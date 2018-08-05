@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------------------------------
+Linux installation:
+---------------------------------------------------------------------------------------------------
+The application is based on Qt-4.8 and gfortran
+
+To install it, first you need to:
+
+1) install the Qt packages as root:
+yum install qt qt-devel
+
+2) install gcc-c++ and gfortran as root
+yum install gcc-c++ gcc-gfortran
+
+3) at root directory
+qmake-qt4
+make
+make install
+
+To run the application:
+cd bin
+./cdm
+
+---------------------------------------------------------------------------------------------------
+Windows installation:
+---------------------------------------------------------------------------------------------------
+The application is based on Qt and MinGW and OpenGL
+
+To build and install it, you need to:
+
+1) install the Qt (5.0 or higher) with OpenGl and MinGW options including the QtCreator IDE
+
+2) Open cmd_install.pro file in the root directory with QtCreator.exe
+
+3) Build full project. You can run the executable cdm.exe directly from QtCreator.
+
+4) To run the application in stand-alone, you need to deploy it along with a few runtime libraries.
+For example if you built with Qt 5.3 (OpenGL included) and MinGW-4.8.2 option, 
+the list of dll (in the Qt and MinGW-4.8.2 lib subdirectories) 
+that have to be present in the same directory as cdm.exe:
+icudt52.dll
+icuin52.dll
+icuuc52.dll
+libgcc_s_dw2-1.dll
+libgfortran-3.dll
+libquadmath-0.dll
+libstdc++-6.dll
+libwinpthread-1.dll
+Qt5Core.dll
+Qt5Gui.dll
+Qt5OpenGL.dll
+Qt5PrintSupport.dll
+Qt5Sql.dll
+Qt5Svg.dll
+Qt5Widgets.dll

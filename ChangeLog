@@ -1,0 +1,270 @@
+	version 0.1.7
+
+	1) mise en place de l'interface avancée.
+	2) -w dans gfortran pour ne pas avoir les warning.
+	3) Nettoyage du C++
+	4) Mise en forme du fortran
+	
+	
+------------------------------------------------------------------------
+	version 0.1.6
+
+	1) openmp dans le Makefile
+	2) correction du nett
+	3) ajout openmp pour microbf et df
+	4) ajout position foyer pour holographie
+	5) bf et df et avec champ incident position foyer ajoute.
+
+------------------------------------------------------------------------
+	version 0.1.5
+	
+	1) mise en rouge start calculation et titre en gras.
+	2) fft singleton mis en place. factor235 supprime et preparation
+	pour FFTW.
+	3) nxmp ajouté pour sideband, comme le libre.
+	4) arbitrary file aussi change pour lire la taille du file.
+	5) Change liste objet avec ajout objet par encore dans la liste
+	6) ajout df et bf.
+	7) ajout cuboid meshsize, ajout density pour preparer sphere
+	8) relecture faite
+	9) bug dans nmax pour le plot corrige.
+	10) nett ameliore.
+	11) amelioration interface multicouche
+
+------------------------------------------------------------------------
+	version 0.1.4
+	
+	1) openmp pour passagefourier avec et sans grossissement.
+	2) bug dans passagefourierimage, oublie de passer imaxk0.
+	3) ajout de division par gross pour l'image.
+	4) changement interpolation poynting.
+
+	
+------------------------------------------------------------------------
+	version 0.1.3
+	
+	1) openmp mis par calcul fonction de Green interpolee
+	2) fonctiongreensurfcomppara.f calcul en openmp la fonction de
+	Green rigoureuse mais necessite un tableau de plus et du coup pas
+	mise en oeuvre pour l'instant.
+	3) Gaussiansurf.f et Gaussiansurfcirc.f en openmp.
+	4) champtotal*.f passes en openmp
+	5) cdmPlot.cpp enlever ligne bizarre
+	6) Intensite pour microscopie ajoutte dans cdmRUnWidget.cpp
+	7) ajout grossissement sur taille pixel
+	8) k0 carré en trop pour Poynting FFT
+	9) enleve para de dipole rayonné en sommant a cause du if.
+	10) Correction bug sur champ diffracte pour mise en memoire.
+	11) Ajouté matlab avec intensite.
+
+
+------------------------------------------------------------------------
+	16/11/17 version 0.1.2
+
+	1) BICGSTARPLUS rajouté.
+	2) methodes iteratives remises a jour openmp par copie du libre.
+	3) fait les methodes iteratives hors cdmlib.f avec optmisé et les
+	instruction openmp faites.
+	4) mise en place de l'option nmatf dans cdmlibsurf.f pour ne pas
+	ecrire les fichiers .mat ainsi que dans mainsurf.f
+	5) option nmatf dans les fichiers de configurations pour ecrire ou
+	pas les fichiers .mat
+	6) openmp mis pour cdmlibsurf.f et les routines diffracte2surf*.f
+	et les routine produit*.f
+	7) Correction bug nside dans cdmOptions.cpp 30 en 31
+	8) fonctiongreenfft.f parallelise partiellement
+
+------------------------------------------------------------------------
+	16/11/17 version 0.1.1
+
+	1) Remet FF0 a la bonne dimension pour les faisceaux gaussien a
+	cause de la normalisation du flux.
+	2) Change aussi E0 pour aller avec le flux pour les faisceaux gaussien.
+	3) Oubli dans circulaire et multi de renormaliser fluxinc.
+	4) Erreur dans champcirmicro sur le us qui contient deja la racine
+	carree de 2.
+	5) Changement dans tous les faisceaux gaussiens incidents du nom des
+	tableaux pour avoir le champ total.
+	6) ajout de gwavecircuclar dans champ total.
+	7) gwavecircular grosse correction dessus
+	8) cdmOptionsWidget.cpp pour ternir compte quand emissivity est
+	choisi et le retenir: if (crosssection->isChecked() ||
+	crosssectionpoynting->isChecked() || microscopy->isChecked() ||
+	nenergie->isChecked() )
+	
+------------------------------------------------------------------------
+	30/10/17 version 0.1.0
+
+
+	1) Correction callbhmie pour mettre epscouche(0) comme medium externe.
+	2) Prise en compte indice dans calcul Cext Csca avec la DDA.
+	3) Correction de toutes les sections efficaces pour le background.
+	4) Arret si pas assez de place pour propa dans le cas de ninterp
+	différent de zéro.
+	5) Mise a 1 pour na et -1 pour gross et RR pour pola par defaut.
+	6) Ajout de methode iterative CORS.
+	7) nlim augmenté.
+	8) Ne calcul pas section efficace si media non homogene.
+	9) Changement de idint en nint pour arrondir  au lieu de tronquer.
+	10) Changement de zg car erreur pour sphere inhomogene.
+	11) eps0 en reel dans inhomo change en complexe, sinon gros pb.
+	12) cdmOptions.cpp hc et lc passer en double.
+	13) cdmRunWidget.cpp supprimé les égalites entre double
+	precision.
+
+	
+------------------------------------------------------------------------
+	11/09/17 version 0.0.13
+
+	1) Supression de nrigtenseur dans cdmlibsurf.f et cdmlibsurf.h et
+	cdmlibwrapper.cpp.
+	2) Menu deroulant pour choisir la valeur de ninterp.
+
+------------------------------------------------------------------------
+	11/09/17 version 0.0.12
+
+	1) Change de place nobjet=1 pour le mettre apres inputmatlab.
+	2) Erreur de background dans objets autres que sphere et cube
+	corriges pour na different de -1.
+	3) Ajout de objectsphereinhomosurf.f y compris dans le makefile
+	4) Ajout de l'appel de objectsphereinhomosurf dans cdmlibsurf.f
+	5) champcirculaire un racine de 2 en trop pour l'incidence normale
+	sur la composante y.
+	6) Initialise nstop à zero au debut.
+	7) gwaveiso ajout de l'argument nmasque.
+	8) gwaveiso return si FFT trop petit.
+	9) Ajout de retour apres calcul du champ incident pour tous les
+	faisceaux.
+	10) gaussianiso amp reel passer en E0 complexe car complexe dans
+	l'appel.
+	11) indice0 et indicen pas toujours initialises pour inputmatlab,
+	calculer tout le temps maintenant.
+	12) declaration character infostr(64) pas correcte : il faut faire
+	character(64) infostr. Changement dans toutes les routines fausses.
+	13) Amp reel dans gaussiansurf.f passe en E0 complex.
+	14) Amplitude reflechie forcée à zéro quand toutes les couches
+	identiques pour éviter des erreurs d'arrondies:
+	champlineairemicro.f, champlineairemicro.f, gaussiansurfmicro.f
+	15) gwaveiso mis pour l'instant avec ouverture numerique de 1.
+	16) kdirx, kdiry, kdirz vires des routines gauss car ne servaient
+	pas.
+	17) supprimer ligne idiote qui changeait la pola!!!
+	18) changement des noms pola dans routine pola pour aller avec le
+	menu!
+	19) Argument relecture dans le call manquait x y et z gauss.
+	20) Dans relecture format * mis pour unformated!
+	21) relecture.f un read 100 au lieu de 1000.
+	22) pb de format dans relecture.f
+	23) supression de gpara* dans relecture.f
+	24) ajout de wavelinearmulti dans relecture.f
+	25) ajout de nrig et ninterp dans relecture.f
+	26) Correction erreur sur sphereconcentric dans choix
+	isotrope dans relecture.f
+	27) ajout beam arbitrary dans relecture.f
+	28) ajout object arbitrary dans relecture.f
+	29) dans appel relecture oublie de variable.
+	30) dans cdmlibsurf.f maxwavenumber a 20 au lieu de 10 par rapport au C.
+	31) nrig, ninterp oublies  dans argument relecture.f
+
+	
+	A faire green function approximation apres tolerance
+
+-------------------------------------------------
+	01/09/17 version 0.0.11
+
+	1) Mis liste dans interface pour choisir etude cote lentille
+	2) Changement de ncote dans cdmlib.f en diminuant de 1 pour
+	conformer au qt.
+	3) Correction initialisation champtotallinear et linearmulti et
+	circ sur Egaussref.
+	4) Dans reduction ouverture numerique indice0 en indicen pour le
+	cas au dessus.
+	5) Oubli initialisation de nfft2d2=nfft2d/2 avant compute the
+	diffracted field pour créer le tableau kxy. encore faux! voir 9)
+	6) Dans le premier call passagefourier erreur dans les arguments
+	pour G=-1
+	7) Modification de ncote quand demande que ndiffracte. Vaut 0 par
+	defaut ou -1 si au desssus c'est absorbant.
+	8) Correction sur ifdda.m sur les champs diffractes.
+	9) Intialise nfft2d2 des le debut du code.
+
+-------------------------------------------------	
+	22/08/17 : version 0.0.10
+	1) RAF: supression de cdmRunThread.cpp qui ne servait pas.
+	2) RAF mis a jour liste des champs incidents en supprimant
+	paraxial et antenna.
+	3) RAF: ajout de gwaveiso comme incident possible.
+	4) RAF: nquickdiffracte=0 ne passe pas dans ndiffracte
+	5) RAF: Nettoyage du fortran
+	6) RAF: quand nlentille=1 alors nenergie calcule pour faire champ total.
+	7) RAF: specklesurf.f Irra faux car divise par waist pas defini :
+	Irradiance pas de sens car aleatoire: mis a zero.
+	8) RAF: specklesurf.f erreur car xs,ys pas utilisés! Pas de
+	translation car c'est un speckle, donc pas d'interet.
+	9) RAF: champtotallineairemulti.f correction sur calcul fluxinc:
+	changement de E0 en E0m
+
+
+
+-----------------------------------------------------------
+	ver 0.8
+       ajouter la configuration des couches/interfaces
+
+
+	nettoyer les b et les declarer dans le main et C++ FAIT
+
+--------------------------------------------------
+	nquad supprimé par rapport à cdmlib
+	supression de 
+     $     FFTTENSORxx, FFTTENSORxy,FFTTENSORxz,FFTTENSORyy,FFTTENSORyz,
+	$     FFTTENSORzz,vectx,vecty,vectz,
+	
+	ajout de
+	// Definition du multicouche
+	int *neps, double *zcouche,dcmplx *epscouche, char materiaucouche[][64],
+
+	de
+	// Option tenseur
+	int *ninterp,int *nrigtenseur
+
+	de
+	// ncote
+	int *nlocal,int *nmacro	,  int *ncote, int *nsection
+
+	de
+	// champ diffracte negatif
+	dcmplx *eimagexneg, dcmplx *eimageyneg,
+        dcmplx *eimagezneg, dcmplx *eimageincxneg, dcmplx *eimageincyneg,
+	dcmplx *eimageinczneg,
+        dcmplx *efourierxneg, dcmplx *efourieryneg, dcmplx *efourierzneg,
+	dcmplx *efourierincxneg, dcmplx *efourierincyneg,
+	dcmplx *efourierinczneg,
+
+	de
+	int * n1m, int *nmatim, int *nplanm, int *nbs,
+//     matrange(nbs,5),matindice (nzm,nzm,nmatim),matind(0:2*n1m*n1m)
+//     ,matindplan(nzm,nzm)	
+	int *matrange, int *matindice, int *matindplan,int *matind,
+//      (2*nxm,2*nym,nplanm)nplanm=nzm*(nzm+1)/2
+	dcmplx *a11, dcmplx *a12, dcmplx *a13, dcmplx *a22, dcmplx *a23,
+	dcmplx *a31, dcmplx *a32, dcmplx *a33,
+
+	modification de
+	Assistant.cpp
+	Assistant.h	
+
+	cdmOptions.cpp cdmOptions.h cdmOptionsWidget.cpp
+	cdmOptionsWidget.h cdmOptionsWindow.cpp cdmRunWidget.cpp pour
+	enlever quad
+
+	inchangé:
+	cdmMain.h
+	cdmMain.cpp	
+	cdmRunWidget.h	
+
+
+	cdmRunWidget.cpp change pour mettre les a, matrange,ncote et ce
+	qui est lié a la couche. Suppression des FFTTensor et vectx,y,z et
+	ajout de masque
+
+	Dans cdmOptions.h ajout du nombre de couche max
