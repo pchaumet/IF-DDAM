@@ -245,6 +245,29 @@ OptionsWindow::tofile(){
       opt << " position Y:" << options->getPositiony().at(i) << endl;
       opt << " position Z:" << options->getPositionz().at(i) << endl;
     }
+    else if (options->getObject() == "inhomogeneous cuboid (length)") {
+      opt << " cube side X:" << options->getCubesidex() << endl;
+      opt << " cube side Y:" << options->getCubesidey() << endl;
+      opt << " cube side Z:" << options->getCubesidez() << endl;
+      opt << " position X:" << options->getPositionx().at(i) << endl;
+      opt << " position Y:" << options->getPositiony().at(i) << endl;
+      opt << " position Z:" << options->getPositionz().at(i) << endl;
+      opt << "  seed:" << options->getSphereseed() << endl;
+      opt << "  coherence length:" << options->getSpherecoherencelength() << endl;
+      opt << "  standard deviation:" << options->getSpherestandardev() << endl;
+    }
+    else if (options->getObject() == "inhomogeneous cuboid (meshsize)") {
+      opt << " position X:" << options->getPositionx().at(i) << endl;
+      opt << " position Y:" << options->getPositiony().at(i) << endl;
+      opt << " position Z:" << options->getPositionz().at(i) << endl;
+      opt << " number of subunit X:" << options->getNxx() << endl;
+      opt << " number of subunit Y:" << options->getNyy() << endl;
+      opt << " number of subunit Z:" << options->getNzz() << endl;
+      opt << " meshsize:" << options->getMeshsize() << endl;
+      opt << "  seed:" << options->getSphereseed() << endl;
+      opt << "  coherence length:" << options->getSpherecoherencelength() << endl;
+      opt << "  standard deviation:" << options->getSpherestandardev() << endl;
+    }
     else if (options->getObject() == "cuboid (length)") {
       opt << " cube side X:" << options->getCubesidex() << endl;
       opt << " cube side Y:" << options->getCubesidey() << endl;

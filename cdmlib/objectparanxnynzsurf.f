@@ -2,11 +2,11 @@
      $     ,yswf,zswf,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx
      $     ,ny,nz,nxm,nym,nzm,nxmp,nymp,nzmp,methode ,epsilon,polarisa
      $     ,sidex,sidey,sidez,xg,yg,zg,na ,neps,nepsmax,dcouche,zcouche
-     $     ,epscouche,tabzn,nmat,infostr,nstop)
+     $     ,epscouche,tabzn,nmatf,infostr,nstop)
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,nxm,nym,nzm,ii
      $     ,jj,i,j,k,test,IP(3),nnnr,dddis,inv,na,nstop,nxmp,nymp,nzmp
-     $     ,nmat
+     $     ,nmatf
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,xg,yg,zg,x,y,z ,aretecube,sidex,sidey,sidez
      $     ,side,pi,z1,z2
@@ -106,9 +106,9 @@ c     shift the layers
                y=aretecube*(dble(j)-0.5d0)-sidey/2.d0
                z=aretecube*(dble(i)-0.5d0)-sidez/2.d0
                
-               if (j.eq.1.and.k.eq.1) write(22,*) z+zg
-               if (i.eq.1.and.k.eq.1) write(21,*) y+yg
-               if (j.eq.1.and.i.eq.1) write(20,*) x+xg
+               if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z+zg
+               if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y+yg
+               if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x+xg
 
                ndipole=ndipole+1  
                nbsphere=nbsphere+1
@@ -142,7 +142,7 @@ c     shift the layers
                      enddo
                   enddo
                endif
-               if (nmat.eq.0) then
+               if (nmatf.eq.0) then
                   write(10,*) xs(nbsphere)
                   write(11,*) ys(nbsphere)
                   write(12,*) zs(nbsphere)

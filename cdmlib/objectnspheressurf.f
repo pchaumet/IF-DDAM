@@ -2,11 +2,11 @@
      $     ,numberspheremax,xg,yg,zg,rayons,eps0,xs,ys,zs,xswf,yswf
      $     ,zswf ,k0,aretecube ,tabdip,tabnbs,nnnr,nmax,nbsphere,ndipole
      $     ,nx ,ny,nz,methode ,na,epsilon,polarisa,neps,nepsmax,dcouche
-     $     ,zcouche,epscouche ,tabzn,infostr,nstop)
+     $     ,zcouche,epscouche ,tabzn,nmatf,infostr,nstop)
       implicit none
       integer nmax,tabdip(nmax),tabnbs(nmax),nbsphere,ndipole,nx,ny,nz
      $     ,na,ii,jj,i,j,k,test,IP(3),nnnr,dddis,inv,is,numbersphere
-     $     ,numberspheremax,nstop
+     $     ,numberspheremax,nstop,nmatf
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,xg(numberspheremax) ,yg(numberspheremax)
      $     ,zg(numberspheremax),x,y,z,aretecube ,rayons(numberspheremax)
@@ -110,9 +110,9 @@ c      write(*,*) 'Z',zmin*1.d9,zmax*1.d9
                   y=ymin+dble(j-1)*aretecube+aretecube/2.d0
                   z=zmin+dble(i-1)*aretecube+aretecube/2.d0
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z
-                  if (i.eq.1.and.k.eq.1) write(21,*) y
-                  if (j.eq.1.and.i.eq.1) write(20,*) x
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x
 
                   ndipole=ndipole+1
                   xswf(ndipole)=x
@@ -157,9 +157,9 @@ c      write(*,*) 'Z',zmin*1.d9,zmax*1.d9
                               enddo
                            enddo
                         endif
-                        write(10,*) xs(nbsphere)
-                        write(11,*) ys(nbsphere)
-                        write(12,*) zs(nbsphere)
+                        if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                        if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                        if (nmatf.eq.0) write(12,*) zs(nbsphere)
                      endif
                   enddo
                   if (test.eq.2) then
@@ -178,9 +178,9 @@ c      write(*,*) 'Z',zmin*1.d9,zmax*1.d9
                   y=ymin+dble(j-1)*aretecube+aretecube/2.d0
                   z=zmin+dble(i-1)*aretecube+aretecube/2.d0
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z
-                  if (i.eq.1.and.k.eq.1) write(21,*) y
-                  if (j.eq.1.and.i.eq.1) write(20,*) x
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x
 
                   ndipole=ndipole+1
                   nbsphere=nbsphere+1
@@ -225,9 +225,9 @@ c      write(*,*) 'Z',zmin*1.d9,zmax*1.d9
                               enddo
                            enddo
                         endif
-                        write(10,*) xs(nbsphere)
-                        write(11,*) ys(nbsphere)
-                        write(12,*) zs(nbsphere)
+                        if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                        if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                        if (nmatf.eq.0) write(12,*) zs(nbsphere)
                      endif
                   enddo
                   if (test.eq.0) then
@@ -239,9 +239,9 @@ c      write(*,*) 'Z',zmin*1.d9,zmax*1.d9
                      epsilon(nbsphere,1,1)=eps0
                      epsilon(nbsphere,2,2)=eps0
                      epsilon(nbsphere,3,3)=eps0   
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere) 
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere) 
                   elseif (test.eq.2) then
                      infostr='sphere are not distincts'
                      nstop=1

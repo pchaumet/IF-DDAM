@@ -2,10 +2,10 @@
      $     ,zswf,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny
      $     ,nz,nxm,nym,nzm,methode ,epsilon,polarisa,sidex,sidey,sidez
      $     ,xg,yg,zg,phi ,theta,psi,na ,neps,nepsmax,dcouche ,zcouche
-     $     ,epscouche,tabzn ,infostr,nstop)
+     $     ,epscouche,tabzn,nmatf,infostr,nstop)
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,nxm,nym,nzm,ii
-     $     ,jj,i,j,k,test,IP(3),nnnr,dddis,inv,na,nstop
+     $     ,jj,i,j,k,test,IP(3),nnnr,dddis,inv,na,nstop,nmatf
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,xg,yg,zg,x,y,z ,aretecube,sidex,sidey,sidez
      $     ,side,phi,theta,psi,pi ,mat(3,3),xr,yr,zr,x1,x2,y1,y2 ,z1,z2
@@ -244,9 +244,9 @@ c     shift the layers
                   z=-(z2-z1)/2.d0+aretecube*(dble(i)-0.5d0) 
                   
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z+zg
-                  if (i.eq.1.and.k.eq.1) write(21,*) y+yg
-                  if (j.eq.1.and.i.eq.1) write(20,*) x+xg
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z+zg
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y+yg
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x+xg
 
                   ndipole=ndipole+1                   
                   xswf(ndipole)=x+xg
@@ -287,9 +287,9 @@ c     shift the layers
                            enddo
                         enddo
                      endif
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere)                  
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere)                  
                   endif
                enddo
             enddo
@@ -304,9 +304,9 @@ c     shift the layers
                   y=-(y2-y1)/2.d0+aretecube*(dble(j)-0.5d0)
                   z=-(z2-z1)/2.d0+aretecube*(dble(i)-0.5d0)                 
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z+zg
-                  if (i.eq.1.and.k.eq.1) write(21,*) y+yg
-                  if (j.eq.1.and.i.eq.1) write(20,*) x+xg
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z+zg
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y+yg
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x+xg
 
                   ndipole=ndipole+1  
                   nbsphere=nbsphere+1
@@ -347,9 +347,9 @@ c     shift the layers
                            enddo
                         enddo
                      endif
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere) 
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere) 
                   else
                      xs(nbsphere)=x+xg
                      ys(nbsphere)=y+yg
@@ -359,9 +359,9 @@ c     shift the layers
                      epsilon(nbsphere,1,1)=eps0
                      epsilon(nbsphere,2,2)=eps0
                      epsilon(nbsphere,3,3)=eps0                             
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere) 
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere) 
                   endif
                enddo
             enddo

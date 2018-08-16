@@ -2,11 +2,12 @@
      $     ,numbersphere,numberspheremax,xg,yg,zg,rayons,eps0,xs,ys,zs
      $     ,xswf,yswf ,zswf,k0,aretecube,tabdip,tabnbs,nnnr,nmax
      $     ,nbsphere,ndipole,nx,ny ,nz,methode,na,epsilon,polarisa,neps
-     $     ,nepsmax,dcouche ,zcouche ,epscouche,tabzn ,infostr,nstop)
+     $     ,nepsmax,dcouche ,zcouche ,epscouche,tabzn,nmatf,infostr
+     $     ,nstop)
       implicit none
       integer nmax,tabdip(nmax),tabnbs(nmax),nbsphere,ndipole,nx,ny,nz
      $     ,na,ii,jj,i,j,k,l,test,IP(3),nnnr,dddis,inv,is,numbersphere
-     $     ,numberspheremax,nstop
+     $     ,numberspheremax,nstop,nmatf
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,xg,yg,zg,x,y,z ,aretecube
      $     ,rayons(numberspheremax),ray,centre
@@ -99,9 +100,9 @@ c     shift the layers
                   z=dble(i-1)*aretecube+aretecube/2.d0-centre
                   ray=dsqrt(x*x+y*y+z*z)
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z
-                  if (i.eq.1.and.k.eq.1) write(21,*) y
-                  if (j.eq.1.and.i.eq.1) write(20,*) x
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x
                   
                   ndipole=ndipole+1
                   xswf(ndipole)=x+xg
@@ -152,9 +153,9 @@ c                        write(*,*) 'eps sortant',is,eps,ray,i,j,k
                            enddo
                         enddo
                      endif
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere)
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   endif
                enddo             
             enddo
@@ -168,9 +169,9 @@ c                        write(*,*) 'eps sortant',is,eps,ray,i,j,k
                   z=dble(i-1)*aretecube+aretecube/2.d0-centre
                   ray=dsqrt(x*x+y*y+z*z)
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z
-                  if (i.eq.1.and.k.eq.1) write(21,*) y
-                  if (j.eq.1.and.i.eq.1) write(20,*) x
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x
 
                   ndipole=ndipole+1
                   nbsphere=nbsphere+1
@@ -221,9 +222,9 @@ c                        write(*,*) 'eps sortant',is,eps,ray,i,j,k
                            enddo
                         enddo
                      endif
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere)
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   else                     
                      xs(nbsphere)=x+xg
                      ys(nbsphere)=y+yg
@@ -233,9 +234,9 @@ c                        write(*,*) 'eps sortant',is,eps,ray,i,j,k
                      epsilon(nbsphere,1,1)=eps0
                      epsilon(nbsphere,2,2)=eps0
                      epsilon(nbsphere,3,3)=eps0                        
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere)                
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere)                
                   endif
                enddo
             enddo

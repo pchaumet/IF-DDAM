@@ -1,11 +1,12 @@
       subroutine objetsphereinhomosurf(eps,xs,ys,zs,xswf,yswf,zswf ,k0
      $     ,aretecube ,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
      $     ,methode ,na ,epsilon,polarisa,rayon,lc,hc,ng,epsb,neps
-     $     ,nepsmax ,dcouche,zcouche,epscouche,tabzn,infostr ,nstop)
+     $     ,nepsmax ,dcouche,zcouche,epscouche,tabzn,nùatf,infostr
+     $     ,nstop)
 
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,i,j,k,test
-     $     ,IP(3),nnnr,dddis,inv,na,nstop
+     $     ,IP(3),nnnr,dddis,inv,na,nstop,nmatf
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,lc,hc,x,y,z,zg,aretecube,pi
       double complex eps,polarisa(nmax,3,3) ,epsilon(nmax,3 ,3),ctmp
@@ -171,9 +172,9 @@ c     Profil des hauteurs
                   y=-rayon+aretecube*(dble(j)-0.5d0)
                   z=-rayon+aretecube*(dble(i)-0.5d0)
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z+zg
-                  if (i.eq.1.and.k.eq.1) write(21,*) y
-                  if (j.eq.1.and.i.eq.1) write(20,*) x
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z+zg
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x
 
                   ndipole=ndipole+1
                   xswf(ndipole)=x
@@ -202,9 +203,9 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
                      epsilon(nbsphere,2,2)=eps
                      epsilon(nbsphere,3,3)=eps
                      
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere)
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   endif
                enddo
             enddo
@@ -217,9 +218,9 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
                   y=-rayon+aretecube*(dble(j)-0.5d0)
                   z=-rayon+aretecube*(dble(i)-0.5d0)
 
-                  if (j.eq.1.and.k.eq.1) write(22,*) z+zg
-                  if (i.eq.1.and.k.eq.1) write(21,*) y
-                  if (j.eq.1.and.i.eq.1) write(20,*) x
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z+zg
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x
 
                   ndipole=ndipole+1
                   nbsphere=nbsphere+1
@@ -251,9 +252,9 @@ c     write (*,*) 'nbsphere = ', nbsphere
                      epsilon(nbsphere,2,2)=eps
                      epsilon(nbsphere,3,3)=eps
                      
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere)
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   else
                      xs(nbsphere)=x
                      ys(nbsphere)=y
@@ -263,9 +264,9 @@ c     write (*,*) 'nbsphere = ', nbsphere
                      epsilon(nbsphere,1,1)=eps0
                      epsilon(nbsphere,2,2)=eps0
                      epsilon(nbsphere,3,3)=eps0
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere) 
+                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
+                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
+                     if (nmatf.eq.0) write(12,*) zs(nbsphere) 
                   endif
                enddo
             enddo

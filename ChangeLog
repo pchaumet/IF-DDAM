@@ -4,8 +4,11 @@
 	2) -w dans gfortran pour ne pas avoir les warning.
 	3) Nettoyage du C++
 	4) Mise en forme du fortran
-	
-	
+	5) nmatf ajoute dans les objets.
+
+
+	objet cuboid inhomo (length en cours)
+
 ------------------------------------------------------------------------
 	version 0.1.6
 

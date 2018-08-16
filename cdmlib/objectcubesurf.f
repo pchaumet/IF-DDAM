@@ -1,10 +1,10 @@
       subroutine objetcubesurf(trope,eps,epsani,eps0,xs,ys,zs,xswf,yswf
      $     ,zswf,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny
      $     ,nz,methode ,epsilon,polarisa,side,xg,yg,zg,neps,nepsmax
-     $     ,dcouche,zcouche ,epscouche,tabzn,infostr,nstop)
+     $     ,dcouche,zcouche ,epscouche,tabzn,nmatf,infostr,nstop)
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,ii,jj,i,j,k
-     $     ,test,IP(3),nnnr,dddis,inv,nnmax,nstop
+     $     ,test,IP(3),nnnr,dddis,inv,nnmax,nstop,nmatf
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,xg,yg,zg,x,y,z,aretecube,side,xc,yc,zc
       double complex eps,epsani(3,3),polaeps(3,3),polarisa(nmax,3,3)
@@ -96,9 +96,9 @@ c     compute the position of down subunit
                y=dble(j)*aretecube-yc
                z=dble(i)*aretecube-zc
 
-               if (j.eq.1.and.k.eq.1) write(22,*) z+zg
-               if (i.eq.1.and.k.eq.1) write(21,*) y+yg
-               if (j.eq.1.and.i.eq.1) write(20,*) x+xg
+               if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z+zg
+               if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y+yg
+               if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x+xg
 
                ndipole=ndipole+1               
                nbsphere=nbsphere+1
@@ -132,9 +132,9 @@ c     compute the position of down subunit
                      enddo
                   enddo
                endif
-               write(10,*) xs(nbsphere)
-               write(11,*) ys(nbsphere)
-               write(12,*) zs(nbsphere)
+               if (nmatf.eq.0) write(10,*) xs(nbsphere)
+               if (nmatf.eq.0) write(11,*) ys(nbsphere)
+               if (nmatf.eq.0) write(12,*) zs(nbsphere)
                
             enddo
          enddo
