@@ -5,9 +5,9 @@
 	3) Nettoyage du C++
 	4) Mise en forme du fortran
 	5) nmatf ajoute dans les objets.
-
-
-	objet cuboid inhomo (length en cours)
+	6) openmp pour init tableau dans objet, eps, pola, tabdip.
+	7) objet cuboid inhomo (length et meshsize)
+	8) relecture.f mis a jour.
 
 ------------------------------------------------------------------------
 	version 0.1.6

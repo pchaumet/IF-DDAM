@@ -718,7 +718,7 @@ c     Built the object
      $        ,infostr ,nstop)
          write(99,*) 'sphere',rayon
 
-      elseif (object(1:6).eq.'inhomo') then
+      elseif (object(1:12).eq.'inhomosphere') then
          numberobjet=1
          if (trope.ne.'iso') then
             nstop=1
@@ -734,7 +734,41 @@ c     Built the object
      $        ,nmatf,infostr,nstop)
          localfieldx=0.d0
          write(99,*) 'sphere',rayon
+      elseif (object(1:13).eq.'inhomocuboid1') then
+         numberobjet=1
+         if (trope.ne.'iso') then
+            nstop=1
+            infostr='Permittivity not scalar for inhomogenous cuboid'
+            write(99,*)
+     $           'Permittivity not scalar for inhomogenous cuboid'
+            return
+         endif
+         call objetparainhomosurf(eps,xs,ys,zs,xswf,yswf,zswf ,k0
+     $        ,aretecube ,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz,nxm
+     $        ,nym ,nzm,polarizability ,nproche ,epsilon,polarisa,sidex
+     $        ,sidey ,sidez ,xg ,yg ,zg,lc ,hc,ng,localfieldx,neps
+     $        ,nepsmax ,dcouche ,zcouche ,epscouche ,tabzn ,nmatf
+     $        ,infostr,nstop)
 
+         localfieldx=0.d0
+         write(99,*) 'cuboid',sidex,sidey,sidez
+      elseif (object(1:13).eq.'inhomocuboid2') then
+         numberobjet=1
+         if (trope.ne.'iso') then
+            nstop=1
+            infostr='Permittivity not scalar for inhomogenous cuboid'
+            write(99,*)
+     $           'Permittivity not scalar for inhomogenous cuboid'
+            return
+         endif
+         call objetparanxnynzinhomosurf(eps,xs,ys,zs,xswf,yswf,zswf ,k0
+     $        ,aretecube ,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz,nxm
+     $        ,nym,nzm,nxmp,nymp,nzmp,polarizability ,nproche ,epsilon
+     $        ,polarisa ,sidex ,sidey,sidez ,xg ,yg,zg,lc ,hc,ng
+     $        ,localfieldx,neps ,nepsmax ,dcouche ,zcouche ,epscouche
+     $        ,tabzn ,nmatf,infostr ,nstop)
+         localfieldx=0.d0
+         write(99,*) 'cuboid',sidex,sidey,sidez
       elseif (object(1:4).eq.'cube') then
          write(99,*) 'cube:side',side
          numberobjet=1
@@ -1402,7 +1436,7 @@ c         write(*,*) 'relecture',filereread
      $        theta, phi, pp, ss, thetam ,phim, ppm, ssm,E0m, nbinc, P0,
      $        w0,nrig, ninterp,xgaus,ygaus,zgaus,namefileinc,
      $        numberobjetmax ,filereread,nlecture1,neps,nepsmax,zcouche
-     $        ,epscouche,aretecube ,nx,ny,nz,nstop ,infostr)
+     $        ,epscouche,aretecube ,nx,ny,nz,hc,lc,ng,nstop ,infostr)
          if (nstop.eq.1) return
 c     reread the local field         
          if (nlecture1.eq.1) then

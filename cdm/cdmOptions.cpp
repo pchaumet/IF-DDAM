@@ -13,7 +13,8 @@ Options::Options()
 
   objectList = (QStringList() << "sphere" << "inhomogeneous sphere" << "cube" 
 		<< "cuboid (length)" << "cuboid (meshsize)" << "ellipsoid" << "multiple spheres" 
-			      <<  "cylinder" << "concentric spheres" << "arbitrary");
+		<<  "cylinder" << "concentric spheres" << "inhomogeneous cuboid (length)"
+		<< "inhomogeneous cuboid (meshsize)" << "arbitrary");
 
   anisotropyList = (QStringList() << "iso" << "ani");
 

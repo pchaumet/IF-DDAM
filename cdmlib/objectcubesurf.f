@@ -22,11 +22,33 @@
 
 c     Initialization
       nbsphere=0
-      ndipole=0 
-      Tabdip=0
+      ndipole=0
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)
+!$OMP DO SCHEDULE(STATIC)
+      do i=1,nmax
+         Tabdip(i)=0
+         polarisa(i,1,1)=0.d0
+         polarisa(i,1,2)=0.d0
+         polarisa(i,1,3)=0.d0
+         polarisa(i,2,1)=0.d0
+         polarisa(i,2,2)=0.d0
+         polarisa(i,2,3)=0.d0
+         polarisa(i,3,1)=0.d0
+         polarisa(i,3,2)=0.d0
+         polarisa(i,3,3)=0.d0
+         epsilon(i,1,1)=0.d0
+         epsilon(i,1,2)=0.d0
+         epsilon(i,1,3)=0.d0
+         epsilon(i,2,1)=0.d0
+         epsilon(i,2,2)=0.d0
+         epsilon(i,2,3)=0.d0
+         epsilon(i,3,1)=0.d0
+         epsilon(i,3,2)=0.d0
+         epsilon(i,3,3)=0.d0
+      enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL         
       Tabzn=0
-      polarisa=0.d0
-      epsilon=0.d0
       dddis=1
       inv=1
       

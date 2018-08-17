@@ -146,6 +146,29 @@ ObjectConfigDialog::ObjectConfigDialog( QWidget *parent,Qt::WindowFlags fl,
       objectconfiglayout->addRow(tr("Theta(X):"),thetaobj.at(i));
       objectconfiglayout->addRow(tr("Phi(Z):"),phiobj.at(i));
      }
+     else if (options->getObject() == "inhomogeneous cuboid (length)") {
+       objectconfiglayout->addRow(tr("Cuboid side x (nm):"),cubesidex.at(i));
+       objectconfiglayout->addRow(tr("Cuboid side y (nm):"),cubesidey.at(i));
+       objectconfiglayout->addRow(tr("Cuboid side z (nm):"),cubesidez.at(i));
+       objectconfiglayout->addRow(tr("Position X (nm):"),positionx.at(i));
+       objectconfiglayout->addRow(tr("Position Y (nm):"),positiony.at(i));
+       objectconfiglayout->addRow(tr("Position Z (nm):"),positionz.at(i));
+       objectconfiglayout->addRow(tr("Cuboid seed :"),sphereseed.at(i));
+       objectconfiglayout->addRow(tr("Coherence length (nm):"),spherecoherencelength.at(i));
+       objectconfiglayout->addRow(tr("Standard deviation:"),spherestandardev.at(i));
+     }
+     else if (options->getObject() == "inhomogeneous cuboid (meshsize)") {
+       objectconfiglayout->addRow(tr("Position X (nm):"),positionx.at(i));
+       objectconfiglayout->addRow(tr("Position Y (nm):"),positiony.at(i));
+       objectconfiglayout->addRow(tr("Position Z (nm):"),positionz.at(i));
+       objectconfiglayout->addRow(tr("number of subunit X:"),nxx.at(i));
+       objectconfiglayout->addRow(tr("number of subunit Y:"),nyy.at(i));
+       objectconfiglayout->addRow(tr("number of subunit Z:"),nzz.at(i));
+       objectconfiglayout->addRow(tr("meshsize (nm):"),meshsize.at(i));
+       objectconfiglayout->addRow(tr("Cuboid seed :"),sphereseed.at(i));
+       objectconfiglayout->addRow(tr("Coherence length (nm):"),spherecoherencelength.at(i));
+       objectconfiglayout->addRow(tr("Standard deviation:"),spherestandardev.at(i));
+     }
      else if (options->getObject() == "arbitrary") {
        objectconfiglayout->addRow(tr("File path:"),objectfile.at(i));
      }

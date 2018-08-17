@@ -1,7 +1,7 @@
       subroutine objetsphereinhomosurf(eps,xs,ys,zs,xswf,yswf,zswf ,k0
      $     ,aretecube ,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
      $     ,methode ,na ,epsilon,polarisa,rayon,lc,hc,ng,epsb,neps
-     $     ,nepsmax ,dcouche,zcouche,epscouche,tabzn,nùatf,infostr
+     $     ,nepsmax ,dcouche,zcouche,epscouche,tabzn,nmatf,infostr
      $     ,nstop)
 
       implicit none
@@ -30,13 +30,35 @@
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
       
-      write(*,*) 'inhomogenous sphere',eps
+      write(*,*) 'inhomogenous sphere',eps,hc,lc,ng,rayon,nnnr
 c     Initialization
       nbsphere=0
-      ndipole=0 
-      Tabdip=0
-      polarisa=0.d0
-      epsilon=0.d0
+      ndipole=0
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)
+!$OMP DO SCHEDULE(STATIC)
+      do i=1,nmax
+         Tabdip(i)=0
+         polarisa(i,1,1)=0.d0
+         polarisa(i,1,2)=0.d0
+         polarisa(i,1,3)=0.d0
+         polarisa(i,2,1)=0.d0
+         polarisa(i,2,2)=0.d0
+         polarisa(i,2,3)=0.d0
+         polarisa(i,3,1)=0.d0
+         polarisa(i,3,2)=0.d0
+         polarisa(i,3,3)=0.d0
+         epsilon(i,1,1)=0.d0
+         epsilon(i,1,2)=0.d0
+         epsilon(i,1,3)=0.d0
+         epsilon(i,2,1)=0.d0
+         epsilon(i,2,2)=0.d0
+         epsilon(i,2,3)=0.d0
+         epsilon(i,3,1)=0.d0
+         epsilon(i,3,2)=0.d0
+         epsilon(i,3,3)=0.d0
+      enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL            
       dddis=1
       inv=1
       pi=dacos(-1.d0)
@@ -148,9 +170,9 @@ c     Spectre symetrique pour diffraction harmonique
       enddo     
       
 c     Profil des hauteurs
-      call dfftw_plan_dft_3d(planb, nx,ny,nz,epsb,epsb,FFTW_BACKWARD
+      call dfftw_plan_dft_3d(planb,nx,ny,nz,epsb,epsb,FFTW_BACKWARD
      $     ,FFTW_ESTIMATE)
-
+      call dfftw_execute_dft(planb, epsb, epsb)
       moyenne=0.d0
       ecartype=0.d0
       do i=1,nk

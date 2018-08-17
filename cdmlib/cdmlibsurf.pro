@@ -105,6 +105,8 @@ SOURCES		+= aleatoire.f \
                 objectsphereconcentricsurf.f \
                 objectspheresurf.f \
                 objectsphereinhomosurf.f \
+                objectparainhomosurf.f \
+                objectparanxnynzinhomosurf.f \
 		passagefourierimage.f \
 		passagefourierimagegross.f \
 		pimzbicgstab.f \

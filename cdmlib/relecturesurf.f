@@ -10,15 +10,16 @@ c     planewavecircular.in / planewavelinear.in files
      $     theta, phi, pp, ss,thetam ,phim, ppm, ssm,E0m,nbinc, P0, w0,
      $     nrig, ninterp, xgaus, ygaus, zgaus,namefileinc,numberobjetmax
      $     ,filereread,nlecture,neps,nepsmax,zcouche,epscouche,aretecube
-     $     ,nx,ny,nz,nstop,infostr)
+     $     ,nx,ny,nz,hc,lc,ng,nstop,infostr)
       implicit none
       integer ntmp,ierror,test,ii,jj,i,k,nlecture,nnnr,numberobjet
-     $     ,numberobjetmax,nstop,long,long1,nx,ny,nz
+     $     ,numberobjetmax,nstop,long,long1,nx,ny,nz,ng
       double precision tmp,lambda,tolinit, side, sidex, sidey, sidez,
      $     hauteur,demiaxea,demiaxeb,demiaxec,thetaobj,phiobj,psiobj
      $     ,theta, phi, pp, ss, P0, w0, xgaus, ygaus, zgaus,xg,yg,zg
      $     ,rayon,xgmulti(numberobjetmax),ygmulti(numberobjetmax)
      $     ,zgmulti(numberobjetmax),rayonmulti(numberobjetmax),aretecube
+     $     ,hc,lc
       character (64) infostr,object,beam,namefileobj,namefileinc
      $     ,filereread,filereread1,filereread2,objecttmp,beamtmp
       character (3) trope,chatmp
@@ -268,7 +269,62 @@ c     ecriture des faisceaux
                      write(1001) epsani(ii,jj)
                   enddo
                enddo
-            endif  
+            endif
+         elseif(object(1:12).eq.'inhomosphere') then
+            write(1000,*) 'rayon   =',rayon
+            write(1000,*) 'lc      =',lc
+            write(1000,*) 'st. de. =',hc
+            write(1000,*) 'seed    =',ng
+            write(1001) rayon
+            write(1001) lc
+            write(1001) hc
+            write(1001) ng
+         elseif(object(1:13).eq.'inhomocuboid1') then
+
+            write(1000,*) 'sidex   =',sidex
+            write(1000,*) 'sidey   =',sidey
+            write(1000,*) 'sidez   =',sidez
+            write(1000,*) 'pos x   =',xg
+            write(1000,*) 'pos y   =',yg
+            write(1000,*) 'pos z   =',zg
+            write(1000,*) 'lc      =',lc
+            write(1000,*) 'st. de. =',hc
+            write(1000,*) 'seed    =',ng
+
+            write(1001) sidex
+            write(1001) sidey
+            write(1001) sidez
+            write(1001) xg
+            write(1001) yg
+            write(1001) zg
+            write(1001) lc
+            write(1001) hc
+            write(1001) ng
+            
+         elseif(object(1:13).eq.'inhomocuboid2') then
+
+            write(1000,*) 'nx      =',nx
+            write(1000,*) 'ny      =',ny
+            write(1000,*) 'nz      =',ny
+            write(1000,*) 'meshsize=',aretecube
+            write(1000,*) 'pos x   =',xg
+            write(1000,*) 'pos y   =',yg
+            write(1000,*) 'pos z   =',zg
+            write(1000,*) 'lc      =',lc
+            write(1000,*) 'st. de. =',hc
+            write(1000,*) 'seed    =',ng
+
+            write(1001) nx
+            write(1001) ny
+            write(1001) ny
+            write(1001) aretecube
+            write(1001) xg
+            write(1001) yg
+            write(1001) zg
+            write(1001) lc
+            write(1001) hc
+            write(1001) ng
+            
          elseif(object(1:9).eq.'ellipsoid') then
             write(1000,*) 'demiaxex=',demiaxea
             write(1000,*) 'demiaxey=',demiaxeb
@@ -700,7 +756,78 @@ c     write(*,*) '13',ctmp,eps
                      if (test.ne.0) goto 1000
                   enddo
                enddo
-            endif     
+            endif
+
+         elseif (object(1:12).eq.'inhomosphere') then
+            read(1000) tmp
+            call comparaisonreel(tmp,rayon,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,lc,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,hc,test)
+            if (test.ne.0) goto 1000
+            read(1000) ntmp
+            if (ntmp.ne.ng) goto 1000
+
+         elseif (object(1:13).eq.'inhomocuboid1') then
+
+            read(1000) tmp
+            call comparaisonreel(tmp,sidex,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,sidey,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,sidez,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,xg,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,yg,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,zg,test)
+            if (test.ne.0) goto 1000          
+            read(1000) tmp
+            call comparaisonreel(tmp,lc,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,hc,test)
+            if (test.ne.0) goto 1000
+            read(1000) ntmp
+            if (ntmp.ne.ng) goto 1000
+            
+
+         elseif (object(1:13).eq.'inhomocuboid2') then
+            read(1000) ntmp
+            if (ntmp.ne.nx) goto 1000
+            read(1000) ntmp
+            if (ntmp.ne.ny) goto 1000
+            read(1000) ntmp
+            if (ntmp.ne.nz) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,aretecube,test)
+            read(1000) tmp
+            call comparaisonreel(tmp,xg,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,yg,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,zg,test)
+            if (test.ne.0) goto 1000          
+            read(1000) tmp
+            call comparaisonreel(tmp,lc,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,hc,test)
+            if (test.ne.0) goto 1000
+            read(1000) ntmp
+            if (ntmp.ne.ng) goto 1000
+            
          elseif(object(1:9).eq.'ellipsoid') then
             read(1000) tmp
             call comparaisonreel(tmp,demiaxea,test)
