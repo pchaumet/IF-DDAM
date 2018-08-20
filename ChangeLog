@@ -8,6 +8,10 @@
 	6) openmp pour init tableau dans objet, eps, pola, tabdip.
 	7) objet cuboid inhomo (length et meshsize)
 	8) relecture.f mis a jour.
+	9) mainsurf.f ajout pour tenir compte type microscope et position
+	foyers.
+	10) dans le fortran -w
+
 
 ------------------------------------------------------------------------
 	version 0.1.6
@@ -20,7 +24,7 @@
 
 ------------------------------------------------------------------------
 	version 0.1.5
-	
+
 	1) mise en rouge start calculation et titre en gras.
 	2) fft singleton mis en place. factor235 supprime et preparation
 	pour FFTW.

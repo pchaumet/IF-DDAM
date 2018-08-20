@@ -3,7 +3,7 @@ c     integer
       integer ii,jj,kk,i,j,k,nstop
       integer  nlocal,nmacro,nsection,nforce ,nforced
      $     ,ntorque,ntorqued,nsens,nproche,nlecture,nquickdiffracte
-     $     ,nrig,ncote,ndiffracte,ninterp,ir,nenergie,nmatf
+     $     ,nrig,ncote,ndiffracte,ninterp,ir,nenergie,nmatf,ntypemic
 
 c     variables for the object
       integer nbsphere3,nbsphere,ndipole,IP(3),test,numberobjetmax
@@ -139,6 +139,7 @@ c     variable pour avoir l'image a travers la lentille
       integer nquicklens,nlentille,nobjet,nfft2d,nfft2d2
       parameter (nfft2d=512)
       double precision kx,ky,kz,deltakx,deltaky,numaper,deltax,gross
+     $     ,numaperinc,zlensr,zlenst
       double precision kxy(nfft2d),xy(nfft2d)
       double complex Eimagexpos(nfft2d*nfft2d),Eimageypos(nfft2d*nfft2d)
      $     ,Eimagezpos(nfft2d*nfft2d),Eimageincxpos(nfft2d*nfft2d)
@@ -398,7 +399,11 @@ c     ntorqued=1 ! calcul la desnite de couple dans l'objet l'objet
 ! (dipole) au premier coup
       nobjet=0                  ! si 1 ne fait que l'objet
       nmatf=0 ! 1 ne cre pas les fichiers .mat 0 sinon
-      gross=-1.d0
+      gross=-1.d0               !grossissement
+      numaperinc=0.9d0          !ouverture numerique de l'incident
+      zlensr=0.d0               ! position lentille reflexion
+      zlenst=0.d0               ! position lentille transmission
+      ntypemic=0                !type microscope
 c*******************************************************
 c     Definition du multicouhe
 c
@@ -481,7 +486,7 @@ c     return scalar results
      $     Eimageincxneg,Eimageincyneg,Eimageinczneg,
      $     Efourierxneg,Efourieryneg,Efourierzneg,
      $     Efourierincxneg,Efourierincyneg,Efourierinczneg,masque,
-     $     kxy,xy,numaper,gross,
+     $     kxy,xy,numaper,numaperinc,gross,zlensr,zlenst,ntypemic,
 c     passe certains arguments pour le dimensionnement
      $     n1m,nmatim,nplanm,nbs,
 c     fonction de green de la surface
