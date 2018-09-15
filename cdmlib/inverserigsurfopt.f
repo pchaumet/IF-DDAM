@@ -142,6 +142,51 @@ c     compute the Residue
 !$OMP END PARALLEL
          tol1=dsqrt(tol1)/NORM
          nloop=nloop+1
+      elseif (methodeit(1:10).eq.'GPBICGplus') then
+         write(*,*) 'methodeit',methodeit
+ 2016    call GPBICGplus(XI,XR,FF0,ldabi,ndim,nlar,nou,WRK,NLOOP,Nlim
+     $        ,TOL,NORM,ALPHA,BETA,GPETA,DZETA,R0RN,NSTAT,STEPERR) 
+
+         if (nstat.lt.0) then
+            nstop=1
+            infostr='Problem to solve Ax=b'
+            write(*,*) 'Problem to solve Ax=b',nstat,STEPERR
+            return
+         endif
+         ncompte=ncompte+1           
+         if (nstat.eq.1) then
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)
+!$OMP DO           
+            do i=1,nbsphere3
+               FFloc(i)=xi(i)       
+            enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL  
+         endif
+         
+         call produitfftmatvectsurmopt(xi,xr,nbsphere,ndipole,nx,ny,nz
+     $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax ,matindplan
+     $        ,b31,b32,b33,FF,b11,b12,b13,a11,a12 ,a13 ,a22,a23,a31,a32
+     $        ,a33,polarisa,planb,planf)
+         
+         if (nstop == -1) then
+            infostr = 'Calculation cancelled during iterative method'
+            return
+         endif
+         
+         if (nstat.ne.1) goto  2016
+c     compute the Residue
+         tol1=0.d0
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)
+!$OMP DO  REDUCTION(+:tol1)           
+         do i=1,nbsphere3
+            xr(i)=xr(i)-FF0(i)            
+            tol1=tol1+dreal(xr(i)*dconjg(xr(i)))
+         enddo            
+!$OMP ENDDO 
+!$OMP END PARALLEL
+         tol1=dsqrt(tol1)/NORM   
+         nloop=nloop+1
          
       elseif (methodeit(1:10).eq.'GPBICGsafe') then
          write(*,*) 'methodeit',methodeit

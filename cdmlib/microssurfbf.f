@@ -33,7 +33,7 @@
       character(12) methodeit
       double precision tol,tol1,tolinit,aretecube,eps0,k0,P0,irra,pi
      $     ,numaper,numaperinc,numaperk,kxinc,kyinc,I0,deltax,deltakx
-     $     ,deltaky,w0 ,deltak,pp,ss,tmp,rloin
+     $     ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
       integer i,j,ii,jj,k,kk,idelta,jdelta,ideltam,nrig,npolainc
      $     ,nquicklens,npol,imaxk0
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
@@ -509,14 +509,15 @@ c     passe le champ diffracte lointain en amplitude e(k||)
      $                       ,imaxk0 ,deltakx,deltax,plan2b)
                         
                      else
+                        sidemic=-1.d0
                         call passagefourierimagegross2(Efourierincxneg
      $                       ,Efourierincyneg,Efourierinczneg,nfft2d
      $                       ,nfft2d ,imaxk0 ,deltakx,deltax ,gross,k0
-     $                       ,indice0,plan2b)
+     $                       ,indice0,sidemic,plan2b)
                         call passagefourierimagegross2(Efourierxneg
      $                       ,Efourieryneg,Efourierzneg,nfft2d,nfft2d
      $                       ,imaxk0,deltakx,deltax ,gross,k0,indice0
-     $                       ,plan2b)
+     $                       ,sidemic,plan2b)
                      endif
                   endif
                   if (ncote.eq.0.or.ncote.eq.1) then
@@ -629,15 +630,15 @@ c     ajoute onde plane
      $                       ,Efourierypos,Efourierzpos,nfft2d,nfft2d
      $                       ,imaxk0 ,deltakx,deltax,plan2b)
                      else
-                        
+                        sidemic=1.d0
                         call passagefourierimagegross2(Efourierincxpos
      $                       ,Efourierincypos,Efourierinczpos ,nfft2d
      $                       ,nfft2d ,imaxk0 ,deltakx,deltax ,gross,k0
-     $                       ,indice0 ,plan2b)
+     $                       ,indice0,sidemic,plan2b)
                         call passagefourierimagegross2(Efourierxpos
      $                       ,Efourierypos,Efourierzpos,nfft2d,nfft2d
      $                       ,imaxk0,deltakx,deltax ,gross,k0,indice0
-     $                       ,plan2b)
+     $                       ,sidemic,plan2b)
                      endif
                   endif
 c     sommation de toutes les images incohérentes.
@@ -694,7 +695,11 @@ c     sommation de toutes les images incohérentes.
 !$OMP ENDDO 
 !$OMP END PARALLEL
                   endif
-                  
+                  if (nstop == -1) then
+              infostr = 'Calculation cancelled during iterative method'
+                     return
+                  endif
+
 c     fin if AN
                endif
             enddo

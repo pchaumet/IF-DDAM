@@ -88,11 +88,12 @@ c     definition of the size for the code
       INTEGER nmax, ntotalm
 
 c     variables for the positions
-      double precision x,y,z,xmin,xmax,ymin,ymax
-     $     ,zmin,zmax,rayon,density,side,sidex,sidey,sidez,hauteur
+      double precision x,y,z,xmin,xmax,ymin,ymax ,zmin,zmax,rayon
+     $     ,density,side,sidex,sidey,sidez,hauteur
      $     ,xgmulti(numberobjetmax),ygmulti(numberobjetmax)
      $     ,zgmulti(numberobjetmax),rayonmulti(numberobjetmax),demiaxea
      $     ,demiaxeb,demiaxec,thetaobj,phiobj,psiobj,t0,t1,t2,lc,hc
+     $     ,sidemic
       double precision aretecube
       integer iphi,itheta,nphi,ntheta,nthetamod
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
@@ -272,7 +273,7 @@ c     convergee.
      $     ,tolinit
       write(*,*) 'Born or rigorous : ',nrig
       write(*,*) 'Green s function : ',ninterp
-      write(*,*) 'Write mat file   : ',nmat
+      write(*,*) 'Write mat file   : ',nmatf
       write(*,*) 'Local field      : ',nlocal
       write(*,*) 'Macroscopic field: ',nmacro
       write(*,*) 'Cross section    : ',nsection,'Csca',ndiffracte
@@ -282,6 +283,8 @@ c     convergee.
       write(*,*) 'Quick Lens       : ',nquicklens
       write(*,*) 'Pos. focal refl. : ',zlensr
       write(*,*) 'Pos. focal tran. : ',zlenst
+      write(*,*) 'NA               : ',numaper
+      write(*,*) 'NA Condenser     : ',numaperinc
       write(*,*) 'Side computation : ',ncote
       write(*,*) 'Optical force    : ',nforce ,'Density',nforced
       write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
@@ -305,7 +308,6 @@ c     arret de suite si nnnr trop petit par rapport a n*m
          nstop = 1;
          return         
       endif
-
 c     arret de suite si pas assez de place pour propa
       if (ninterp.ne.0) then
          i=min(nxm,nym)*(2*max(nxm,nym)-min(nxm,nym)+1)/2
@@ -320,7 +322,7 @@ c     arret de suite si pas assez de place pour propa
             return
          endif         
       endif
-      
+
       nhomo=0
       ctmp=epscouche(0)
       do i=0,neps+1         
@@ -333,7 +335,7 @@ c     arret de suite si pas assez de place pour propa
          return
       endif
       
-      
+
       if (nlentille.eq.1) nenergie=1
       
 c      if (nenergie.eq.1.and.nquickdiffracte.eq.1) then
@@ -375,8 +377,6 @@ c     ne fait rien
       endif
 
       
-
-      
 c     calculation size parameter initialization
       ntotalm=4*nxm*nym
       nmax = nxm*nym*nzm
@@ -416,7 +416,7 @@ c     arret pour tolerance dans la méthode itérative
          nstop = 1;
          return
       endif
-      
+
       do k=1, numberobjet
          write (*,*) 'Material object',k,':',materiaumulti(k)
       enddo
@@ -438,7 +438,6 @@ c     endif
      $        ='nxm nym and nzm too small compare to the discretization'
          return
       endif
-
 
 c     open the output file:
       open(99,file='output')
@@ -930,7 +929,6 @@ c     epsilon
       write(99,*) 'lambda/(10n)',lambda/10.d0/cdabs(cdsqrt(eps))
 
 
-
       if (beam(1:11).eq.'pwavelinear') then
          write(99,*) 'Beam pwavelinear'
       elseif (beam(1:13).eq.'pwavecircular') then
@@ -957,6 +955,7 @@ c     epsilon
       endif
 
 c     cré le fichier de data pour connaitre les options pour matlab
+
       if (nmatf.eq.0) then
          open(900,file='inputmatlab.mat')
          write(900,*) nproche
@@ -3215,14 +3214,15 @@ c     enddo
      $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax,plan2b)
             else
                write(*,*) 'magnification',gross
+               sidemic=-1.d0
                call passagefourierimagegross(Efourierincxneg
      $              ,Efourierincyneg,Efourierinczneg,Eimageincxneg
      $              ,Eimageincyneg,Eimageinczneg,nfft2d,nfft2d ,imaxk0
-     $              ,deltakx,deltax,gross,k0,indice0,plan2b)
+     $              ,deltakx,deltax,gross,k0,indice0,sidemic,plan2b)
                call passagefourierimagegross(Efourierxneg ,Efourieryneg
      $              ,Efourierzneg,Eimagexneg,Eimageyneg ,Eimagezneg
      $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax ,gross,k0
-     $              ,indice0,plan2b)
+     $              ,indice0,sidemic,plan2b)
             endif
 
             write(*,*) 'Number of point in NA',imaxk0*2+1
@@ -3305,14 +3305,15 @@ c     sauve le champ dans le plan de image.
      $              ,Efourierzpos,Eimagexpos,Eimageypos,Eimagezpos
      $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax,plan2b)
             else
+               sidemic=1.d0
                call passagefourierimagegross(Efourierincxpos
      $              ,Efourierincypos,Efourierinczpos,Eimageincxpos
      $              ,Eimageincypos,Eimageinczpos,nfft2d,nfft2d,imaxk0
-     $              ,deltakx,deltax,gross,k0,indicen,plan2b)
+     $              ,deltakx,deltax,gross,k0,indicen,sidemic,plan2b)
                call passagefourierimagegross(Efourierxpos
      $              ,Efourierypos,Efourierzpos,Eimagexpos,Eimageypos
      $              ,Eimagezpos,nfft2d,nfft2d,imaxk0,deltakx
-     $              ,deltax ,gross,k0,indicen,plan2b)
+     $              ,deltax ,gross,k0,indicen,sidemic,plan2b)
             endif
             if (nmatf.eq.0) then
                do j=-imaxk0,imaxk0

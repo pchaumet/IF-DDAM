@@ -1,3 +1,27 @@
+	version 0.2.1 (fftw) et 0.1.8 (ffts)
+
+	1) Correction de la matrice de rotation pour la microscopie en
+	rélfexion sir holography, df et bf.
+	2) core quand on demande composante microscopy x en reflexion.
+	Correction oubli d'un menu
+	3) Dans mainsurf oubli de density dans liste argument
+	4) nmatf dans le write a la place de nmat
+	5) oublie nxmp, nymp, nzmp dans mainsurf
+	6) ajout de write dans l'intro data
+	7) ifdda.m chnage pour etre plus lisible.
+
+	
+---------------------------------------------------------------------
+
+	version 0.2.0 (fftw) et 0.1.8 (ffts)
+
+	Les deux versions sont créées dans deux branches séparées.
+
+	1) ajout arret dans matlab file si fichiers absents.
+	2) GPBICGplus ajoute.
+	3) ajout arret en cas d'annulation de calcul dans bf et df.
+
+------------------------------------------------------------------------
 	version 0.1.7
 
 	1) mise en place de l'interface avancée.
@@ -40,16 +64,15 @@
 
 ------------------------------------------------------------------------
 	version 0.1.4
-	
+
 	1) openmp pour passagefourier avec et sans grossissement.
 	2) bug dans passagefourierimage, oublie de passer imaxk0.
 	3) ajout de division par gross pour l'image.
 	4) changement interpolation poynting.
 
-	
 ------------------------------------------------------------------------
 	version 0.1.3
-	
+
 	1) openmp mis par calcul fonction de Green interpolee
 	2) fonctiongreensurfcomppara.f calcul en openmp la fonction de
 	Green rigoureuse mais necessite un tableau de plus et du coup pas
@@ -98,7 +121,7 @@
 	choisi et le retenir: if (crosssection->isChecked() ||
 	crosssectionpoynting->isChecked() || microscopy->isChecked() ||
 	nenergie->isChecked() )
-	
+
 ------------------------------------------------------------------------
 	30/10/17 version 0.1.0
 
@@ -119,7 +142,7 @@
 	13) cdmRunWidget.cpp supprimé les égalites entre double
 	precision.
 
-	
+
 ------------------------------------------------------------------------
 	11/09/17 version 0.0.13
 
@@ -173,7 +196,7 @@
 	30) dans cdmlibsurf.f maxwavenumber a 20 au lieu de 10 par rapport au C.
 	31) nrig, ninterp oublies  dans argument relecture.f
 
-	
+
 	A faire green function approximation apres tolerance
 
 -------------------------------------------------
@@ -195,7 +218,7 @@
 	8) Correction sur ifdda.m sur les champs diffractes.
 	9) Intialise nfft2d2 des le debut du code.
 
--------------------------------------------------	
+-------------------------------------------------
 	22/08/17 : version 0.0.10
 	1) RAF: supression de cdmRunThread.cpp qui ne servait pas.
 	2) RAF mis a jour liste des champs incidents en supprimant
@@ -222,10 +245,10 @@
 
 --------------------------------------------------
 	nquad supprimé par rapport à cdmlib
-	supression de 
+	supression de
      $     FFTTENSORxx, FFTTENSORxy,FFTTENSORxz,FFTTENSORyy,FFTTENSORyz,
 	$     FFTTENSORzz,vectx,vecty,vectz,
-	
+
 	ajout de
 	// Definition du multicouche
 	int *neps, double *zcouche,dcmplx *epscouche, char materiaucouche[][64],
@@ -250,7 +273,7 @@
 	de
 	int * n1m, int *nmatim, int *nplanm, int *nbs,
 //     matrange(nbs,5),matindice (nzm,nzm,nmatim),matind(0:2*n1m*n1m)
-//     ,matindplan(nzm,nzm)	
+//     ,matindplan(nzm,nzm)
 	int *matrange, int *matindice, int *matindplan,int *matind,
 //      (2*nxm,2*nym,nplanm)nplanm=nzm*(nzm+1)/2
 	dcmplx *a11, dcmplx *a12, dcmplx *a13, dcmplx *a22, dcmplx *a23,
@@ -258,7 +281,7 @@
 
 	modification de
 	Assistant.cpp
-	Assistant.h	
+	Assistant.h
 
 	cdmOptions.cpp cdmOptions.h cdmOptionsWidget.cpp
 	cdmOptionsWidget.h cdmOptionsWindow.cpp cdmRunWidget.cpp pour
@@ -266,8 +289,8 @@
 
 	inchangé:
 	cdmMain.h
-	cdmMain.cpp	
-	cdmRunWidget.h	
+	cdmMain.cpp
+	cdmRunWidget.h
 
 
 	cdmRunWidget.cpp change pour mettre les a, matrange,ncote et ce

@@ -1,6 +1,12 @@
 close all
 clear all
-
+nexist=exist('inputmatlab.mat','file');
+if (nexist == 0);
+disp('mat files do not exist!')
+disp('Please use Advanced interface')
+disp('and uncheck the option "Do not write mat file" if necessary')
+return;
+end;
 load inputmatlab.mat -ascii
 
 nproche=inputmatlab(1);         % Defined box of computation for the near field
@@ -837,7 +843,7 @@ set(400,'DefaultTextfontSize',12)
 set(400,'DefaultTextfontWeight','Bold')
 set(400,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
   
 imagesc(kxfourier,kxfourier,fourierm.^2')
 axis xy  
@@ -857,14 +863,14 @@ xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
 ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[350 575 100 20],'String','Fourier plane scattered field:')
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 575 100 20],'String','kz>0')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 545 200 18],'String','Numerical aperture:')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 545 40 18]);
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane scattered field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz>0')
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
-'Position', [460 566 150 30],...
+'Position', [460 550 150 30],...
 'Callback',{@plotfourierpos,numaper,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
 
 
@@ -881,7 +887,7 @@ set(450,'DefaultTextfontSize',12)
 set(450,'DefaultTextfontWeight','Bold')
 set(450,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
   
 imagesc(kxfourier,kxfourier,fourierincm.^2')
 axis xy  
@@ -901,14 +907,14 @@ xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
 ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[240 575 220 20],'String','Fourier plane total field:')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 545 200 18],'String','Numerical aperture:')
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 575 100 20],'String','kz>0')  
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 545 40 18]);
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane total field:')
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz>0')  
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
-'Position', [460 566 150 30],...
+'Position', [460 550 150 30],...
 'Callback',{@plotfourierincpos,numaper,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
 
 
@@ -926,7 +932,7 @@ set(500,'DefaultTextfontSize',12)
 set(500,'DefaultTextfontWeight','Bold')
 set(500,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imagem.^2')
 axis xy
@@ -939,7 +945,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[350 560 100 30],'String','Image plane scattered field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane scattered field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z>0')
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -961,7 +967,7 @@ set(550,'DefaultTextfontSize',12)
 set(550,'DefaultTextfontWeight','Bold')
 set(550,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imageincm.^2')
 axis xy
@@ -974,7 +980,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 560 200 30],'String','Image plane total field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z>0')
   
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1067,7 +1073,7 @@ set(600,'DefaultTextfontSize',12)
 set(600,'DefaultTextfontWeight','Bold')
 set(600,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
   
 imagesc(kxfourier,kxfourier,fourierm.^2')
 axis xy  
@@ -1087,14 +1093,14 @@ xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
 ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[350 575 100 20],'String','Fourier plane scattered field:')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 545 200 18],'String','Numerical aperture:')
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 575 100 20],'String','kz<0')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 545 40 18]);
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane scattered field:')
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz<0')
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
-'Position', [460 566 150 30],...
+'Position', [460 550 150 30],...
 'Callback',{@plotfourierneg,numaper,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
 
 
@@ -1111,7 +1117,7 @@ set(650,'DefaultTextfontSize',12)
 set(650,'DefaultTextfontWeight','Bold')
 set(650,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
   
 imagesc(kxfourier,kxfourier,fourierincm.^2')
 axis xy  
@@ -1131,14 +1137,14 @@ xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
 ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[240 575 220 20],'String','Fourier plane total field:')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 545 200 18],'String','Numerical aperture:')
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 575 100 20],'String','kz>0')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 545 40 18]);
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane total field:')
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz<0')
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
-'Position', [460 566 150 30],...
+'Position', [460 550 150 30],...
 'Callback',{@plotfourierincneg,numaper,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
 
 
@@ -1156,7 +1162,7 @@ set(700,'DefaultTextfontSize',12)
 set(700,'DefaultTextfontWeight','Bold')
 set(700,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imagem.^2')
 axis xy
@@ -1169,7 +1175,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[350 560 100 30],'String','Image plane scattered field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane scattered field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z<0')
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1191,7 +1197,7 @@ set(750,'DefaultTextfontSize',12)
 set(750,'DefaultTextfontWeight','Bold')
 set(750,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imageincm.^2')
 axis xy
@@ -1204,7 +1210,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 560 200 30],'String','Image plane total field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z<0')
   
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1267,7 +1273,7 @@ set(500,'DefaultTextfontSize',12)
 set(500,'DefaultTextfontWeight','Bold')
 set(500,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imagem.^2')
 axis xy
@@ -1280,7 +1286,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[350 560 100 30],'String','Image plane scattered field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane scattered field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z>0')
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1302,7 +1308,7 @@ set(550,'DefaultTextfontSize',12)
 set(550,'DefaultTextfontWeight','Bold')
 set(550,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imageincm.^2')
 axis xy
@@ -1315,7 +1321,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 560 200 30],'String','Image plane total field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z>0')
   
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1375,7 +1381,7 @@ set(700,'DefaultTextfontSize',12)
 set(700,'DefaultTextfontWeight','Bold')
 set(700,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imagem.^2')
 axis xy
@@ -1388,7 +1394,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[350 560 100 30],'String','Image plane scattred field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane scattred field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z<0')
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1410,7 +1416,7 @@ set(750,'DefaultTextfontSize',12)
 set(750,'DefaultTextfontWeight','Bold')
 set(750,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imageincm.^2')
 axis xy
@@ -1423,7 +1429,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 560 200 30],'String','Image plane total field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 30],'String','Image plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z<0')
   
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1487,7 +1493,7 @@ set(500,'DefaultTextfontSize',12)
 set(500,'DefaultTextfontWeight','Bold')
 set(500,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imagem.^2')
 axis xy
@@ -1522,7 +1528,7 @@ set(550,'DefaultTextfontSize',12)
 set(550,'DefaultTextfontWeight','Bold')
 set(550,'Position',[0 0 1000 600])
 
-subplot('position',[0.1 0.1 0.8 0.8])
+subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imageincm.^2')
 axis xy
@@ -1535,7 +1541,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 560 200 30],'String','Image plane total field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z>0')
   
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1595,7 +1601,7 @@ set(700,'DefaultTextfontSize',12)
 set(700,'DefaultTextfontWeight','Bold')
 set(700,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imagem.^2')
 axis xy
@@ -1608,7 +1614,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[350 560 100 30],'String','Image plane scattered field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane scattered field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z<0')
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1630,7 +1636,7 @@ set(750,'DefaultTextfontSize',12)
 set(750,'DefaultTextfontWeight','Bold')
 set(750,'Position',[0 0 1000 600])
 
-subplot('Position',[0.1 0.1 0.8 0.8])
+subplot('Position',[0.1 0.1 0.75 0.75])
 
 imagesc(ximage,ximage,imageincm.^2')
 axis xy
@@ -1643,7 +1649,7 @@ colorbar
 xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
-uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 560 200 30],'String','Image plane total field:')
+uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Image plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[625 560 100 30],'String','z<0')
   
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...

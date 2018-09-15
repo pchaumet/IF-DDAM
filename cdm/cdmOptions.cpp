@@ -22,7 +22,7 @@ Options::Options()
 				<< "Glass" << "Water" << "W" << "Si" << "Mo" << "Ni" 
 				<< "Os" << "Rh");
 
-  methodeitList = (QStringList() << "GPBICG1" << "GPBICG2" << "GPBICGsafe" << "GPBICGAR1" << "GPBICGAR2"
+  methodeitList = (QStringList() << "GPBICG1" << "GPBICG2" << "GPBICGsafe"<< "GPBICGplus" << "GPBICGAR1" << "GPBICGAR2"
 				 << "QMRCLA" << "TFQMR" << "CG" << "BICGSTAB" << "QMRBICGSTAB1" 
 		                 << "QMRBICGSTAB2" << "GPBICOR" << "CORS" << "BICGSTARPLUS" );
 

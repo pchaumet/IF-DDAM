@@ -17,7 +17,7 @@ set(450,'DefaultTextfontSize',12)
 set(450,'DefaultTextfontWeight','Bold')
 set(450,'Position',[0 0 1000 600])
 
- subplot('position',[0.1 0.1 0.8 0.8])
+ subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(kxfourier,kxfourier,fourierm.^2')
 axis xy  
@@ -50,7 +50,7 @@ set(450,'DefaultTextfontSize',12)
 set(450,'DefaultTextfontWeight','Bold')
 set(450,'Position',[0 0 1000 600])
 
- subplot('position',[0.1 0.1 0.8 0.8])
+ subplot('position',[0.1 0.1 0.75 0.75])
 
 imagesc(kxfourier,kxfourier,fourierm')
 axis xy  

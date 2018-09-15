@@ -9,7 +9,8 @@ c     variables for the object
       integer nbsphere3,nbsphere,ndipole,IP(3),test,numberobjetmax
      $     ,numberobjet,ng
       parameter (numberobjetmax=20)
-      integer nx,ny,nz,nx2,ny2,nxy2,nz2,nxm,nym,nzm,ntotal
+      integer nx,ny,nz,nx2,ny2,nxy2,nz2,nxm,nym,nzm,ntotal,nxmp,nymp
+     $     ,nzmp
       integer subunit,nphi,ntheta
 c     parameter (nxm=3,nym=3,nzm=3,nphi=72,ntheta=35)
       parameter (nxm=20,nym=20,nzm=20,nphi=72,ntheta=36)
@@ -20,7 +21,7 @@ c     variables for the positions
       double precision rayon,side,sidex,sidey ,sidez,hauteur
      $     ,xgmulti(numberobjetmax) ,ygmulti(numberobjetmax)
      $     ,zgmulti(numberobjetmax) ,rayonmulti(numberobjetmax),demiaxea
-     $     ,demiaxeb,demiaxec ,thetaobj,phiobj,psiobj,lc,hc
+     $     ,demiaxeb,demiaxec ,thetaobj,phiobj,psiobj,lc,hc,density
       double precision aretecube
       DOUBLE PRECISION, DIMENSION(nxm*nym*nzm) :: xs,ys,zs,xswf,yswf
      $     ,zswf
@@ -137,7 +138,7 @@ c     Creation des nouvelles variables
 
 c     variable pour avoir l'image a travers la lentille
       integer nquicklens,nlentille,nobjet,nfft2d,nfft2d2
-      parameter (nfft2d=512)
+      parameter (nfft2d=128)
       double precision kx,ky,kz,deltakx,deltaky,numaper,deltax,gross
      $     ,numaperinc,zlensr,zlenst
       double precision kxy(nfft2d),xy(nfft2d)
@@ -252,13 +253,13 @@ c      object='inhomo'
 
       if (object(1:6).eq.'sphere') then
          numberobjet=1
-         rayonmulti(1)=50.d0         
+         rayonmulti(1)=500.d0         
          xgmulti(1)=0.d0
          ygmulti(1)=0.d0
          zgmulti(1)=0.d0
          materiaumulti(1)='xx'
-         nnnr=20
-         epsmulti(1)=(1.01d0,0.d0)
+         nnnr=10
+         epsmulti(1)=(1.1d0,0.d0)
       elseif (object(1:4).eq.'cube') then
          numberobjet=1
          side=100.d0
@@ -379,11 +380,14 @@ c     defini ce que l'on veut calculer
 c*******************************************************
       nproche=1 !0 calcul le champ dans l'objet, 1 dans le cube
                 !contenant l'objet 2 dans la boite nxm,nym,nzm
-      nlocal=1 ! 0 ne calcul pas le champ local, 1 calcul le champ local
+      nxmp=0 ! si boite plus large que l'objet suivant x
+      nymp=0 ! si boite plus large que l'objet suivant y
+      nzmp=0 ! si boite plus large que l'objet suivant z
+      nlocal=1                  ! 0 ne calcul pas le champ local, 1 calcul le champ local
       nmacro=1 ! 0 ne calcul pas le champ macro, 1 calcul le champ macro
-      nsection=0
-      ndiffracte=0 !0  ne calcul pas le champ diffracte, 1 le calcul
-      nquickdiffracte=0 ! 0 calcul le champ diffracte classique, 1 par FFT
+      nsection=1
+      ndiffracte=1 !0  ne calcul pas le champ diffracte, 1 le calcul
+      nquickdiffracte=1 ! 0 calcul le champ diffracte classique, 1 par FFT
       nrig=0 ! 0 calcul rigoureusement le champ, 1 Born renormalise
       ninterp=0 ! niveau d'interpolation si tenseur non rigoureux
       ncote=1 ! 1 calcul des deux cotes le champ diffracté, 0 dessous, 2 dessus
@@ -393,13 +397,13 @@ c     nforced=1 ! calcul la densite de force dans l'objet
 c     ntorque=1 ! calcul le couple exerce par la lumiere sur l'objet
 c     ntorqued=1 ! calcul la desnite de couple dans l'objet l'objet
       nlentille=1 !calcul l'image a travers une lentille: 0 pas de lentille, 1 au dessus, -1 au dessous (on élcaire par en dessous)
-      nquicklens=0!image a travers la lentille sans FFT (0) ou avec FFT(1)
+      nquicklens=1!image a travers la lentille sans FFT (0) ou avec FFT(1)
       nenergie=0 !0: calcul du champ diffracte. 1 calcul du champ total
       nlecture=0 ! 0 ne relit pas, 1 relit ou cree le fichier FF
 ! (dipole) au premier coup
       nobjet=0                  ! si 1 ne fait que l'objet
       nmatf=0 ! 1 ne cre pas les fichiers .mat 0 sinon
-      gross=-1.d0               !grossissement
+      gross=100.d0               !grossissement
       numaperinc=0.9d0          !ouverture numerique de l'incident
       zlensr=0.d0               ! position lentille reflexion
       zlenst=0.d0               ! position lentille transmission
@@ -445,11 +449,11 @@ c     input file cdm.in
 C     Definition du multicouche
      $     neps,zcouche,epscouche,materiaucouche,
 c     output file cdm.out
-     $     nlocal,nmacro,ncote,nsection,ndiffracte,nquickdiffracte,nrig
-     $     ,ninterp,nforce,nforced,ntorque,ntorqued,nproche,
+     $     nlocal,nmacro,ncote,nsection,ndiffracte,nquickdiffracte,nrig,
+     $     ninterp,nforce,nforced,ntorque,ntorqued,nproche,
      $     nlentille,nquicklens,nenergie,nobjet,
 c     cube, sphere (includes multiple)
-     $     side, sidex, sidey, sidez, hauteur,
+     $     density,side, sidex, sidey, sidez, hauteur,
      $     numberobjet, rayonmulti, xgmulti, ygmulti, zgmulti,
      $     epsmulti, epsanimulti,lc,hc,ng,
 c     ellipsoid+arbitrary
@@ -467,7 +471,7 @@ c     return scalar results
      $     Cext,Cabs,Csca,Cscai,gasym,irra, E0,
      $     forcet, forcem,
      $     couplet, couplem,
-     $     nxm, nym, nzm,
+     $     nxm, nym, nzm, nxmp, nymp, nzmp,
      $     incidentfield, localfield, macroscopicfield,
      $     xs, ys, zs, xswf, yswf, zswf,
      $     ntheta, nphi, thetafield,phifield,poyntingfield,
@@ -509,7 +513,7 @@ c     output
 
       write(*,*) 'numberobjet',numberobjet
 
-
+      stop
       
       if (nstop.eq.1) then
          write(*,*) infostr
@@ -599,14 +603,14 @@ c         write(*,*) 'MIECEXT',MIECEXT,MIECABS,MIECSCA,GSCA
          write(*,*) 'modulus of the optical torque',couplem
          write(*,*) 'couple Mie',MIECABS/8.d0/k0/pi*I0*quatpieps0
       endif
-      if (numberobjet.ne.1) then
-         do i=1,numberobjet
-            write(*,*) 'numero',i
-            write(*,*) 'forcex',forcexmulti(i)
-            write(*,*) 'forcey',forceymulti(i)
-            write(*,*) 'forcez',forcezmulti(i)
-         enddo
-      endif
+c      if (numberobjet.ne.1) then
+c         do i=1,numberobjet
+c            write(*,*) 'numero',i
+c            write(*,*) 'forcex',forcexmulti(i)
+c            write(*,*) 'forcey',forceymulti(i)
+c            write(*,*) 'forcez',forcezmulti(i)
+c         enddo
+c      endif
 
 
       end

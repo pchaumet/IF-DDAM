@@ -378,7 +378,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
 	}
       }
       else{
-    	cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
+    	cout << "ERROR: Impossible to read file." << endl;
       }
     }
     // calcul dimension des tenseurs surface
@@ -948,7 +948,7 @@ RunWidget::displayResults()
    int nmatim = min(options->getNxm(),options->getNym())*(2*n1m-min(options->getNxm(),options->getNym()));
    int nbs = nmatim*options->getNzm()*options->getNzm();
    int nside = options->getNside();
-   
+   QLOG_INFO () << " RESULTS1 !!!";
    // Scalar results
    QFrame *hsep0 = new QFrame(this);
    QFrame *hsep00 = new QFrame(this);
@@ -966,6 +966,7 @@ RunWidget::displayResults()
    QLabel *lambda10n = new QLabel(QString::number(run->getLambda10n()),this);
    QLabel *lambdaLabel = new QLabel("<html><body><sup>&lambda;</sup>&frasl;<sub>(10|n|)</sub> [m]:</body></html>",this);
    outputlayout->addRow(lambdaLabel, lambda10n);
+   QLOG_INFO () << " RESULTS1 !!!";
    if (options->getDipolepsilon() == false ) {
      QLabel *k0 = new QLabel(QString::number(run->getK0()),this);
      QLabel *kappa0Label = 
@@ -1084,6 +1085,7 @@ RunWidget::displayResults()
 	QLabel(QString::number(run->getOpticalTorqueModulus()),this);
       outputlayout->addRow("Optical torque modulus [N/m]:", opticaltorquedensity);
    }
+   QLOG_INFO () << " RESULTS2 !!!";
    ////////////////////////////////////////////////////////////////////////////////////
    // Dipole epsilon buttons
    QPushButton *dipoles3DButton = new QPushButton("Plot epsilon/dipoles",this);
@@ -1129,6 +1131,7 @@ RunWidget::displayResults()
    QPushButton *plotzforceButton = new QPushButton("Plot Z",this);
    connect(plotzforceButton, SIGNAL(clicked()), this, SLOT(plotzforce()));
    // CHECK DELTA OVER Xc,Yc,Zc, XcWF, YcWF, ZcWF
+   QLOG_INFO () << " RESULTS3 !!!" << run->getObjectSubunits();
    for (int i = 0 ; i < run->getObjectSubunits() ; i++) {
      if ( fabs(run->getXc()[i]) < DELTA ) run->getXc()[i] = 0;
      if ( fabs(run->getYc()[i]) < DELTA ) run->getYc()[i] = 0;
@@ -1139,12 +1142,14 @@ RunWidget::displayResults()
      if ( fabs(run->getYcWF()[i]) < DELTA ) run->getYcWF()[i] = 0;
      if ( fabs(run->getZcWF()[i]) < DELTA ) run->getZcWF()[i] = 0;
    }
+   QLOG_INFO () << " RESULTS4 !!!";
    // Plot X list
    double refx;
    QList<double> xlist;
    QList<double> xwflist;
    refx = run->getXc()[0];
    xlist.append(refx);
+   QLOG_INFO () << " RESULTS5 !!!";
    for (int i = 0 ; i < run->getObjectSubunits() ; i++) {
        bool exists = false;
        if ( run->getXc()[i] != refx) {
@@ -1898,8 +1903,8 @@ RunWidget::plotmicroscopy() {
          }
        }
      }
-     else if ( field == "Image plane: Total field: z<0" && type == "x" ) {
-       title = "Image plane: Total field: z<0";
+     else if ( field == "Image plane: Scattered field: z<0" && type == "x" ) {
+       title = "Image plane: Scattered field: z<0";
        xtitle = "x(m)";
        ytitle = "y(m)";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {

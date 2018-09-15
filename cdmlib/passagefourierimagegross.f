@@ -1,10 +1,10 @@
       subroutine passagefourierimagegross(Ex,Ey,Ez,Eimx,Eimy,Eimz,nfft2d
-     $     ,nfftmax,imaxk0,deltakx,deltax,gross,k0,indiceopt,planb)
+     $     ,nfftmax,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planb)
       implicit none
       integer nfft2d,nfft2d2,nfftmax,i,j,kk,indicex,indicey
      $     ,indice,imaxk0
-      double precision tmp,deltakx,deltaky,deltax,pi,normal(3) ,gross,u1
-     $     ,u2,kx,ky,k0,k0n,indiceopt,fac
+      double precision tmp,deltakx,deltaky,deltax,pi,u(3) ,gross,v(3),kx
+     $     ,ky,k0,k0n,indiceopt,fac,side,u1,u2,costmp,sintmp
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
      $     *nfftmax),Eimx(nfftmax*nfftmax),Eimy(nfftmax*nfftmax)
      $     ,Eimz(nfftmax*nfftmax),tmpx,tmpy ,tmpz
@@ -31,7 +31,7 @@
 !$OMP END PARALLEL
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice,kk)   
-!$OMP& PRIVATE(kx,ky,normal,u1,u2,tmp)
+!$OMP& PRIVATE(kx,ky,u,v,u1,u2,tmp,costmp,sintmp)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)          
       do i=-imaxk0,imaxk0 
          do j=-imaxk0,imaxk0
@@ -48,34 +48,37 @@
                indicey=nfft2d+j+1
             endif
             if (kx*kx+ky*ky.le.k0n*k0n) then
-               normal(1)=kx/k0n
-               normal(2)=ky/k0n
-               normal(3)=dsqrt(1.d0-normal(1)*normal(1)-normal(2)
-     $              *normal(2))
-               
-               u1=-normal(2)
-               u2=normal(1)
-               tmp=dsqrt(u1*u1+u2*u2)
+
+               u(1)=kx/k0n
+               u(2)=ky/k0n
+               u(3)=dsqrt(1.d0-u(1)*u(1)-u(2)*u(2))*side
+
+               v(1)=kx/k0n/gross
+               v(2)=ky/k0n/gross
+               v(3)=dsqrt(1.d0-v(1)*v(1)-v(2)*v(2))*side
 
                indice=indicex+nfft2d*(indicey-1)
                kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
+               u1=u(2)*v(3)-u(3)*v(2)
+               u2=-u(1)*v(3)+u(3)*v(1)
+               costmp=u(1)*v(1)+u(2)*v(2)+u(3)*v(3)
+               sintmp=dsqrt(u1*u1+u2*u2)
+               u1=u1/sintmp
+               u2=u2/sintmp
 
-               if (tmp.eq.0.d0) then
+               if (sintmp.eq.0.d0) then
                   Eimx(indice)=Ex(kk)
                   Eimy(indice)=Ey(kk)
                   Eimz(indice)=Ez(kk)
                else
-                  u1=u1/tmp
-                  u2=u2/tmp
-                  tmp=dasin(dsin(-dacos(normal(3)))/gross)
-     $                 -dacos(normal(3))
-                  Eimx(indice)=(u1*u1+(1.d0-u1*u1)*dcos(tmp))*Ex(kk)+u1
-     $                 *u2*(1.d0-dcos(tmp))*Ey(kk)+u2*dsin(tmp)*Ez(kk)
-                  Eimy(indice)=u1*u2*(1.d0-dcos(tmp))*Ex(kk)+(u2*u2
-     $                 +(1.d0-u2*u2)*dcos(tmp))*Ey(kk)-u1*dsin(tmp)
-     $                 *Ez(kk)
-                  Eimz(indice)=-u2*dsin(tmp)*Ex(kk)+u1*dsin(tmp)*Ey(kk)
-     $                 +dcos(tmp)*Ez(kk)
+               
+
+                  Eimx(indice)=(u1*u1+(1.d0-u1*u1)*costmp)*Ex(kk)+u1 *u2
+     $                 *(1.d0-costmp)*Ey(kk)+u2*sintmp*Ez(kk)
+                  Eimy(indice)=u1*u2*(1.d0-costmp)*Ex(kk)+(u2*u2+(1.d0
+     $                 -u2*u2)*costmp)*Ey(kk)-u1*sintmp *Ez(kk)
+                  Eimz(indice)=-u2*sintmp*Ex(kk)+u1*sintmp*Ey(kk)
+     $                 +costmp*Ez(kk)
                endif
             endif
          enddo

@@ -79,7 +79,8 @@ SOURCES		+= aleatoire.f \
 		gpbicgar.f \
                 gpbicg.f \
                 gpbicgsafe.f \
-                gpbicor.f \
+          	gpbicgplus.f \
+	  	gpbicor.f \
                 cors.f \
 		i1mach.f \
 		incidentarbitrary.f \
