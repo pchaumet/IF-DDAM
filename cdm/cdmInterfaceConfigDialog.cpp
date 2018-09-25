@@ -25,16 +25,22 @@ InterfaceConfigDialog::InterfaceConfigDialog(QWidget *parent,Qt::WindowFlags fl,
 
      
      QBoxLayout   *epsilonlayout = new QBoxLayout(QBoxLayout::LeftToRight);
-     epsilonlayout->addWidget(epsilonr.at(i));
-     epsilonlayout->addWidget(epsiloni.at(i));
-     epsilonlayout->addWidget(materiallayer.at(i));
+    
      if (i ==0) {
-       layout->addRow("Epsilon substrat:",epsilonlayout);
+       epsilonlayout->addWidget(epsilonr.at(i));
+       epsilonlayout->addWidget(materiallayer.at(i));
+       layout->addRow("Medium (real) where the light source is (lowest z):",epsilonlayout);
      }
      else if (i == options->getInterfaceNumber()) {
-       layout->addRow("Epsilon superstrat:",epsilonlayout);
+       epsilonlayout->addWidget(epsilonr.at(i));
+       epsilonlayout->addWidget(epsiloni.at(i));
+       epsilonlayout->addWidget(materiallayer.at(i));
+       layout->addRow("Last medium (highest z):",epsilonlayout);
      }
      else {
+       epsilonlayout->addWidget(epsilonr.at(i));
+       epsilonlayout->addWidget(epsiloni.at(i));
+       epsilonlayout->addWidget(materiallayer.at(i));
        layout->addRow("Epsilon:",epsilonlayout);
      }
 

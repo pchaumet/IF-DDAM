@@ -1,14 +1,20 @@
 	version 0.2.1 (fftw) et 0.1.8 (ffts)
 
 	1) Correction de la matrice de rotation pour la microscopie en
-	rélfexion sir holography, df et bf.
+	rélfexion sur holography, df et bf.
 	2) core quand on demande composante microscopy x en reflexion.
 	Correction oubli d'un menu
 	3) Dans mainsurf oubli de density dans liste argument
 	4) nmatf dans le write a la place de nmat
 	5) oublie nxmp, nymp, nzmp dans mainsurf
 	6) ajout de write dans l'intro data
-	7) ifdda.m chnage pour etre plus lisible.
+	7) ifdda.m change pour etre plus lisible.
+	8) change description des couches dans le menu pour etre plus
+	clair.
+	9) Met les NA en n sin theta pour etre conforme a l'habitude, plus
+	correction arret sur les NA
+	10) eclairci input au debut.
+
 
 	
 ---------------------------------------------------------------------

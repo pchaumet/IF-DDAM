@@ -264,38 +264,37 @@ c     convergee.
       write(*,*) '*************************************************'
       write(*,*) '******************* INPUT DATA ******************'
       write(*,*) '*************************************************'
-      write(*,*) 'Wavelength       :',lambda
+      write(*,*) 'Wavelength       :',lambda,'nm'
       write(*,*) 'Beam             : ',beam
       write(*,*) 'Object           : ',object
-      write(*,*) 'iso              : ',trope
+      write(*,*) 'Isotropy         : ',trope
       write(*,*) 'Discretization   : ',nnnr
       write(*,*) 'Iterative method : ',methodeit,'tolerance asked'
      $     ,tolinit
-      write(*,*) 'Born or rigorous : ',nrig
-      write(*,*) 'Green s function : ',ninterp
-      write(*,*) 'Write mat file   : ',nmatf
-      write(*,*) 'Local field      : ',nlocal
-      write(*,*) 'Macroscopic field: ',nmacro
+      write(*,*) 'Born or rigorous : ',nrig,'0 rigourous'
+      write(*,*) 'Green s function : ',ninterp,'0 rigourous'
+      write(*,*) 'Write mat file   : ',nmatf,'0 write mat file'
+      write(*,*) 'Local field      : ',nlocal,'1 compute local field'
+      write(*,*) 'Macroscopic field: ',nmacro,'1 compute mac. field'
       write(*,*) 'Cross section    : ',nsection,'Csca',ndiffracte
-      write(*,*) 'Quick cross section : ',nquickdiffracte
-      write(*,*) 'Emissivity       : ',nenergie
-      write(*,*) 'Lens             : ',nlentille
-      write(*,*) 'Quick Lens       : ',nquicklens
-      write(*,*) 'Pos. focal refl. : ',zlensr
-      write(*,*) 'Pos. focal tran. : ',zlenst
+      write(*,*) 'Quick cross section : ',nquickdiffracte,'FFT used'
+      write(*,*) 'Emissivity       : ',nenergie,'1 compute energy'
+      write(*,*) 'Lens             : ',nlentille,'1 compute microscopy'
+      write(*,*) 'Quick Lens       : ',nquicklens,'FFT used'
+      write(*,*) 'Pos. focal refl. : ',zlensr,'nm'
+      write(*,*) 'Pos. focal tran. : ',zlenst,'nm'
       write(*,*) 'NA               : ',numaper
       write(*,*) 'NA Condenser     : ',numaperinc
-      write(*,*) 'Side computation : ',ncote
-      write(*,*) 'Optical force    : ',nforce ,'Density',nforced
-      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
+      write(*,*) 'Side computation : ',ncote,'0 both side'
+c      write(*,*) 'Optical force    : ',nforce ,'Density',nforced
+c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
       write(*,*) 'Near field       : ',nproche
       write(*,*) 'Polarizability   : ',polarizability
-      write(*,*) 'Waist            : ',w0
-      write(*,*) 'Power            : ',P0
-      write(*,*) 'Energie          : ',nenergie
-      write(*,*) 'Object           : ',nobjet
+      write(*,*) 'Waist            : ',w0,'nm'
+      write(*,*) 'Power            : ',P0,'W'
+      write(*,*) 'Object           : ',nobjet,'1 compute only dipole'
       write(*,*) 'Box size         : ',nxm,nym,nzm
-      write(*,*) 'Meshsize         : ',aretecube
+      write(*,*) 'Meshsize         : ',aretecube,'nm'
       write(*,*) 'Number of layer  : ',neps
 
 
@@ -343,26 +342,7 @@ c         ndiffracte=1
 c      endif
     
 
-      if (nlentille.eq.1) then
-         if (beam(1:9).eq.'arbitrary') then
-            infostr='Can not compute total field with this beam'
-            nstop=1
-            return
-         endif
-         if (numaper.le.0.d0.or.numaper.gt.1.d0) then
-            nstop=1
-            infostr='problem with numerical aperture!'
-            return
-         endif
-         zlensr=zlensr*1.d-9
-         zlenst=zlenst*1.d-9
-c     if (dabs(gross).lt.1.d0) then
-c     nstop=1
-c     infostr='problem with manification!'
-c     return
-c     endif
-         
-      endif
+
 
       materiau = materiaumulti(1)
 c     ne fait rien
@@ -631,7 +611,7 @@ c     epsilon of the layers
 
       indice0=dsqrt(dreal(epscouche(0)))
       indicen=dsqrt(dreal(epscouche(neps+1)))
-      
+
       if (ncote.eq.0.or.ncote.eq.1) then
          if (dreal(epscouche(neps+1)).le.0.d0) then
             infostr='epsilon <0 higher layer computation far field'
@@ -639,11 +619,12 @@ c     epsilon of the layers
             return
          endif
          if (dimag(epscouche(neps+1)).gt.0.d0) then
-            infostr='absorbing layer to computate far field'
+            infostr='absorbing superstrate to computate far field'
             nstop=-1
             return
          endif
          indicem=indicen
+         numaper=numaper/indicen
       endif
 
       if (ncote.eq.0.or.ncote.eq.-1) then     
@@ -651,13 +632,44 @@ c     epsilon of the layers
             infostr='epsilon <0 higher layer computation far field'
             nstop=-1
             return
-         endif                
+         endif
+         if (dimag(epscouche(0)).gt.0.d0) then
+            infostr='absorbing substrate to computate far field'
+            nstop=-1
+            return
+         endif
          indicem=indice0
+         numaperinc=numaperinc/indice0
       endif
       
       if (ncote.eq.0) then
          indicem=max(indice0,indicen)
       endif
+
+c     change ouverture numerique
+      
+      if (nlentille.eq.1) then
+         
+         if (beam(1:9).eq.'arbitrary') then
+            infostr='Can not compute total field with this beam'
+            nstop=1
+            return
+         endif
+         if (numaper.le.0.d0.or.numaper.gt.1.d0) then
+            nstop=1
+            infostr='problem with numerical aperture!'
+            return
+         endif
+         if (numaperinc.le.0.d0.or.numaperinc.gt.1.d0) then
+            nstop=1
+            infostr='problem with condenser numerical aperture!'
+            return
+         endif
+         zlensr=zlensr*1.d-9
+         zlenst=zlenst*1.d-9
+         
+      endif
+
       
       do k=0,neps+1
          materiau = materiaucouche(k)
