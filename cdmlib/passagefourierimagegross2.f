@@ -44,8 +44,8 @@
                u(2)=ky/k0n
                u(3)=dsqrt(1.d0-u(1)*u(1)-u(2)*u(2))*side
 
-               v(1)=kx/k0n/gross
-               v(2)=ky/k0n/gross
+               v(1)=-kx/k0n/gross
+               v(2)=-ky/k0n/gross
                v(3)=dsqrt(1.d0-v(1)*v(1)-v(2)*v(2))*side
                indice=indicex+nfft2d*(indicey-1)
                u1=u(2)*v(3)-u(3)*v(2)

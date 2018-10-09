@@ -283,7 +283,7 @@ c     convergee.
       write(*,*) 'Quick Lens       : ',nquicklens,'FFT used'
       write(*,*) 'Pos. focal refl. : ',zlensr,'nm'
       write(*,*) 'Pos. focal tran. : ',zlenst,'nm'
-      write(*,*) 'NA               : ',numaper
+      write(*,*) 'NA objective     : ',numaper
       write(*,*) 'NA Condenser     : ',numaperinc
       write(*,*) 'Side computation : ',ncote,'0 both side'
 c      write(*,*) 'Optical force    : ',nforce ,'Density',nforced

@@ -234,7 +234,19 @@ c         theta=65.287098590488455d0
          E0m(1)=(1.d0,0.d0)*cdexp(-icomp*4.d0*pi/3.d0)
          E0m(2)=(1.d0,0.d0)*cdexp(icomp*4.d0*pi/3.d0)
       elseif (beam(1:9).eq.'arbitrary') then
+         
          namefileinc='incarbitrary.in'
+         open(15,file=namefileinc,status='old',iostat=ierror)
+         if (ierror.ne.0) then
+            write(*,*) 'bad namefile for arbitrary'
+            stop
+         endif
+         read(15,*) nx,ny,nz
+         read(15,*) aretecube
+         rewind(15)
+         close(15)
+         nnnr=max(nx,ny)
+         nnnr=max(nnnr,nz)
          
       endif
 c*******************************************************

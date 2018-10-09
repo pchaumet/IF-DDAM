@@ -14,8 +14,8 @@
 	9) Met les NA en n sin theta pour etre conforme a l'habitude, plus
 	correction arret sur les NA
 	10) eclairci input au debut.
-
-
+	11) Dans mainsurf change arbitrary, pour ne plus avoir d'arret.
+	12) correction matrice de rotation avec -gross
 	
 ---------------------------------------------------------------------
 
