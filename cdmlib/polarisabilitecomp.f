@@ -38,7 +38,7 @@ c     polarisabilite de CM
 
       if (methode.eq.'CM') then
          polarisabilite=eps0*pola
-      elseif (methode.eq.'RR') then
+      elseif (methode.eq.'RR'.or.methode.eq.'PS') then
          polarisabilite=eps0*pola/(1.d0-2.d0/3.d0*icomp*k03*pola)
 c         polarisabilite=pola
       elseif (methode.eq.'GB') then

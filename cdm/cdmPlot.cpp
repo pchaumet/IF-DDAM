@@ -228,6 +228,7 @@ PlotRaster::PlotRaster( QWidget *parent , QVector<QwtPoint3D> *_data,
        if (tmpx < minx) minx = tmpx;
        if (tmpy > maxy) maxy = tmpy;
        if (tmpy < miny) miny = tmpy;
+       if (tmpz == -100) continue;
        if (tmpz > maxz) maxz = tmpz;
        if (tmpz < minz) minz = tmpz;
     }

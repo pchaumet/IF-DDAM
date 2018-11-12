@@ -1,4 +1,4 @@
-	version 0.2.1 (fftw) et 0.1.8 (ffts)
+	version 0.2.1 (fftw) et 0.1.9 (ffts)
 
 	1) Correction de la matrice de rotation pour la microscopie en
 	rélfexion sur holography, df et bf.
@@ -16,6 +16,19 @@
 	10) eclairci input au debut.
 	11) Dans mainsurf change arbitrary, pour ne plus avoir d'arret.
 	12) correction matrice de rotation avec -gross
+	13) Correction de monflux pour marcher avec toutes les versions de Qt.
+	14) correction arbitrary dans mainsurf.f
+	15) pas passe dans le test nnnr si objet defini ds le C++.
+	16) Erreur corrigee sur champ macro zs change en zswf.
+	17) evite definition epsilon quand arbitrary.
+	18) Conservation d'energie pour le grossissement+ passer xy en -xy
+	pour avoir image inversée
+	19) pola pour sphere optimisée mise.
+	20) Correction macroscopique pour graphie avec tabdip.
+
+	
+	mainsurf stocked green function quand boucle dans mainsurf
+
 	
 ---------------------------------------------------------------------
 

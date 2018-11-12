@@ -6,7 +6,7 @@
       double precision tmp,deltakx,deltaky,deltax,pi,gross,u(3)
      $     ,v(3),kx,ky,k0,k0n,indiceopt,fac,side,u1,u2,costmp,sintmp
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
-     $     *nfftmax),tmpx,tmpy ,tmpz
+     $     *nfftmax),tmpx,tmpy ,tmpz,ctmp
       integer FFTW_BACKWARD
       integer*8 planb
       FFTW_BACKWARD=+1
@@ -54,18 +54,19 @@
                sintmp=dsqrt(u1*u1+u2*u2)
                u1=u1/sintmp
                u2=u2/sintmp
-
+               tmp=dsqrt(u(3)/v(3))
                if (sintmp.ne.0.d0) then
 
                   tmpx=Ex(indice)
                   tmpy=Ey(indice)
                   tmpz=Ez(indice)
                               
-                  Ex(indice)=(u1*u1+(1.d0-u1*u1)*costmp)*tmpx+u1*u2 *(1
-     $                 .d0-costmp)*tmpy+u2*sintmp*tmpz
-                  Ey(indice)=u1*u2*(1.d0-costmp)*tmpx+(u2*u2+(1.d0 -u2
-     $                 *u2)*costmp)*tmpy-u1*sintmp*tmpz
-                  Ez(indice)=-u2*sintmp*tmpx+u1*sintmp*tmpy+costmp*tmpz
+                  Ex(indice)=((u1*u1+(1.d0-u1*u1)*costmp)*tmpx+u1*u2 *(1
+     $                 .d0-costmp)*tmpy+u2*sintmp*tmpz)*tmp
+                  Ey(indice)=(u1*u2*(1.d0-costmp)*tmpx+(u2*u2+(1.d0 -u2
+     $                 *u2)*costmp)*tmpy-u1*sintmp*tmpz)*tmp
+                  Ez(indice)=(-u2*sintmp*tmpx+u1*sintmp*tmpy+costmp*tmpz
+     $                 )*tmp
                   
               
                endif
@@ -114,4 +115,35 @@
       enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL
+
+
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP& PRIVATE(i,j,indice,kk,ctmp)
+!$OMP DO SCHEDULE(STATIC) COLLAPSE(2)           
+      do i=-nfft2d2,nfft2d2-1
+         do j=-nfft2d2,-1
+            kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
+            indice=nfft2d*nfft2d+1-kk
+
+            ctmp=Ex(kk)
+            Ex(kk)=Ex(indice)
+            Ex(indice)=ctmp
+            ctmp=Ey(kk)
+            Ey(kk)=Ey(indice)
+            Ey(indice)=ctmp
+            ctmp=Ez(kk)
+            Ez(kk)=Ez(indice)
+            Ez(indice)=ctmp
+
+         enddo
+      enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
+      
+
+
+
+
+
+
       end

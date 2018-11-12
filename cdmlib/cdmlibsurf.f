@@ -302,9 +302,11 @@ c     Initialise nstop
       nstop=0
 
 c     arret de suite si nnnr trop petit par rapport a n*m
-      if (nnnr.gt.min(nxm,nym,nzm)) then
+      if (nnnr.gt.min(nxm,nym
+     $     ,nzm).and.object(1:9).ne.'arbitrary'.and.Object(1:7).ne
+     $     .'cuboid2' .and. Object(1:13).ne.'inhomocuboid2') then
          infostr='nxm nym or nzm smaller than discretization'
-         nstop = 1;
+         nstop = 1
          return         
       endif
 c     arret de suite si pas assez de place pour propa
@@ -572,6 +574,7 @@ c     check the potision of the layers
 c     compute the relative permittivity fron a database versus the
 c     wavelength of illumination
 c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
+      if (object(1:9).eq.'arbitrary') goto 111
       do k=1,numberobjet
          materiau = materiaumulti(k)
          if (materiau(1:2).ne.'xx') then
@@ -598,7 +601,7 @@ c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
       eps = epsmulti(1)
       materiau = materiaumulti(1)
 c     epsilon of the layers
-      if (dimag(epscouche(0)).gt.0.d0) then
+ 111  if (dimag(epscouche(0)).gt.0.d0) then
          infostr='absorbing incident layer'
          nstop=-1
          return
@@ -1947,7 +1950,7 @@ c     Intensity of the local field wide field
             close(143)            
          endif
          if (nmacro.eq.1) then
-            write(*,*) 'compute macrosocpic field'
+            write(*,*) 'compute macroscopic field'
             nsens=1
             if (nmatf.eq.0) then
                do i=1,subunit              
@@ -1963,7 +1966,7 @@ c     pour l'instant fait au niveau du epsilon pour le champ macro
                         epsani(ii,jj)=polarisa(i,ii,jj)
                      enddo
                   enddo 
-                  eps0=epscouche(numerocouche(zs(i),neps,nepsmax
+                  eps0=epscouche(numerocouche(zswf(i),neps,nepsmax
      $                 ,zcouche))
                   call local_macro_surf(Eloc,Em,epsani,eps0,aretecube,k0
      $                 ,nsens)
@@ -1994,7 +1997,7 @@ c     pour l'instant faut au niveau du epsilonpour le champ macro
                         epsani(ii,jj)=polarisa(i,ii,jj)
                      enddo
                   enddo
-                  eps0=epscouche(numerocouche(zs(i),neps,nepsmax
+                  eps0=epscouche(numerocouche(zswf(i),neps,nepsmax
      $                 ,zcouche))
                   call local_macro_surf(Eloc,Em,epsani,eps0,aretecube,k0
      $                 ,nsens)
@@ -2079,31 +2082,30 @@ c     compute and save the macroscopic field
             if (nmatf.eq.0) then
                do i=1,ndipole
                   k=tabdip(i)
-                  subunit=subunit+1
                   if (k.ne.0) then
-                     ii=3*(i-1)
+                     ii=3*(k-1)
                      Eloc(1)= FFloc(ii+1)
                      Eloc(2)= FFloc(ii+2)
                      Eloc(3)= FFloc(ii+3)
                      do ii=1,3
                         do jj=1,3
-                           epsani(ii,jj)=epsilon(i,ii,jj)
+                           epsani(ii,jj)=epsilon(k,ii,jj)
                         enddo
                      enddo 
-                     eps0=epscouche(numerocouche(zs(i),neps,nepsmax
+                     eps0=epscouche(numerocouche(zs(k),neps,nepsmax
      $                    ,zcouche))
                      call local_macro_surf(Eloc,Em,epsani,eps0,aretecube
      $                    ,k0,nsens)
 c     write(*,*) 'local',eps0,zs(i),Eloc,Em,'ani',epsani
-                     macroscopicfieldx(subunit)=Em(1)
-                     macroscopicfieldy(subunit)=Em(2)
-                     macroscopicfieldz(subunit)=Em(3)
+                     macroscopicfieldx(k)=Em(1)
+                     macroscopicfieldy(k)=Em(2)
+                     macroscopicfieldz(k)=Em(3)
                      write(44,*) dreal(Em(1)),dimag(Em(1))
                      write(45,*) dreal(Em(2)),dimag(Em(2))
                      write(46,*) dreal(Em(3)),dimag(Em(3)) 
-                     macroscopicfield(subunit)= dsqrt(cdabs(Em(1))**2+
+                     macroscopicfield(k)= dsqrt(cdabs(Em(1))**2+
      $                    cdabs(Em(2))**2+cdabs(Em(3))**2)
-                     write(47,*) macroscopicfield(subunit)
+                     write(47,*) macroscopicfield(k)
                   else
                      write(44,*) 0.d0,0.d0
                      write(45,*) 0.d0,0.d0
@@ -2126,7 +2128,7 @@ c     write(*,*) 'local',eps0,zs(i),Eloc,Em,'ani',epsani
                            epsani(ii,jj)=epsilon(k,ii,jj)
                         enddo
                      enddo
-                     eps0=epscouche(numerocouche(zs(i),neps,nepsmax
+                     eps0=epscouche(numerocouche(zs(k),neps,nepsmax
      $                    ,zcouche))
                      call local_macro_surf(Eloc,Em,epsani,eps0
      $                    ,aretecube,k0,nsens)

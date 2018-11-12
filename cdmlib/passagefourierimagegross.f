@@ -7,7 +7,7 @@
      $     ,ky,k0,k0n,indiceopt,fac,side,u1,u2,costmp,sintmp
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
      $     *nfftmax),Eimx(nfftmax*nfftmax),Eimy(nfftmax*nfftmax)
-     $     ,Eimz(nfftmax*nfftmax),tmpx,tmpy ,tmpz
+     $     ,Eimz(nfftmax*nfftmax),tmpx,tmpy ,tmpz,ctmp
       integer FFTW_BACKWARD
       integer*8 planb
       FFTW_BACKWARD=+1
@@ -65,20 +65,19 @@
                sintmp=dsqrt(u1*u1+u2*u2)
                u1=u1/sintmp
                u2=u2/sintmp
-
+               tmp=dsqrt(u(3)/v(3))
                if (sintmp.eq.0.d0) then
                   Eimx(indice)=Ex(kk)
                   Eimy(indice)=Ey(kk)
                   Eimz(indice)=Ez(kk)
                else
                
-
-                  Eimx(indice)=(u1*u1+(1.d0-u1*u1)*costmp)*Ex(kk)+u1 *u2
-     $                 *(1.d0-costmp)*Ey(kk)+u2*sintmp*Ez(kk)
-                  Eimy(indice)=u1*u2*(1.d0-costmp)*Ex(kk)+(u2*u2+(1.d0
-     $                 -u2*u2)*costmp)*Ey(kk)-u1*sintmp *Ez(kk)
-                  Eimz(indice)=-u2*sintmp*Ex(kk)+u1*sintmp*Ey(kk)
-     $                 +costmp*Ez(kk)
+                  Eimx(indice)=((u1*u1+(1.d0-u1*u1)*costmp)*Ex(kk)+u1*u2
+     $                 *(1.d0-costmp)*Ey(kk)+u2*sintmp*Ez(kk))*tmp
+                  Eimy(indice)=(u1*u2*(1.d0-costmp)*Ex(kk)+(u2*u2+(1.d0
+     $                 -u2*u2)*costmp)*Ey(kk)-u1*sintmp *Ez(kk))*tmp
+                  Eimz(indice)=(-u2*sintmp*Ex(kk)+u1*sintmp*Ey(kk)
+     $                 +costmp*Ez(kk))*tmp
                endif
             endif
          enddo
@@ -124,4 +123,31 @@
       enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL
+
+
+
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP& PRIVATE(i,j,indice,kk,ctmp)
+!$OMP DO SCHEDULE(STATIC) COLLAPSE(2)           
+      do i=-nfft2d2,nfft2d2-1
+         do j=-nfft2d2,-1
+            kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
+            indice=nfft2d*nfft2d+1-kk
+
+            ctmp=Eimx(kk)
+            Eimx(kk)=Eimx(indice)
+            Eimx(indice)=ctmp
+            ctmp=Eimy(kk)
+            Eimy(kk)=Eimy(indice)
+            Eimy(indice)=ctmp
+            ctmp=Eimz(kk)
+            Eimz(kk)=Eimz(indice)
+            Eimz(indice)=ctmp
+
+         enddo
+      enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
+
+
       end

@@ -5,7 +5,7 @@
 
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,ii,jj,i,j,k
-     $     ,test,IP(3),nnnr,dddis,inv,na,nstop,nmatf
+     $     ,test,IP(3),nnnr,dddis,inv,na,nstop,nmatf,kk
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,xg,yg,zg,x,y,z,aretecube
       double complex eps,epsani(3,3),polaeps(3,3),polarisa(nmax,3,3)
@@ -113,6 +113,14 @@ c         write(*,*) z/aretecube+zg/aretecube+0.5d0,idint(z/aretecube+zg
 c     $        /aretecube+0.5d0)
       endif
 
+      if (nmaxc-nminc.ne.0.and.methode.eq.'PS') then
+         nstop=1
+         infostr='Polarizability PS only for sphere in homogeneous bg'
+         return
+      endif
+
+
+
       write(*,*) 'obj2',nminc,nmaxc,zg
       if (na.eq.-1) then
          do i=1,nnnr 
@@ -165,7 +173,13 @@ c     $        /aretecube+0.5d0)
                enddo
             enddo
          enddo
-      elseif (na.eq.0) then
+         if (methode.eq.'PS') then
+            eps0=epscouche(numerocouche(zs(1),neps,nepsmax,zcouche))
+            call polamodifsphere(nbsphere,nmax,xs,ys,zs,k0,polarisa
+     $           ,aretecube,eps,eps0)
+         endif
+
+      elseif (na.eq.0.and.methode.ne.'PS') then
          do i=1,nnnr         
             do j=1,nnnr              
                do k=1,nnnr                
@@ -231,6 +245,104 @@ c                        write (*,*) 'nbsphere = ', nbsphere
                enddo
             enddo
          enddo
+      elseif (na.eq.0.and.methode.eq.'PS') then
+         nbsphere=0
+         do i=1,nnnr         
+            do j=1,nnnr              
+               do k=1,nnnr                
+                  x=-rayon+aretecube*(dble(k)-0.5d0)
+                  y=-rayon+aretecube*(dble(j)-0.5d0)
+                  z=-rayon+aretecube*(dble(i)-0.5d0)
+                  if (dsqrt(x*x+y*y+z*z).lt.rayon) then
+                     nbsphere=nbsphere+1
+                     xs(nbsphere)=x+xg
+                     ys(nbsphere)=y+yg
+                     zs(nbsphere)=z+zg
+                  endif
+               enddo
+            enddo
+         enddo
+         eps0=epscouche(numerocouche(zs(1),neps,nepsmax,zcouche))
+         call polamodifsphere(nbsphere,nmax,xs,ys,zs,k0,epsilon
+     $        ,aretecube,eps,eps0)
+         kk=0
+         ndipole=0
+         nbsphere=0
+         do i=1,nnnr         
+            do j=1,nnnr              
+               do k=1,nnnr                
+                  x=-rayon+aretecube*(dble(k)-0.5d0)
+                  y=-rayon+aretecube*(dble(j)-0.5d0)
+                  z=-rayon+aretecube*(dble(i)-0.5d0)
+
+                  if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z+zg
+                  if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y+yg
+                  if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x+xg
+
+                  ndipole=ndipole+1
+                  nbsphere=nbsphere+1
+                  Tabdip(ndipole)=nbsphere
+                  xs(nbsphere)=x+xg
+                  ys(nbsphere)=y+yg
+                  zs(nbsphere)=z+zg
+                  if (dsqrt(x*x+y*y+z*z).lt.rayon) then                    
+                
+                     kk=kk+1
+
+                     polarisa(nbsphere,1,1)=epsilon(kk,1,1)
+                     polarisa(nbsphere,1,2)=epsilon(kk,1,2)
+                     polarisa(nbsphere,1,3)=epsilon(kk,1,3)
+                     polarisa(nbsphere,2,1)=epsilon(kk,2,1)
+                     polarisa(nbsphere,2,2)=epsilon(kk,2,2)
+                     polarisa(nbsphere,2,3)=epsilon(kk,2,3)
+                     polarisa(nbsphere,3,1)=epsilon(kk,3,1)
+                     polarisa(nbsphere,3,2)=epsilon(kk,3,2)
+                     polarisa(nbsphere,3,3)=epsilon(kk,3,3)
+                     
+                  endif
+                  if (nmatf.eq.0) then
+                     write(10,*) xs(nbsphere)
+                     write(11,*) ys(nbsphere)
+                     write(12,*) zs(nbsphere)
+                  endif
+               enddo
+            enddo
+         enddo
+         nbsphere=0
+         do i=1,nnnr         
+            do j=1,nnnr              
+               do k=1,nnnr                
+                  x=-rayon+aretecube*(dble(k)-0.5d0)
+                  y=-rayon+aretecube*(dble(j)-0.5d0)
+                  z=-rayon+aretecube*(dble(i)-0.5d0)
+                  nbsphere=nbsphere+1
+
+                  if (dsqrt(x*x+y*y+z*z).lt.rayon) then                    
+                     epsilon(nbsphere,1,1)=eps
+                     epsilon(nbsphere,1,2)=0.d0
+                     epsilon(nbsphere,1,3)=0.d0
+                     epsilon(nbsphere,2,1)=0.d0
+                     epsilon(nbsphere,2,2)=eps
+                     epsilon(nbsphere,2,3)=0.d0
+                     epsilon(nbsphere,3,1)=0.d0
+                     epsilon(nbsphere,3,2)=0.d0
+                     epsilon(nbsphere,3,3)=eps
+
+                  else
+                     epsilon(nbsphere,1,1)=eps0
+                     epsilon(nbsphere,1,2)=0.d0
+                     epsilon(nbsphere,1,3)=0.d0
+                     epsilon(nbsphere,2,1)=0.d0
+                     epsilon(nbsphere,2,2)=eps0
+                     epsilon(nbsphere,2,3)=0.d0
+                     epsilon(nbsphere,3,1)=0.d0
+                     epsilon(nbsphere,3,2)=0.d0
+                     epsilon(nbsphere,3,3)=eps0
+                  endif
+               enddo
+            enddo
+         enddo
+
       else
          infostr='na should be equal to -1 or 0'
          nstop=1

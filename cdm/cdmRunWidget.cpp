@@ -354,7 +354,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
       string objfile(namefileobj);
       string objfilel = objfile.substr(0,nlength);
       cout << objfilel  << endl;
-      ifstream monFlux(objfilel);
+      ifstream monFlux(objfilel.c_str());
      
       if(monFlux){
     	monFlux  >> nxm >> nym >> nzm;

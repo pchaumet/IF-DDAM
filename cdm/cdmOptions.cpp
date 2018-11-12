@@ -26,7 +26,7 @@ Options::Options()
 				 << "QMRCLA" << "TFQMR" << "CG" << "BICGSTAB" << "QMRBICGSTAB1" 
 		                 << "QMRBICGSTAB2" << "GPBICOR" << "CORS" << "BICGSTARPLUS" );
 
-  polarizabilityList = (QStringList() << "RR" <<  "GB" << "LA" << "LR" << "CM");
+  polarizabilityList = (QStringList() << "RR" <<  "GB" << "LA" << "LR" << "CM" << "PS");
 
   nfft2dList = (QStringList() << "128" << "256" <<  "512"  << "768" << "1024" << "1536" << "2048" << "3072" << "4096");
 

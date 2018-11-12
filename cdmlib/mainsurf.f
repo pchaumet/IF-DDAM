@@ -245,8 +245,11 @@ c         theta=65.287098590488455d0
          read(15,*) aretecube
          rewind(15)
          close(15)
-         nnnr=max(nx,ny)
-         nnnr=max(nnnr,nz)
+
+         if (nx.gt.nxm.or.ny.gt.nym.or.nz.gt.nzm) then
+            write(*,*) 'Size of the table too small'
+            stop
+         endif
          
       endif
 c*******************************************************

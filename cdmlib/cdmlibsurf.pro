@@ -146,7 +146,8 @@ SOURCES		+= aleatoire.f \
                 passagefourierimage2.f \
                 passagefourierimagegross2.f \
                 diffractefft2dtoeposfour.f \
-                deltakroutine.f
+                deltakroutine.f \
+		polamodifie.f
                 
 INCLUDEPATH 	+= .
 
