@@ -271,28 +271,28 @@ c     convergee.
       write(*,*) 'Discretization   : ',nnnr
       write(*,*) 'Iterative method : ',methodeit,'tolerance asked'
      $     ,tolinit
-      write(*,*) 'Born or rigorous : ',nrig,'0 rigourous'
-      write(*,*) 'Green s function : ',ninterp,'0 rigourous'
-      write(*,*) 'Write mat file   : ',nmatf,'0 write mat file'
-      write(*,*) 'Local field      : ',nlocal,'1 compute local field'
-      write(*,*) 'Macroscopic field: ',nmacro,'1 compute mac. field'
+      write(*,*) 'Born or rigorous : ',nrig,':0 rigourous'
+      write(*,*) 'Green s function : ',ninterp,':0 rigourous'
+      write(*,*) 'Write mat file   : ',nmatf,':0 write mat file'
+      write(*,*) 'Local field      : ',nlocal,':1 compute local field'
+      write(*,*) 'Macroscopic field: ',nmacro,':1 compute mac. field'
       write(*,*) 'Cross section    : ',nsection,'Csca',ndiffracte
       write(*,*) 'Quick cross section : ',nquickdiffracte,'FFT used'
-      write(*,*) 'Emissivity       : ',nenergie,'1 compute energy'
-      write(*,*) 'Lens             : ',nlentille,'1 compute microscopy'
+      write(*,*) 'Emissivity       : ',nenergie,':1 compute energy'
+      write(*,*) 'Lens             : ',nlentille,':1 compute microscopy'
       write(*,*) 'Quick Lens       : ',nquicklens,'FFT used'
       write(*,*) 'Pos. focal refl. : ',zlensr,'nm'
       write(*,*) 'Pos. focal tran. : ',zlenst,'nm'
       write(*,*) 'NA objective     : ',numaper
       write(*,*) 'NA Condenser     : ',numaperinc
-      write(*,*) 'Side computation : ',ncote,'0 both side'
+      write(*,*) 'Side computation : ',ncote,':0 both side'
 c      write(*,*) 'Optical force    : ',nforce ,'Density',nforced
 c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
       write(*,*) 'Near field       : ',nproche
       write(*,*) 'Polarizability   : ',polarizability
       write(*,*) 'Waist            : ',w0,'nm'
       write(*,*) 'Power            : ',P0,'W'
-      write(*,*) 'Object           : ',nobjet,'1 compute only dipole'
+      write(*,*) 'Object           : ',nobjet,':1 compute only dipole'
       write(*,*) 'Box size         : ',nxm,nym,nzm
       write(*,*) 'Meshsize         : ',aretecube,'nm'
       write(*,*) 'Number of layer  : ',neps
@@ -600,6 +600,27 @@ c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
       enddo
       eps = epsmulti(1)
       materiau = materiaumulti(1)
+
+      do k=0,neps+1
+         materiau = materiaucouche(k)
+         if (materiau(1:2).ne.'xx') then
+            
+            call interpdielec(lambda,materiau,epr,epi,infostr,nstop)
+            if (nstop.eq.1) return
+            epscouche(k)=(epr*uncomp+icomp*epi)
+            write(99,*) 'Relative permittivity of the layer',k
+     $           ,epscouche(k)
+            write(99,*) 'Relative permittivity of the layer'
+     $           ,epscouche(k),materiau(1:2),lambda
+         else
+            write(*,*) 'Relative permittivity of the layer',k
+     $           ,epscouche(k)
+            write(99,*) 'Relative permittivity of the layer',k,eps
+     $           couche(k)          
+         endif
+      enddo
+
+      
 c     epsilon of the layers
  111  if (dimag(epscouche(0)).gt.0.d0) then
          infostr='absorbing incident layer'
@@ -674,24 +695,7 @@ c     change ouverture numerique
       endif
 
       
-      do k=0,neps+1
-         materiau = materiaucouche(k)
-         if (materiau(1:2).ne.'xx') then
-            
-            call interpdielec(lambda,materiau,epr,epi,infostr,nstop)
-            if (nstop.eq.1) return
-            epscouche(k)=(epr*uncomp+icomp*epi)
-            write(99,*) 'Relative permittivity of the layer',k
-     $           ,epscouche(k)
-            write(99,*) 'Relative permittivity of the layer'
-     $           ,epscouche(k),materiau(1:2),lambda
-         else
-            write(*,*) 'Relative permittivity of the layer',k
-     $           ,epscouche(k)
-            write(99,*) 'Relative permittivity of the layer',k,eps
-     $           couche(k)          
-         endif
-      enddo
+ 
 
 c     wavenumber
       k0=2.d0*pi/lambda
@@ -720,6 +724,9 @@ c     look  for compute near field with FFT
          nprochefft=nproche
          nproche=0
       endif
+
+      if (nobjet.eq.-1.and.nproche.ge.1) nobjet=0
+      
       if (nstop.eq.1) return
 
 c     Built the object
@@ -1041,12 +1048,17 @@ c     write(*,*) 'gree surf',hcc,tolinit,epsabs,aretecube,k0,neps
 c     $        ,nepsmax,dcouche,zcouche,epscouche,nbsphere ,nmax,n1m
 c     $        ,nplanm,nz,nbs,nmat,nmatim,nt 
 c     compute Green function (local field)
-
-
+         if (nobjet.eq.-1) then
+            write(*,*) '**********************************************'      
+            write(*,*) '**** DO NOT COMPUTE GREEN FUNCTION ***********'
+            write(*,*) '**********************************************'
+            goto 200
+         endif
          write(*,*) '*************************************************'      
          write(*,*) '**************** BEGIN GREEN FUNCTION ***********'
          write(*,*) '*************************************************'
          write(*,*) 'Interpolation',ninterp
+        
          if (ninterp.eq.0) then
 
 c     write(*,*) 'fonction interp',hcc,tolinit,epsabs,aretecube,k0
@@ -1090,7 +1102,7 @@ c     Compute the incident field at each subunit of the object
             return
          endif
       endif
-      write(*,*) '*************************************************'      
+ 200  write(*,*) '*************************************************'      
       write(*,*) '************** BEGIN INCIDENT FIELD *************'
       write(*,*) '*************************************************'
       write(*,*) 'Beam used  : ',beam
@@ -2199,7 +2211,6 @@ c     Pdissapeted=W/2Im(p.E^*) et Cext=Pdissapeted/I avec I=0.5 c eps E^2
 c     compute the scattering cross section
          Csca=Cext-Cabs
          write(*,*) 'Cext = ',Cext
-         write(*,*) 'Cabs = ',Cabs
          if (Cabs.le.Cext*1.d-12) then
             Cabs=0.d0
             write(*,*) 'Cabs = ',Cabs
@@ -2670,7 +2681,7 @@ c*************************************************************
          
 c     initialization table
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j)   
-!$OMP DO SCHEDULE(STATIC)  
+!$OMP DO SCHEDULE(STATIC)  COLLAPSE(2)
          do i=1,nfft2d
             do j=1,nfft2d
                Ediffkzpos(i,j,1)=0.d0

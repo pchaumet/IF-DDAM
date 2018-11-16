@@ -1,7 +1,19 @@
+
+
+	version 0.2.2 (fftw) et 0.1.11 (ffts)
+
+	1) Correction dans objet spĥere de PS, oublie de tabzn et de xyzwf
+	2) passe calcul eps si diff de xx avant test sur imag....
+	3) ajoute un collapse
+	4) si objet=-1 calcul pas fonction de Green et fft de celle-ci.
+
+
+---------------------------------------------------------------------
+
 	version 0.2.1 (fftw) et 0.1.9 (ffts)
 
 	1) Correction de la matrice de rotation pour la microscopie en
-	rélfexion sur holography, df et bf.
+	réflexion sur holography, df et bf.
 	2) core quand on demande composante microscopy x en reflexion.
 	Correction oubli d'un menu
 	3) Dans mainsurf oubli de density dans liste argument
@@ -26,10 +38,10 @@
 	19) pola pour sphere optimisée mise.
 	20) Correction macroscopique pour graphie avec tabdip.
 
-	
+
 	mainsurf stocked green function quand boucle dans mainsurf
 
-	
+
 ---------------------------------------------------------------------
 
 	version 0.2.0 (fftw) et 0.1.8 (ffts)

@@ -282,9 +282,13 @@ c                        write (*,*) 'nbsphere = ', nbsphere
                   ndipole=ndipole+1
                   nbsphere=nbsphere+1
                   Tabdip(ndipole)=nbsphere
+                  Tabzn(ndipole)=i
                   xs(nbsphere)=x+xg
                   ys(nbsphere)=y+yg
                   zs(nbsphere)=z+zg
+                  xswf(nbsphere)=x+xg
+                  yswf(nbsphere)=y+yg
+                  zswf(nbsphere)=z+zg
                   if (dsqrt(x*x+y*y+z*z).lt.rayon) then                    
                 
                      kk=kk+1
@@ -353,6 +357,7 @@ c                        write (*,*) 'nbsphere = ', nbsphere
          nstop=1
          return
       endif
+
       close(10)
       close(11)
       close(12)
