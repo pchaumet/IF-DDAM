@@ -557,6 +557,15 @@ OptionsWidget::saveName() {
    this->finish();
   }
 }
+void
+OptionsWidget::saveAsName() {
+  QLOG_INFO() << "PRESENT SAVE NAME " << name;
+  this->updateOptions();
+  nameLineEdit->clear();
+  descriptionLineEdit->clear();
+  cfgWindow->exec();
+  QLOG_INFO() << "NEW SAVE NAME " << name;
+}
 void 
 OptionsWidget::finish() {
  name = nameLineEdit->text();

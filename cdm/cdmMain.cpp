@@ -60,6 +60,7 @@ CdmMain::CdmMain( QString _appDirPath, QMainWindow* parent, Qt::WindowFlags fl)
   menuCalculation->addAction("New", this, SLOT(openOptionsWidget()));
   menuCalculation->addAction("Load", this, SLOT(openOptionsWindow()));
   menuCalculation->addAction("Save", this, SLOT(saveOptionsWidget()));
+  menuCalculation->addAction("Save as", this, SLOT(saveAsOptionsWidget()));
   menuCalculation->addAction("Start", this, SLOT(execute()));
   menuPlot->addAction("Clear", this, SLOT(clearPlots()));
   menuPlot->addAction("Color", this, SLOT(colorPlots()));
@@ -86,6 +87,16 @@ void CdmMain::saveOptionsWidget() {
     optionswidget = widget->findChild<OptionsWidget *>("Options");
     optionswidget->updateOptions();
     optionswidget->saveName();
+    updateOptionsWindow();
+  }
+}
+void CdmMain::saveAsOptionsWidget() {
+  QMainWindow *widget = (QMainWindow*)tab->currentWidget();
+  OptionsWidget *optionswidget = NULL;
+  if (widget) {
+    optionswidget = widget->findChild<OptionsWidget *>("Options");
+    optionswidget->updateOptions();
+    optionswidget->saveAsName();
     updateOptionsWindow();
   }
 }

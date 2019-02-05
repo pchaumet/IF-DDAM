@@ -31,7 +31,8 @@ QMAKE_CXXFLAGS_RELEASE  -= -O2
 
 QMAKE_CXXFLAGS 	+= -O3 
 
-QMAKE_LFLAGS    += -fopenmp -O3 -lfftw3_omp -lfftw3 -lm
+QMAKE_LFLAGS    += -fopenmp -lfftw3_omp -lfftw3 -lm
+QMAKE_LFLAGS    += -O3
 
 HEADERS 	+= 	cdmMain.h \
 			cdmOptions.h \
@@ -89,7 +90,7 @@ unix:LIBS            += -Wl,-Bstatic \
                    -L$$QWT_LIB_PATH -lqwt \
                    -L$$QWTPLOT3_LIB_PATH -lqwtplot3d \
                    -Wl,-Bdynamic \
-                   -lGLU -lgfortran
+                   -lGLU -lgfortran -lfftw3_omp -lfftw3 -lm
 
 
 # make install

@@ -1,4 +1,10 @@
+	version 0.2.3 (fftw) et
 
+	1) save as mis.
+	2) rajout de link dans le makefile pour fftw, marche aussi sur ubuntu.
+
+
+---------------------------------------------------------------------
 
 	version 0.2.2 (fftw) et 0.1.11 (ffts)
 
@@ -38,8 +44,6 @@
 	19) pola pour sphere optimisée mise.
 	20) Correction macroscopique pour graphie avec tabdip.
 
-
-	mainsurf stocked green function quand boucle dans mainsurf
 
 
 ---------------------------------------------------------------------

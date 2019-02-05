@@ -24,7 +24,7 @@ QMAKE_CC        =       gfortran -Warray-bounds -fcray-pointer -w
 
 QMAKE_CFLAGS    += -fopenmp -lfftw3_omp -lfftw3 -lm 
 
-QMAKE_CFLAGS_RELEASE    = -O3 -w
+QMAKE_CFLAGS_RELEASE    = -O3
 
 QMAKE_CFLAGS_THREAD =
 
@@ -151,6 +151,6 @@ SOURCES		+= aleatoire.f \
                 
 INCLUDEPATH 	+= .
 
-LIBS 		+= 	-lgfortran
+LIBS 		+= 	-lgfortran -lfftw3_omp -lfftw3 -lm
 
 QMAKE_DISTCLEAN += lib/*

@@ -75,6 +75,7 @@ class OptionsWidget : public QWidget
     public slots:
       void execute();
       void saveName();
+      void saveAsName();
       void finish();
       void cancel();
       void handleObjectSelectionChanged(int index);

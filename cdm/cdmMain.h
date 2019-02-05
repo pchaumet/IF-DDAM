@@ -39,6 +39,7 @@ class CdmMain : public QMainWindow
   void openOptionsWindow();
   void openOptionsWidget();
   void saveOptionsWidget();
+  void saveAsOptionsWidget();
   void openWidget(Options *options);
   void openFileWindow();
   void saveFileWindow();
