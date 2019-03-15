@@ -3243,11 +3243,12 @@ c     enddo
                call passagefourierimagegross(Efourierincxneg
      $              ,Efourierincyneg,Efourierinczneg,Eimageincxneg
      $              ,Eimageincyneg,Eimageinczneg,nfft2d,nfft2d ,imaxk0
-     $              ,deltakx,deltax,gross,k0,indice0,sidemic,plan2b)
+     $              ,deltakx,deltax,gross,k0,indice0,sidemic,plan2f
+     $              ,plan2b)
                call passagefourierimagegross(Efourierxneg ,Efourieryneg
      $              ,Efourierzneg,Eimagexneg,Eimageyneg ,Eimagezneg
      $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax ,gross,k0
-     $              ,indice0,sidemic,plan2b)
+     $              ,indice0,sidemic,plan2f,plan2b)
             endif
 
             write(*,*) 'Number of point in NA',imaxk0*2+1
@@ -3334,11 +3335,12 @@ c     sauve le champ dans le plan de image.
                call passagefourierimagegross(Efourierincxpos
      $              ,Efourierincypos,Efourierinczpos,Eimageincxpos
      $              ,Eimageincypos,Eimageinczpos,nfft2d,nfft2d,imaxk0
-     $              ,deltakx,deltax,gross,k0,indicen,sidemic,plan2b)
-               call passagefourierimagegross(Efourierxpos
-     $              ,Efourierypos,Efourierzpos,Eimagexpos,Eimageypos
-     $              ,Eimagezpos,nfft2d,nfft2d,imaxk0,deltakx
-     $              ,deltax ,gross,k0,indicen,sidemic,plan2b)
+     $              ,deltakx,deltax,gross,k0,indicen,sidemic,plan2f
+     $              ,plan2b)
+               call passagefourierimagegross(Efourierxpos ,Efourierypos
+     $              ,Efourierzpos,Eimagexpos,Eimageypos ,Eimagezpos
+     $              ,nfft2d,nfft2d,imaxk0,deltakx ,deltax ,gross,k0
+     $              ,indicen,sidemic,plan2f,plan2b)
             endif
             if (nmatf.eq.0) then
                do j=-imaxk0,imaxk0

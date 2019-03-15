@@ -1,5 +1,6 @@
       subroutine passagefourierimagegross(Ex,Ey,Ez,Eimx,Eimy,Eimz,nfft2d
-     $     ,nfftmax,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planb)
+     $     ,nfftmax,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planf
+     $     ,planb)
       implicit none
       integer nfft2d,nfft2d2,nfftmax,i,j,kk,indicex,indicey
      $     ,indice,imaxk0
@@ -9,7 +10,7 @@
      $     *nfftmax),Eimx(nfftmax*nfftmax),Eimy(nfftmax*nfftmax)
      $     ,Eimz(nfftmax*nfftmax),tmpx,tmpy ,tmpz,ctmp
       integer FFTW_BACKWARD
-      integer*8 planb
+      integer*8 planb,planf
       FFTW_BACKWARD=+1
 
 
@@ -85,9 +86,9 @@
 !$OMP ENDDO 
 !$OMP END PARALLEL
 
-      call dfftw_execute_dft(planb,Eimx,Eimx)
-      call dfftw_execute_dft(planb,Eimy,Eimy)
-      call dfftw_execute_dft(planb,Eimz,Eimz)
+      call dfftw_execute_dft(planf,Eimx,Eimx)
+      call dfftw_execute_dft(planf,Eimy,Eimy)
+      call dfftw_execute_dft(planf,Eimz,Eimz)
       
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice,kk)   
 !$OMP& PRIVATE(tmpx,tmpy,tmpz)
@@ -124,30 +125,30 @@
 !$OMP ENDDO 
 !$OMP END PARALLEL
 
-
-
-!$OMP PARALLEL DEFAULT(SHARED)
-!$OMP& PRIVATE(i,j,indice,kk,ctmp)
-!$OMP DO SCHEDULE(STATIC) COLLAPSE(2)           
-      do i=-nfft2d2,nfft2d2-1
-         do j=-nfft2d2,-1
-            kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
-            indice=nfft2d*nfft2d+1-kk
-
-            ctmp=Eimx(kk)
-            Eimx(kk)=Eimx(indice)
-            Eimx(indice)=ctmp
-            ctmp=Eimy(kk)
-            Eimy(kk)=Eimy(indice)
-            Eimy(indice)=ctmp
-            ctmp=Eimz(kk)
-            Eimz(kk)=Eimz(indice)
-            Eimz(indice)=ctmp
-
-         enddo
-      enddo
-!$OMP ENDDO 
-!$OMP END PARALLEL
+c$$$
+c$$$
+c$$$!$OMP PARALLEL DEFAULT(SHARED)
+c$$$!$OMP& PRIVATE(i,j,indice,kk,ctmp)
+c$$$!$OMP DO SCHEDULE(STATIC) COLLAPSE(2)           
+c$$$      do i=-nfft2d2,nfft2d2-1
+c$$$         do j=-nfft2d2,-1
+c$$$            kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
+c$$$            indice=nfft2d*nfft2d+1-kk
+c$$$
+c$$$            ctmp=Eimx(kk)
+c$$$            Eimx(kk)=Eimx(indice)
+c$$$            Eimx(indice)=ctmp
+c$$$            ctmp=Eimy(kk)
+c$$$            Eimy(kk)=Eimy(indice)
+c$$$            Eimy(indice)=ctmp
+c$$$            ctmp=Eimz(kk)
+c$$$            Eimz(kk)=Eimz(indice)
+c$$$            Eimz(indice)=ctmp
+c$$$
+c$$$         enddo
+c$$$      enddo
+c$$$!$OMP ENDDO 
+c$$$!$OMP END PARALLEL
 
 
       end

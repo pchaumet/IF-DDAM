@@ -1,5 +1,5 @@
       subroutine passagefourierimagegross2(Ex,Ey,Ez,nfft2d,nfftmax
-     $     ,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planb)
+     $     ,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planf,planb)
       implicit none
       integer nfft2d,nfft2d2,nfftmax,i,j,kk,indicex,indicey
      $     ,indice,imaxk0
@@ -8,7 +8,7 @@
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
      $     *nfftmax),tmpx,tmpy ,tmpz,ctmp
       integer FFTW_BACKWARD
-      integer*8 planb
+      integer*8 planb,planf
       FFTW_BACKWARD=+1
 
 
@@ -77,9 +77,9 @@
 !$OMP END PARALLEL
 
 
-      call dfftw_execute_dft(planb,Ex,Ex)
-      call dfftw_execute_dft(planb,Ey,Ey)
-      call dfftw_execute_dft(planb,Ez,Ez)
+      call dfftw_execute_dft(planf,Ex,Ex)
+      call dfftw_execute_dft(planf,Ey,Ey)
+      call dfftw_execute_dft(planf,Ez,Ez)
       
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice,kk)   
 !$OMP& PRIVATE(tmpx,tmpy,tmpz)
@@ -115,30 +115,30 @@
       enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL
-
-
-!$OMP PARALLEL DEFAULT(SHARED)
-!$OMP& PRIVATE(i,j,indice,kk,ctmp)
-!$OMP DO SCHEDULE(STATIC) COLLAPSE(2)           
-      do i=-nfft2d2,nfft2d2-1
-         do j=-nfft2d2,-1
-            kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
-            indice=nfft2d*nfft2d+1-kk
-
-            ctmp=Ex(kk)
-            Ex(kk)=Ex(indice)
-            Ex(indice)=ctmp
-            ctmp=Ey(kk)
-            Ey(kk)=Ey(indice)
-            Ey(indice)=ctmp
-            ctmp=Ez(kk)
-            Ez(kk)=Ez(indice)
-            Ez(indice)=ctmp
-
-         enddo
-      enddo
-!$OMP ENDDO 
-!$OMP END PARALLEL
+c$$$
+c$$$
+c$$$!$OMP PARALLEL DEFAULT(SHARED)
+c$$$!$OMP& PRIVATE(i,j,indice,kk,ctmp)
+c$$$!$OMP DO SCHEDULE(STATIC) COLLAPSE(2)           
+c$$$      do i=-nfft2d2,nfft2d2-1
+c$$$         do j=-nfft2d2,-1
+c$$$            kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
+c$$$            indice=nfft2d*nfft2d+1-kk
+c$$$
+c$$$            ctmp=Ex(kk)
+c$$$            Ex(kk)=Ex(indice)
+c$$$            Ex(indice)=ctmp
+c$$$            ctmp=Ey(kk)
+c$$$            Ey(kk)=Ey(indice)
+c$$$            Ey(indice)=ctmp
+c$$$            ctmp=Ez(kk)
+c$$$            Ez(kk)=Ez(indice)
+c$$$            Ez(indice)=ctmp
+c$$$
+c$$$         enddo
+c$$$      enddo
+c$$$!$OMP ENDDO 
+c$$$!$OMP END PARALLEL
       
 
 
