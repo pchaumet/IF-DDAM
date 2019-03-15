@@ -2,7 +2,8 @@
      $     ,yswf,zswf,k0,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx
      $     ,ny,nz,nxm,nym,nzm,methode,na,epsilon,polarisa,rayon,hauteur
      $     ,xg,yg,zg,phi ,theta,psi,neps,nepsmax,dcouche ,zcouche
-     $     ,epscouche,tabzn,nmatf,infostr,nstop)
+     $     ,epscouche,tabzn,nmatf,file_id,group_iddip,infostr,nstop)
+      use HDF5
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,nxm,nym,nzm,ii
      $     ,jj,i,j,k,test,IP(3),nnnr,dddis,inv,na,nstop,nmatf
@@ -24,6 +25,12 @@
       character(3) trope
       character(64) infostr
 
+      character(LEN=100) :: datasetname
+      integer(hid_t) :: file_id
+      integer(hid_t) :: group_iddip
+      integer :: dim(4)
+      integer error
+      
 c     Initialization
       nbsphere=0
       ndipole=0 
@@ -205,14 +212,13 @@ c     discretization of the object under study
       xr=mat(1,1)*x+mat(1,2)*y+mat(1,3)*z
       yr=mat(2,1)*x+mat(2,2)*y+mat(2,3)*z
       zr=mat(3,1)*x+mat(3,2)*y+mat(3,3)*z
-      write(*,*) 'r',xr,yr,zr,xr*xr+yr*yr+zr*zr
       x1=min(x1,xr)
       x2=max(x2,xr)
       y1=min(y1,yr)
       y2=max(y2,yr)
       z1=min(z1,zr)
       z2=max(z2,zr)
-      write(*,*) x1,x2,y1,y2,z1,z2
+
       demim=max(x2-x1,y2-y1,z2-z1)
       aretecube=demim/dble(nnnr)
 
@@ -302,9 +308,6 @@ c     shift the layers
                            enddo
                         enddo
                      endif
-                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
-                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
-                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   endif
                enddo
             enddo
@@ -360,9 +363,6 @@ c     shift the layers
                            enddo
                         enddo
                      endif
-                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
-                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
-                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   else
                      xs(nbsphere)=x+xg
                      ys(nbsphere)=y+yg
@@ -372,9 +372,6 @@ c     shift the layers
                      epsilon(nbsphere,1,1)=eps0
                      epsilon(nbsphere,2,2)=eps0
                      epsilon(nbsphere,3,3)=eps0                 
-                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
-                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
-                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   endif
                enddo
             enddo
@@ -392,7 +389,23 @@ c     shift the layers
          nstop=1
          return
       endif
-
+      if (nmatf.eq.0) then
+         do i=1,nbsphere
+            write(10,*) xs(i)
+            write(11,*) ys(i)
+            write(12,*) zs(i)
+         enddo
+      elseif (nmatf.eq.2) then
+         
+         dim(1)=nbsphere
+         dim(2)=nmax
+         datasetname="Dipole position x"
+         call hdf5write1d(group_iddip,datasetname,xs,dim)
+         datasetname="Dipole position y"
+         call hdf5write1d(group_iddip,datasetname,ys,dim)
+         datasetname="Dipole position z"
+         call hdf5write1d(group_iddip,datasetname,zs,dim)
+      endif
       close(10)
       close(11)
       close(12)

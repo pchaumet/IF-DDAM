@@ -25,6 +25,7 @@ class OptionsWidget : public QWidget
   ~OptionsWidget();
 
    QString  getFilereread();
+   QString  getH5File();
    double   getWavelength();
    double   getP0();
    double   getW0();
@@ -59,6 +60,7 @@ class OptionsWidget : public QWidget
    void setDiscretization(int _discretization);
    void setTolerance(double _tolerance);
    void setMethodeit(QString _methodeit);
+   void setH5file(QString _fileh5);
    void setPolarizability(QString _polarizability);
    void setnfft2d(int _nfft2d);
    void update();
@@ -87,7 +89,6 @@ class OptionsWidget : public QWidget
       void configureObject();
       void configureEpsilon();
       void nreadCheckBoxStateChanged(int state);
-      void nmatlabCheckBoxStateChanged(int state);
       void advancedinterfaceCheckBoxStateChanged(int state);
       void farfieldCheckBoxStateChanged(int state);
       void nenergieCheckBoxStateChanged(int state);
@@ -162,10 +163,12 @@ class OptionsWidget : public QWidget
     QCheckBox       *nread;
     QLabel          *filerereadLabel;
     QLineEdit       *filereread;
+    QLabel          *fileh5Label;
+    QLineEdit       *fileh5;
     QLabel          *advancedinterfaceLabel;
     QCheckBox       *advancedinterface;
     QLabel          *nmatlabLabel;
-    QCheckBox       *nmatlab;
+    QComboBox       *nmatlab;
     QLabel          *macroscopicfieldLabel;
     QCheckBox       *macroscopicfield;
     QLabel          *nenergieLabel;

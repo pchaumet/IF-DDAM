@@ -2,8 +2,9 @@
      $     ,k0,aretecube ,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz,nxm
      $     ,nym,nzm,nxmp,nymp,nzmp,methode ,na ,epsilon,polarisa,sidex
      $     ,sidey,sidez ,xg ,yg,zg,lc ,hc,ng,epsb,neps ,nepsmax ,dcouche
-     $     ,zcouche ,epscouche,tabzn ,nmatf,infostr,nstop)
-
+     $     ,zcouche ,epscouche,tabzn ,nmatf,file_id,group_iddip,infostr
+     $     ,nstop)
+      use HDF5
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,nxm ,nym ,nzm
      $     ,nxmp,nymp,nzmp,i,j,k,test ,IP(3),nnnr,dddis,inv,na,nstop
@@ -28,6 +29,12 @@
       integer *8 planb
       integer FFTW_BACKWARD,FFTW_ESTIMATE,FFTW_FORWARD
 
+      character(LEN=100) :: datasetname
+      integer(hid_t) :: file_id
+      integer(hid_t) :: group_iddip
+      integer :: dim(4)
+      integer error
+      
       FFTW_FORWARD=-1
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
@@ -241,11 +248,6 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
                epsilon(nbsphere,1,1)=eps
                epsilon(nbsphere,2,2)=eps
                epsilon(nbsphere,3,3)=eps
-               if (nmatf.eq.0) then
-                  write(10,*) xs(nbsphere)
-                  write(11,*) ys(nbsphere)
-                  write(12,*) zs(nbsphere)
-               endif
             enddo
          enddo
       enddo
@@ -255,6 +257,25 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
          nstop=1
          return
       endif
+      if (nmatf.eq.0) then
+         do i=1,nbsphere
+            write(10,*) xs(i)
+            write(11,*) ys(i)
+            write(12,*) zs(i)
+         enddo
+      elseif (nmatf.eq.2) then
+         
+         dim(1)=nbsphere
+         dim(2)=nmax
+         datasetname="Dipole position x"
+         call hdf5write1d(group_iddip,datasetname,xs,dim)
+         datasetname="Dipole position y"
+         call hdf5write1d(group_iddip,datasetname,ys,dim)
+         datasetname="Dipole position z"
+         call hdf5write1d(group_iddip,datasetname,zs,dim)
+      endif
+
+      
       close(10)
       close(11)
       close(12)

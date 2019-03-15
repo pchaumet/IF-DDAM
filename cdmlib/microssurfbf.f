@@ -12,8 +12,8 @@
      $     ,Efourieryneg,Efourierzneg, Efourierincxneg ,Efourierincyneg
      $     ,Efourierinczneg,Ediffkzpos,Ediffkzneg, kxy ,xy,numaper
      $     ,numaperinc,gross,zlensr,zlenst ,ntypemic , planf ,planb
-     $     ,plan2f ,plan2b ,nmatf,nstop ,infostr)
-
+     $     ,plan2f ,plan2b ,nmatf,file_id ,group_idmic,nstop ,infostr)
+      use HDF5
       implicit none
       integer nbsphere,ndipole,nx,ny,nz,nx2,ny2 ,nxm,nym,nzm,nplanm
      $     ,ntotalm,nmax,nmatim,nlar,ldabi,nfft2d,nfft2d2,nstop,nmatf
@@ -64,6 +64,12 @@
       integer*8 planf,planb,plan2f,plan2b,planfn,planbn
       integer FFTW_FORWARD,FFTW_ESTIMATE,FFTW_BACKWARD
       character(64) infostr,beam
+
+      character(LEN=100) :: datasetname
+      integer(hid_t) :: file_id
+      integer(hid_t) :: group_idmic
+      integer :: dim(4)
+      integer error
 
       write(*,*) 'Bright field microscope'
 
@@ -513,11 +519,11 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                         call passagefourierimagegross2(Efourierincxneg
      $                       ,Efourierincyneg,Efourierinczneg,nfft2d
      $                       ,nfft2d ,imaxk0 ,deltakx,deltax ,gross,k0
-     $                       ,indice0,sidemic,plan2b)
+     $                       ,indice0,sidemic,plan2f,plan2b)
                         call passagefourierimagegross2(Efourierxneg
      $                       ,Efourieryneg,Efourierzneg,nfft2d,nfft2d
      $                       ,imaxk0,deltakx,deltax ,gross,k0,indice0
-     $                       ,sidemic,plan2b)
+     $                       ,sidemic,plan2f,plan2b)
                      endif
                   endif
                   if (ncote.eq.0.or.ncote.eq.1) then
@@ -634,11 +640,11 @@ c     ajoute onde plane
                         call passagefourierimagegross2(Efourierincxpos
      $                       ,Efourierincypos,Efourierinczpos ,nfft2d
      $                       ,nfft2d ,imaxk0 ,deltakx,deltax ,gross,k0
-     $                       ,indice0,sidemic,plan2b)
+     $                       ,indice0,sidemic,plan2f,plan2b)
                         call passagefourierimagegross2(Efourierxpos
      $                       ,Efourierypos,Efourierzpos,nfft2d,nfft2d
      $                       ,imaxk0,deltakx,deltax ,gross,k0,indice0
-     $                       ,sidemic,plan2b)
+     $                       ,sidemic,plan2f,plan2b)
                      endif
                   endif
 c     sommation de toutes les images incohérentes.
@@ -820,9 +826,33 @@ c     fin if AN
             close(307)
             close(308)
          endif
-
+      elseif (nmatf.eq.2) then
+         dim(1)=nfft2d
+         dim(2)=nfft2d
+         datasetname='x Image'
+         call hdf5write1d(group_idmic,datasetname,xy,dim)
+         k=0
+         if (ncote.eq.0.or.ncote.eq.1) then
+            datasetname='Image bright field kz>0'
+            call writehdf5mic(Eimagexpos,Eimageypos,Eimagezpos,nfft2d
+     $           ,imaxk0,Ediffkzpos,k,datasetname,group_idmic)
+            datasetname='Image+incident bright field kz>0'
+            call writehdf5mic(Eimageincxpos,Eimageincypos,Eimageinczpos
+     $           ,nfft2d,imaxk0,Ediffkzpos,k,datasetname,group_idmic)
+         endif
+         if (ncote.eq.0.or.ncote.eq.-1) then
+            datasetname='Image bright field kz<0'
+            call writehdf5mic(Eimagexneg,Eimageyneg,Eimagezneg,nfft2d
+     $           ,imaxk0,Ediffkzpos,k,datasetname,group_idmic)
+            datasetname='Image+incident bright field kz<0'
+            call writehdf5mic(Eimageincxneg,Eimageincyneg,Eimageinczneg
+     $           ,nfft2d,imaxk0,Ediffkzpos,k,datasetname,group_idmic)
+         endif
          
       endif
+
+         
+
       
 
       

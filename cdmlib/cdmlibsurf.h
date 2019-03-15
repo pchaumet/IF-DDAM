@@ -5,7 +5,7 @@ extern"C" {
 int cdmlibsurf_( // input file cdm.in
 	double *lambda,	char *beam, char *object, char *trope, 
 	char materiau[][64], int  *nnnr, double *tolinit, char* methodeit,
-        char* methode,  int *nlecture, char *filereread, int* nmat,
+        char* methode,  int *nlecture, char *filereread, int* nmat,  char* fileh5,
 	// Definition du multicouche
 	int *neps, double *zcouche,dcmplx *epscouche, char materiaucouche[][64],
 	// ouput file cdm.out

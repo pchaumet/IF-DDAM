@@ -1,7 +1,9 @@
       subroutine objetcubesurf(trope,eps,epsani,eps0,xs,ys,zs,xswf,yswf
      $     ,zswf,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny
      $     ,nz,methode ,epsilon,polarisa,side,xg,yg,zg,neps,nepsmax
-     $     ,dcouche,zcouche ,epscouche,tabzn,nmatf,infostr,nstop)
+     $     ,dcouche,zcouche ,epscouche,tabzn,nmatf,file_id,group_iddip
+     $     ,infostr,nstop)
+      use HDF5
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,ii,jj,i,j,k
      $     ,test,IP(3),nnnr,dddis,inv,nnmax,nstop,nmatf
@@ -15,11 +17,16 @@
       double precision dcouche(nepsmax),zcouche(0:nepsmax),zmin,zmax
       double complex epscouche(0:nepsmax+1)
 
-
       character(2) methode
       character(3) trope
       character(64) infostr
 
+      character(LEN=100) :: datasetname
+      integer(hid_t) :: file_id
+      integer(hid_t) :: group_iddip
+      integer :: dim(4)
+      integer error
+      
 c     Initialization
       nbsphere=0
       ndipole=0
@@ -154,10 +161,6 @@ c     compute the position of down subunit
                      enddo
                   enddo
                endif
-               if (nmatf.eq.0) write(10,*) xs(nbsphere)
-               if (nmatf.eq.0) write(11,*) ys(nbsphere)
-               if (nmatf.eq.0) write(12,*) zs(nbsphere)
-               
             enddo
          enddo
       enddo
@@ -169,7 +172,24 @@ c     compute the position of down subunit
          nstop=1
          return
       endif
-
+      
+      if (nmatf.eq.0) then
+         do i=1,nbsphere
+            write(10,*) xs(nbsphere)
+            write(11,*) ys(nbsphere)
+            write(12,*) zs(nbsphere)
+         enddo
+      elseif (nmatf.eq.2) then
+         dim(1)=nbsphere
+         dim(2)=nmax
+         datasetname="Dipole position x"
+         call hdf5write1d(group_iddip,datasetname,xs,dim)
+         datasetname="Dipole position y"
+         call hdf5write1d(group_iddip,datasetname,ys,dim)
+         datasetname="Dipole position z"
+         call hdf5write1d(group_iddip,datasetname,zs,dim)
+      endif
+      
       close(10)
       close(11)
       close(12)

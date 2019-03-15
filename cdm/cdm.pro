@@ -90,7 +90,7 @@ unix:LIBS            += -Wl,-Bstatic \
                    -L$$QWT_LIB_PATH -lqwt \
                    -L$$QWTPLOT3_LIB_PATH -lqwtplot3d \
                    -Wl,-Bdynamic \
-                   -lGLU -lgfortran -lfftw3_omp -lfftw3 -lm
+                   -lGLU -lgfortran -lfftw3_omp -lfftw3 -lm -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
 
 
 # make install

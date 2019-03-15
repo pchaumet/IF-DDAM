@@ -32,6 +32,7 @@ class Options
    QString  getName();
    QString  getDescription();
    QString  getFilereread();
+   QString  getH5File();
    double   getWavelength();
    QString  getBeam();
    QString  getBeamFile();
@@ -153,6 +154,7 @@ class Options
    void setName(QString _runname);
    void setDescription(QString _description);
    void setFilereread(QString _filereread);
+   void setH5File(QString _fileh5);
    void setWavelength(double _wavelength);
    void setBeam(QString _beam);
    void setBeamFile(QString _beamfile);
@@ -277,6 +279,7 @@ class Options
    QStringList nfft2dList;
    QStringList polarizabilityList;
    QStringList nrigList;
+   QStringList nmatlabList;
    QStringList ntypemicList;
    QStringList rangeofstudyList;
    QStringList nsideList;
@@ -294,6 +297,7 @@ class Options
     QString object;
     QString objectfile;
     QString anisotropy;
+    QString fileh5;
     QString methodeit;
     QString polarizability;
     int     discretization;

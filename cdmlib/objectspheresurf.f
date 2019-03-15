@@ -1,8 +1,9 @@
       subroutine objetspheresurf(trope,eps,epsani,xs,ys,zs,xswf,yswf
      $     ,zswf,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny
      $     ,nz,methode ,na,epsilon,polarisa,rayon,xg,yg,zg,neps,nepsmax
-     $     ,dcouche,zcouche,epscouche,tabzn,nmatf,infostr,nstop)
-
+     $     ,dcouche,zcouche,epscouche,tabzn,nmatf,file_id,group_iddip
+     $     ,infostr,nstop)
+      use HDF5
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,ii,jj,i,j,k
      $     ,test,IP(3),nnnr,dddis,inv,na,nstop,nmatf,kk
@@ -19,6 +20,13 @@
       character(2) methode
       character(3) trope
       character(64) infostr
+
+      character(LEN=100) :: datasetname
+      integer(hid_t) :: file_id
+      integer(hid_t) :: group_iddip
+      integer :: dim(4)
+      integer error
+      
       write (*,*) 'pola0 = ',methode
 c     Initialization
       nbsphere=0
@@ -166,9 +174,6 @@ c     $        /aretecube+0.5d0)
                            enddo
                         enddo
                      endif
-                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
-                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
-                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   endif
                enddo
             enddo
@@ -226,9 +231,6 @@ c                        write (*,*) 'nbsphere = ', nbsphere
                            enddo
                         enddo
                      endif
-                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
-                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
-                     if (nmatf.eq.0) write(12,*) zs(nbsphere)
                   else
                      xs(nbsphere)=x+xg
                      ys(nbsphere)=y+yg
@@ -238,9 +240,6 @@ c                        write (*,*) 'nbsphere = ', nbsphere
                      epsilon(nbsphere,1,1)=eps0
                      epsilon(nbsphere,2,2)=eps0
                      epsilon(nbsphere,3,3)=eps0
-                     if (nmatf.eq.0) write(10,*) xs(nbsphere)
-                     if (nmatf.eq.0) write(11,*) ys(nbsphere)
-                     if (nmatf.eq.0) write(12,*) zs(nbsphere) 
                   endif
                enddo
             enddo
@@ -304,11 +303,6 @@ c                        write (*,*) 'nbsphere = ', nbsphere
                      polarisa(nbsphere,3,3)=epsilon(kk,3,3)
                      
                   endif
-                  if (nmatf.eq.0) then
-                     write(10,*) xs(nbsphere)
-                     write(11,*) ys(nbsphere)
-                     write(12,*) zs(nbsphere)
-                  endif
                enddo
             enddo
          enddo
@@ -357,7 +351,24 @@ c                        write (*,*) 'nbsphere = ', nbsphere
          nstop=1
          return
       endif
-
+      if (nmatf.eq.0) then
+         do i=1,nbsphere
+            write(10,*) xs(i)
+            write(11,*) ys(i)
+            write(12,*) zs(i)
+         enddo
+      elseif (nmatf.eq.2) then
+         
+         dim(1)=nbsphere
+         dim(2)=nmax
+         datasetname="Dipole position x"
+         call hdf5write1d(group_iddip,datasetname,xs,dim)
+         datasetname="Dipole position y"
+         call hdf5write1d(group_iddip,datasetname,ys,dim)
+         datasetname="Dipole position z"
+         call hdf5write1d(group_iddip,datasetname,zs,dim)
+      endif
+      
       close(10)
       close(11)
       close(12)

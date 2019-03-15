@@ -58,11 +58,14 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   filereread = new QLineEdit(options->getFilereread());
   startnreadlayout->addWidget(filerereadLabel);
   startnreadlayout->addWidget(filereread);
-  nmatlabLabel = new QLabel("Do not write mat file");
-  nmatlab = new QCheckBox(this);
-  connect(nmatlab, SIGNAL(stateChanged(int)),this,
-	SLOT(nmatlabCheckBoxStateChanged(int)));
-
+  nmatlabLabel = new QLabel("Database file");
+  nmatlab = new QComboBox();
+  nmatlab->addItems(options->nmatlabList);
+  nmatlab->setCurrentIndex(options->getNmatlab());
+  nmatlab->setFixedWidth(200);
+  fileh5Label= new QLabel("Name h5 file");
+  fileh5 = new QLineEdit(options->getH5File());
+  fileh5->setFixedWidth(120);
   advancedinterfaceLabel = new QLabel("Advanced interface");
   advancedinterface = new QCheckBox(this);
   connect(advancedinterface, SIGNAL(stateChanged(int)),this,
@@ -372,6 +375,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   layout->addRow(nreadLabel,nread);
   layout->addRow(startnreadlayout);
   layout->addRow(nmatlabLabel,nmatlab);
+  layout->addRow(fileh5Label,fileh5);
   layout->addRow(advancedinterfaceLabel->text(),advancedinterface);
   
   QFrame *hsep0 = new QFrame(this);
@@ -654,10 +658,6 @@ OptionsWidget::nreadCheckBoxStateChanged(int state) {
   }
 }
 void
-OptionsWidget::nmatlabCheckBoxStateChanged(int state) {
-
-}
-void
 OptionsWidget::advancedinterfaceCheckBoxStateChanged(int state) {
   if (state == Qt::Checked) {
     methodeitLabel->show();
@@ -676,6 +676,8 @@ OptionsWidget::advancedinterfaceCheckBoxStateChanged(int state) {
     nread->show();
     nmatlabLabel->show();
     nmatlab->show();
+    fileh5Label->show();
+    fileh5->show();
   }
    else if (state == Qt::Unchecked) {
      methodeitLabel->hide();
@@ -694,6 +696,9 @@ OptionsWidget::advancedinterfaceCheckBoxStateChanged(int state) {
      nread->hide();
      nmatlabLabel->hide();
      nmatlab->hide();
+     fileh5Label->hide();
+     fileh5->hide();
+     
    }
 }
 void 
@@ -955,6 +960,10 @@ QString
 OptionsWidget::getFilereread(){
   return filereread->text();
 }
+QString 
+OptionsWidget::getH5File(){
+  return fileh5->text();
+}
 double 
 OptionsWidget::getWavelength(){
   return wavelength->text().toDouble();
@@ -1146,6 +1155,7 @@ void
 OptionsWidget::update() {
 
   filereread->setText(options->getFilereread());
+  fileh5->setText(options->getH5File());
   this->setWavelength(options->getWavelength());
   this->setP0(options->getP0());
   this->setW0(options->getW0());
@@ -1162,8 +1172,7 @@ OptionsWidget::update() {
   QLOG_DEBUG() << " NREAD " << options->getNread();
   nread->setChecked(options->getNread());
   nreadCheckBoxStateChanged(nread->isChecked());
-  nmatlab->setChecked(options->getNmatlab());
-  nmatlabCheckBoxStateChanged(nmatlab->isChecked());
+  //  nmatlab->setChecked(options->getNmatlab());
   advancedinterface->setChecked(options->getAdvancedinterface());
   advancedinterfaceCheckBoxStateChanged(advancedinterface->isChecked()); 
   dipolepsilon->setChecked(options->getDipolepsilon());
@@ -1182,7 +1191,9 @@ OptionsWidget::update() {
 void 
 OptionsWidget::updateOptions() {
   options->setNread(nread->isChecked());
-  options->setNmatlab(nmatlab->isChecked());
+  options->setNmatlab(nmatlab->currentIndex());
+  options->setH5File(this->getH5File());
+  //options->setNmatlab(nmatlab->isChecked());
   options->setAdvancedinterface(advancedinterface->isChecked());  
   options->setWavelength(this->getWavelength());
   options->setP0(this->getP0());

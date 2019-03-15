@@ -1,3 +1,4 @@
+      use HDF5
       implicit none
 c     integer
       integer ii,jj,kk,i,j,k,nstop
@@ -156,6 +157,10 @@ c     variable pour avoir l'image a travers la lentille
      $     ,Efourierincyneg(nfft2d*nfft2d),Efourierinczneg(nfft2d
      $     *nfft2d),masque(nfft2d,nfft2d) ,Ediffkzpos(nfft2d,nfft2d,3)
      $     ,Ediffkzneg(nfft2d,nfft2d,3)
+
+      character(LEN=100) :: h5file
+      
+      
 c     input
       lambda=632.8d0
       P0=1.d0            
@@ -418,7 +423,8 @@ c     ntorqued=1 ! calcul la desnite de couple dans l'objet l'objet
 ! (dipole) au premier coup
       nobjet=0                  ! si 1 ne fait que l'objet
       nmatf=0 ! 1 ne cre pas les fichiers .mat 0 sinon
-      gross=100.d0               !grossissement
+      h5file='ifdda.h5'
+      gross=100.d0              !grossissement
       numaperinc=0.9d0          !ouverture numerique de l'incident
       zlensr=0.d0               ! position lentille reflexion
       zlenst=0.d0               ! position lentille transmission
@@ -460,7 +466,7 @@ c*******************************************************
 c     input file cdm.in
      $     lambda,beam,object,trope,
      $     materiaumulti,nnnr,tolinit,methodeit,polarizability,
-     $     nlecture,filereread,nmatf,
+     $     nlecture,filereread,nmatf,h5file,
 C     Definition du multicouche
      $     neps,zcouche,epscouche,materiaucouche,
 c     output file cdm.out

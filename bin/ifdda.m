@@ -2,11 +2,48 @@ close all
 clear all
 nexist=exist('inputmatlab.mat','file');
 if (nexist == 0);
-disp('mat files do not exist!')
+namefileh5=input('Please give the name of an H5 file : ','s')
+nexisth5 = exist(namefileh5,'file');
+
+if (nexisth5 == 0);
+disp('Data files do not exist!')
 disp('Please use Advanced interface')
-disp('and uncheck the option "Do not write mat file" if necessary')
+disp('and uncheck the option "Do not write file" if necessary')
 return;
+
 end;
+end;
+
+if (nexist == 0);
+
+nproche=h5read(namefileh5,'/Option/nproche')
+nlocal=h5read(namefileh5,'/Option/nlocal')
+nmacro=h5read(namefileh5,'/Option/nmacro')
+nsection=h5read(namefileh5,'/Option/nsection')
+nsectionsca=h5read(namefileh5,'/Option/ndiffracte')
+nquickdiffracte=h5read(namefileh5,'/Option/nquickdiffracte')
+nforce=h5read(namefileh5,'/Option/nforce')
+nforced=h5read(namefileh5,'/Option/nforced')
+ntorque=h5read(namefileh5,'/Option/ntorque')
+ntorqued=h5read(namefileh5,'/Option/ntorqued')
+nlentille=h5read(namefileh5,'/Option/nlentille')
+nquicklens=h5read(namefileh5,'/Option/nquicklens')
+nphi=h5read(namefileh5,'/Option/nphi')
+ntheta=h5read(namefileh5,'/Option/ntheta')
+niso=h5read(namefileh5,'/Option/niso')
+nfft=h5read(namefileh5,'/Option/nfft2d')
+k0=h5read(namefileh5,'/Option/k0')
+numaper=h5read(namefileh5,'/Option/numaper')
+nprochefft=h5read(namefileh5,'/Option/nprochefft')
+nobjet=h5read(namefileh5,'/Option/nobjet')
+ncote=h5read(namefileh5,'/Option/nside')
+indice0=h5read(namefileh5,'/Option/index lower')
+indicen=h5read(namefileh5,'/Option/index upper')
+ntypemic=h5read(namefileh5,'/Option/ntypemic')
+ntypefile=h5read(namefileh5,'/Option/nmatf')
+
+else
+   
 load inputmatlab.mat -ascii
 
 nproche=inputmatlab(1);         % Defined box of computation for the near field
@@ -33,9 +70,30 @@ ncote=inputmatlab(21);          % =0 both side -1 neg et +1 pos
 indice0=inputmatlab(22);        % indice0
 indicen=inputmatlab(23);        % indicen
 ntypemic=inputmatlab(24);       % type microsocopy
+ntypefile=inputmatlab(25);      % mat file or hdf5 file
+
   
+if (ntypefile == 2);
+
+
+nexisth5a = exist('filenameh5','file');
+if (nexisth5a == 0);
+disp('H5 files do not exist!')
+return;
+end;
+
+fid=fopen('filenameh5');    % name file of hdf5
+namefileh5a=fgetl(fid);
+k=0; for i=1:101; if namefileh5a(i) ~= ' '; k = k+1; namefileh5(k)=namefileh5a(i);end;end;
+%namefileh5=input('Please give the name of an H5 file : ','s')
+end;
+
+end;
+
+
 icomp=complex(0,1);
-  
+
+if (ntypefile == 0);
 load x.mat -ascii
 load y.mat -ascii
 load z.mat -ascii
@@ -49,9 +107,35 @@ nz=max(size(z));
 load xc.mat -ascii
 load yc.mat -ascii
 load zc.mat -ascii
-
-  
 load epsilon.mat -ascii
+
+
+elseif(ntypefile == 2)
+
+nx=double(h5read(namefileh5,'/Object/nx'));
+ny=double(h5read(namefileh5,'/Object/ny'));
+nz=double(h5read(namefileh5,'/Object/nz'));
+xc=h5read(namefileh5,'/Object/Dipole position x');
+yc=h5read(namefileh5,'/Object/Dipole position y');
+zc=h5read(namefileh5,'/Object/Dipole position z');
+epsilon(:,1)=h5read(namefileh5,'/Object/Epsilon real part');
+epsilon(:,2)=h5read(namefileh5,'/Object/Epsilon imaginary part');
+
+xmin=min(xc);
+xmax=max(xc);
+pasx=(xmax-xmin)/(nx-1);
+ymin=min(yc);
+ymax=max(yc);
+pasy=(xmax-xmin)/(ny-1);
+zmin=min(zc);
+zmax=max(zc);
+pasz=(xmax-xmin)/(nz-1);
+x=xmin:pasx:xmax;
+y=ymin:pasy:ymax;
+z=zmin:pasz:zmax;
+
+end;
+
 
 if (niso == 0);
 if (nproche == -1 );
@@ -220,11 +304,24 @@ end;
 
 if ( nprochefft == 0) 
 
+if (ntypefile == 0);
+
 load incidentfield.mat -ascii
 load incidentfieldx.mat -ascii
 load incidentfieldy.mat -ascii
 load incidentfieldz.mat -ascii
 
+elseif (ntypefile ==2);
+
+incidentfield=h5read(namefileh5,'/Near Field/Incident field modulus');
+incidentfieldx(:,1)=h5read(namefileh5,'/Near Field/Incident field x component real part');
+incidentfieldx(:,2)=h5read(namefileh5,'/Near Field/Incident field x component imaginary part');
+incidentfieldy(:,1)=h5read(namefileh5,'/Near Field/Incident field y component real part');
+incidentfieldy(:,2)=h5read(namefileh5,'/Near Field/Incident field y component imaginary part');
+incidentfieldz(:,1)=h5read(namefileh5,'/Near Field/Incident field z component real part');
+incidentfieldz(:,2)=h5read(namefileh5,'/Near Field/Incident field z component imaginary part');
+
+end;
 
 matxyincifield=reshape(incidentfield,nx,ny,nz);
 matxyincifieldx=reshape(incidentfieldx(:,1)+icomp*incidentfieldx(:,2),nx,ny,nz);
@@ -266,11 +363,24 @@ nxm=max(size(xwf));
 nym=max(size(ywf));
 nzm=max(size(zwf));
 
+if (ntypefile == 0);
+
 load incidentfieldwf.mat -ascii
 load incidentfieldxwf.mat -ascii
 load incidentfieldywf.mat -ascii
 load incidentfieldzwf.mat -ascii
 
+elseif (ntypefile ==2);
+
+incidentfieldwf=h5read(namefileh5,'/Near Field/Incident field modulus wf');
+incidentfieldxwf(:,1)=h5read(namefileh5,'/Near Field/Incident field x component real part wf');
+incidentfieldxwf(:,2)=h5read(namefileh5,'/Near Field/Incident field x component imaginary part wf');
+incidentfieldywf(:,1)=h5read(namefileh5,'/Near Field/Incident field y component real part wf');
+incidentfieldywf(:,2)=h5read(namefileh5,'/Near Field/Incident field y component imaginary part wf');
+incidentfieldzwf(:,1)=h5read(namefileh5,'/Near Field/Incident field z component real part wf');
+incidentfieldzwf(:,2)=h5read(namefileh5,'/Near Field/Incident field z component imaginary part wf');
+
+end;
 
 matxyincifield=reshape(incidentfieldwf,nxm,nym,nzm);
 matxyincifieldx=reshape(incidentfieldxwf(:,1)+icomp*incidentfieldxwf(:,2),nxm,nym,nzm);
@@ -314,11 +424,20 @@ if nlocal == 1;
 
 if (nprochefft ==0) 
 
+if (ntypefile == 0);  
 load localfield.mat -ascii
 load localfieldx.mat -ascii
 load localfieldy.mat -ascii
 load localfieldz.mat -ascii
-
+elseif (ntypefile ==2);
+localfield=h5read(namefileh5,'/Near Field/Local field modulus');
+localfieldx(:,1)=h5read(namefileh5,'/Near Field/Local field x component real part');
+localfieldx(:,2)=h5read(namefileh5,'/Near Field/Local field x component imaginary part');
+localfieldy(:,1)=h5read(namefileh5,'/Near Field/Local field y component real part');
+localfieldy(:,2)=h5read(namefileh5,'/Near Field/Local field y component imaginary part');
+localfieldz(:,1)=h5read(namefileh5,'/Near Field/Local field z component real part');
+localfieldz(:,2)=h5read(namefileh5,'/Near Field/Local field z component imaginary part');
+end;
 
 matxylocalfield=reshape(localfield,nx,ny,nz);
 matxylocalfieldx=reshape(localfieldx(:,1)+icomp*localfieldx(:,2),nx,ny,nz);
@@ -357,12 +476,21 @@ load zwf.mat -ascii
 nxm=max(size(xwf));
 nym=max(size(ywf));
 nzm=max(size(zwf));
-
+if (ntypefile ==0);
 load localfieldwf.mat -ascii
 load localfieldxwf.mat -ascii
 load localfieldywf.mat -ascii
 load localfieldzwf.mat -ascii
+elseif (ntypefile ==2);
+localfieldwf=h5read(namefileh5,'/Near Field/Local field modulus wf');
+localfieldxwf(:,1)=h5read(namefileh5,'/Near Field/Local field x component real part wf');
+localfieldxwf(:,2)=h5read(namefileh5,'/Near Field/Local field x component imaginary part wf');
+localfieldywf(:,1)=h5read(namefileh5,'/Near Field/Local field y component real part wf');
+localfieldywf(:,2)=h5read(namefileh5,'/Near Field/Local field y component imaginary part wf');
+localfieldzwf(:,1)=h5read(namefileh5,'/Near Field/Local field z component real part wf');
+localfieldzwf(:,2)=h5read(namefileh5,'/Near Field/Local field z component imaginary part wf');
 
+end;
 
   
 matxylocalfield=reshape(localfieldwf,nxm,nym,nzm);
@@ -406,12 +534,20 @@ if nmacro == 1;
 
 
 if (nprochefft ==0) 
-
+if (ntypefile == 0);
 load macroscopicfield.mat -ascii
 load macroscopicfieldx.mat -ascii
 load macroscopicfieldy.mat -ascii
 load macroscopicfieldz.mat -ascii
-
+elseif (ntypefile ==2);
+macroscopicfield=h5read(namefileh5,'/Near Field/Macroscopic field modulus');
+macroscopicfieldx(:,1)=h5read(namefileh5,'/Near Field/Macroscopic field x component real part');
+macroscopicfieldx(:,2)=h5read(namefileh5,'/Near Field/Macroscopic field x component imaginary part');
+macroscopicfieldy(:,1)=h5read(namefileh5,'/Near Field/Macroscopic field y component real part');
+macroscopicfieldy(:,2)=h5read(namefileh5,'/Near Field/Macroscopic field y component imaginary part');
+macroscopicfieldz(:,1)=h5read(namefileh5,'/Near Field/Macroscopic field z component real part');
+macroscopicfieldz(:,2)=h5read(namefileh5,'/Near Field/Macroscopic field z component imaginary part');
+end;
 
 matxymacrofield=reshape(macroscopicfield,nx,ny,nz);
 matxymacrofieldx=reshape(macroscopicfieldx(:,1)+icomp*macroscopicfieldx(:,2),nx,ny,nz);
@@ -448,13 +584,21 @@ load zwf.mat -ascii
 nxm=max(size(xwf));
 nym=max(size(ywf));
 nzm=max(size(zwf));
-
+if (ntypefile == 0);  
 load macroscopicfieldwf.mat -ascii
 load macroscopicfieldxwf.mat -ascii
 load macroscopicfieldywf.mat -ascii
 load macroscopicfieldzwf.mat -ascii
 
-
+elseif (ntypefile ==2);
+macroscopicfieldwf=h5read(namefileh5,'/Near Field/Macroscopic field modulus wf');
+macroscopicfieldxwf(:,1)=h5read(namefileh5,'/Near Field/Macroscopic field x component real part wf');
+macroscopicfieldxwf(:,2)=h5read(namefileh5,'/Near Field/Macroscopic field x component imaginary part wf');
+macroscopicfieldywf(:,1)=h5read(namefileh5,'/Near Field/Macroscopic field y component real part wf');
+macroscopicfieldywf(:,2)=h5read(namefileh5,'/Near Field/Macroscopic field y component imaginary part wf');
+macroscopicfieldzwf(:,1)=h5read(namefileh5,'/Near Field/Macroscopic field z component real part wf');
+macroscopicfieldzwf(:,2)=h5read(namefileh5,'/Near Field/Macroscopic field z component imaginary part wf');
+end;
   
 matxymacrofield=reshape(macroscopicfieldwf,nxm,nym,nzm);
 matxymacrofieldx=reshape(macroscopicfieldxwf(:,1)+icomp*macroscopicfieldxwf(:,2),nxm,nym,nzm);
@@ -494,7 +638,12 @@ end;
 if nsectionsca == 1;
 if nquickdiffracte == 0;
 
+
+if (ntypefile ==0)
 load poynting.mat -ascii
+elseif (ntypefile ==2)
+poynting=h5read(namefileh5,'/Far Field/Poynting');
+end;
 
 ray=reshape(poynting,nphi,ntheta);
 ray(nphi+1,:)=ray(1,:);
@@ -529,8 +678,11 @@ zlabel('z')
 
 else
 
-
+if (ntypefile ==0)
 load poynting.mat -ascii
+elseif (ntypefile ==2)
+poynting=h5read(namefileh5,'/Far Field/Poynting');
+end;
 
 ray=reshape(poynting,nphi,ntheta);
 ray(nphi+1,:)=ray(1,:);
@@ -565,10 +717,18 @@ zlabel('$z$','Interpreter','latex','Fontsize',18)
 
 
 
+
+if (ntypefile ==0)
 load poyntingpos.mat -ascii
 load poyntingneg.mat -ascii
 load kx.mat -ascii
 load ky.mat -ascii
+elseif (ntypefile ==2)
+poyntingpos=h5read(namefileh5,'/Far Field/Poynting positive');
+poyntingneg=h5read(namefileh5,'/Far Field/Poynting negative');
+kx=h5read(namefileh5,'/Far Field/kx Poynting');
+ky=h5read(namefileh5,'/Far Field/ky Poynting');
+end;
 
 
 nxp=max(size(kx));
@@ -763,12 +923,24 @@ if (ntypemic ==0);
 %%%%%%%%%%%%%%%%%%%%%%% Lens for z>0 %%%%%%%%%%%%%%%%
 ncote
 if (ncote==0 || ncote ==1);
-ncote
+
+
+if (ntypefile ==0 );
 load fourierpos.mat -ascii
 load fourierposx.mat -ascii
 load fourierposy.mat -ascii
 load fourierposz.mat -ascii
 load kxfourier.mat -ascii
+elseif (ntypefile ==2 );
+kxfourier=h5read(namefileh5,'/Microscopy/kx Fourier');
+fourierpos=h5read(namefileh5,'/Microscopy/Fourier kz>0 field modulus');
+fourierposx(:,1)=h5read(namefileh5,'/Microscopy/Fourier kz>0 field x component real part');
+fourierposx(:,2)=h5read(namefileh5,'/Microscopy/Fourier kz>0 field x component imaginary part');
+fourierposy(:,1)=h5read(namefileh5,'/Microscopy/Fourier kz>0 field y component real part');
+fourierposy(:,2)=h5read(namefileh5,'/Microscopy/Fourier kz>0 field y component imaginary part');
+fourierposz(:,1)=h5read(namefileh5,'/Microscopy/Fourier kz>0 field z component real part');
+fourierposz(:,2)=h5read(namefileh5,'/Microscopy/Fourier kz>0 field z component imaginary part');
+end;
 
 nnfft=max(size(kxfourier));
 
@@ -782,10 +954,22 @@ clear fourierposx
 clear fourierposy
 clear fourierposz
 
+if (ntypefile ==0 );
 load fourierposinc.mat -ascii
 load fourierposincx.mat -ascii
 load fourierposincy.mat -ascii
 load fourierposincz.mat -ascii
+elseif (ntypefile ==2 );
+fourierposinc=h5read(namefileh5,'/Microscopy/Fourier+incident kz>0 field modulus');
+fourierposincx(:,1)=h5read(namefileh5,'/Microscopy/Fourier+incident kz>0 field x component real part');
+fourierposincx(:,2)=h5read(namefileh5,'/Microscopy/Fourier+incident kz>0 field x component imaginary part');
+fourierposincy(:,1)=h5read(namefileh5,'/Microscopy/Fourier+incident kz>0 field y component real part');
+fourierposincy(:,2)=h5read(namefileh5,'/Microscopy/Fourier+incident kz>0 field y component imaginary part');
+fourierposincz(:,1)=h5read(namefileh5,'/Microscopy/Fourier+incident kz>0 field z component real part');
+fourierposincz(:,2)=h5read(namefileh5,'/Microscopy/Fourier+incident kz>0 field z component imaginary part');
+end;
+
+
 
 fourierincm=reshape(fourierposinc,nnfft,nnfft);
 fourierincxc=reshape(fourierposincx(:,1)+icomp*fourierposincx(:,2),nnfft,nnfft);
@@ -797,11 +981,22 @@ clear fourierposincx
 clear fourierposincy
 clear fourierposincz
 
-
+if (ntypefile ==0 );
+load ximage.mat -ascii
 load imagepos.mat -ascii
 load imageposx.mat -ascii
 load imageposy.mat -ascii
 load imageposz.mat -ascii
+elseif (ntypefile ==2 );
+ximage=h5read(namefileh5,'/Microscopy/x Image');
+imagepos=h5read(namefileh5,'/Microscopy/Image kz>0 field modulus');
+imageposx(:,1)=h5read(namefileh5,'/Microscopy/Image kz>0 field x component real part');
+imageposx(:,2)=h5read(namefileh5,'/Microscopy/Image kz>0 field x component imaginary part');
+imageposy(:,1)=h5read(namefileh5,'/Microscopy/Image kz>0 field y component real part');
+imageposy(:,2)=h5read(namefileh5,'/Microscopy/Image kz>0 field y component imaginary part');
+imageposz(:,1)=h5read(namefileh5,'/Microscopy/Image kz>0 field z component real part');
+imageposz(:,2)=h5read(namefileh5,'/Microscopy/Image kz>0 field z component imaginary part');
+end;
 
 imagem=reshape(imagepos,nfft,nfft);
 imagexc=reshape(imageposx(:,1)+icomp*imageposx(:,2),nfft,nfft);
@@ -813,11 +1008,20 @@ clear imageposx
 clear imageposy
 clear imageposz
 
-
+if (ntypefile ==0 );
 load imageposinc.mat -ascii
 load imageposincx.mat -ascii
 load imageposincy.mat -ascii
 load imageposincz.mat -ascii
+elseif (ntypefile ==2 );
+imageposinc=h5read(namefileh5,'/Microscopy/Image+incident kz>0 field modulus');
+imageposincx(:,1)=h5read(namefileh5,'/Microscopy/Image+incident kz>0 field x component real part');
+imageposincx(:,2)=h5read(namefileh5,'/Microscopy/Image+incident kz>0 field x component imaginary part');
+imageposincy(:,1)=h5read(namefileh5,'/Microscopy/Image+incident kz>0 field y component real part');
+imageposincy(:,2)=h5read(namefileh5,'/Microscopy/Image+incident kz>0 field y component imaginary part');
+imageposincz(:,1)=h5read(namefileh5,'/Microscopy/Image+incident kz>0 field z component real part');
+imageposincz(:,2)=h5read(namefileh5,'/Microscopy/Image+incident kz>0 field z component imaginary part');
+end;
 
 imageincm=reshape(imageposinc,nfft,nfft);
 imageincxc=reshape(imageposincx(:,1)+icomp*imageposincx(:,2),nfft,nfft);
@@ -829,7 +1033,6 @@ clear imageposincx
 clear imageposincy
 clear imageposincz
 
-load ximage.mat -ascii
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Fourier %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -994,11 +1197,23 @@ end;
 
 if (ncote==0 || ncote ==-1);
 
+
+if (ntypefile ==0 );
 load fourierneg.mat -ascii
 load fouriernegx.mat -ascii
 load fouriernegy.mat -ascii
 load fouriernegz.mat -ascii
 load kxfourier.mat -ascii
+elseif (ntypefile ==2 );
+kxfourier=h5read(namefileh5,'/Microscopy/kx Fourier');
+fourierneg=h5read(namefileh5,'/Microscopy/Fourier kz<0 field modulus');
+fouriernegx(:,1)=h5read(namefileh5,'/Microscopy/Fourier kz<0 field x component real part');
+fouriernegx(:,2)=h5read(namefileh5,'/Microscopy/Fourier kz<0 field x component imaginary part');
+fouriernegy(:,1)=h5read(namefileh5,'/Microscopy/Fourier kz<0 field y component real part');
+fouriernegy(:,2)=h5read(namefileh5,'/Microscopy/Fourier kz<0 field y component imaginary part');
+fouriernegz(:,1)=h5read(namefileh5,'/Microscopy/Fourier kz<0 field z component real part');
+fouriernegz(:,2)=h5read(namefileh5,'/Microscopy/Fourier kz<0 field z component imaginary part');
+end;
 
 nnfft=max(size(kxfourier));
 
@@ -1012,10 +1227,20 @@ clear fouriernegx
 clear fouriernegy
 clear fouriernegz
 
+if (ntypefile ==0 );
 load fourierneginc.mat -ascii
 load fouriernegincx.mat -ascii
 load fouriernegincy.mat -ascii
 load fouriernegincz.mat -ascii
+elseif (ntypefile ==2 );
+fourierneginc=h5read(namefileh5,'/Microscopy/Fourier+incident kz<0 field modulus');
+fouriernegincx(:,1)=h5read(namefileh5,'/Microscopy/Fourier+incident kz<0 field x component real part');
+fouriernegincx(:,2)=h5read(namefileh5,'/Microscopy/Fourier+incident kz<0 field x component imaginary part');
+fouriernegincy(:,1)=h5read(namefileh5,'/Microscopy/Fourier+incident kz<0 field y component real part');
+fouriernegincy(:,2)=h5read(namefileh5,'/Microscopy/Fourier+incident kz<0 field y component imaginary part');
+fouriernegincz(:,1)=h5read(namefileh5,'/Microscopy/Fourier+incident kz<0 field z component real part');
+fouriernegincz(:,2)=h5read(namefileh5,'/Microscopy/Fourier+incident kz<0 field z component imaginary part');
+end;
 
 fourierincm=reshape(fourierneginc,nnfft,nnfft);
 fourierincxc=reshape(fouriernegincx(:,1)+icomp*fouriernegincx(:,2),nnfft,nnfft);
@@ -1027,11 +1252,22 @@ clear fouriernegincx
 clear fouriernegincy
 clear fouriernegincz
 
-
+if (ntypefile ==0 );
+load ximage.mat -ascii
 load imageneg.mat -ascii
 load imagenegx.mat -ascii
 load imagenegy.mat -ascii
 load imagenegz.mat -ascii
+elseif (ntypefile ==2 );
+ximage=h5read(namefileh5,'/Microscopy/x Image');
+imageneg=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field modulus');
+imagenegx(:,1)=h5read(namefileh5,'/Microscopy/Image kz<0 field x component real part');
+imagenegx(:,2)=h5read(namefileh5,'/Microscopy/Image kz<0 field x component imaginary part');
+imagenegy(:,1)=h5read(namefileh5,'/Microscopy/Image kz<0 field y component real part');
+imagenegy(:,2)=h5read(namefileh5,'/Microscopy/Image kz<0 field y component imaginary part');
+imagenegz(:,1)=h5read(namefileh5,'/Microscopy/Image kz<0 field z component real part');
+imagenegz(:,2)=h5read(namefileh5,'/Microscopy/Image kz<0 field z component imaginary part');
+end;
 
 imagem=reshape(imageneg,nfft,nfft);
 imagexc=reshape(imagenegx(:,1)+icomp*imagenegx(:,2),nfft,nfft);
@@ -1044,10 +1280,20 @@ clear imagenegy
 clear imagenegz
 
 
+if (ntypefile ==0 );
 load imageneginc.mat -ascii
 load imagenegincx.mat -ascii
 load imagenegincy.mat -ascii
 load imagenegincz.mat -ascii
+elseif (ntypefile ==2 );
+imageneginc=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field modulus');
+imagenegincx(:,1)=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field x component real part');
+imagenegincx(:,2)=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field x component imaginary part');
+imagenegincy(:,1)=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field y component real part');
+imagenegincy(:,2)=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field y component imaginary part');
+imagenegincz(:,1)=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field z component real part');
+imagenegincz(:,2)=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field z component imaginary part');
+end;
 
 imageincm=reshape(imageneginc,nfft,nfft);
 imageincxc=reshape(imagenegincx(:,1)+icomp*imagenegincx(:,2),nfft,nfft);
@@ -1059,7 +1305,7 @@ clear imagenegincx
 clear imagenegincy
 clear imagenegincz
 
-load ximage.mat -ascii
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Fourier %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1226,11 +1472,22 @@ end;
 ncote
 if (ncote==0 || ncote ==1);
 ncote
-
+if (ntypefile == 0);
 load imagebfpos.mat -ascii
 load imagebfxpos.mat -ascii
 load imagebfypos.mat -ascii
 load imagebfzpos.mat -ascii
+elseif(ntypefile == 2);
+imagebfpos=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field modulus');
+imagebfxpos(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field x component real part');
+imagebfxpos(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field x component imaginary part');
+imagebfypos(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field y component real part');
+imagebfypos(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field y component imaginary part');
+imagebfzpos(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field z component real part');
+imagebfzpos(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field z component imaginary part');
+
+end;
+
 
 imagem=reshape(imagebfpos,nfft,nfft);
 imagexc=reshape(imagebfxpos(:,1),nfft,nfft);
@@ -1242,12 +1499,22 @@ clear imagebfxpos
 clear imagebfypos
 clear imagebfzpos
 
-
+if (ntypefile == 0);
 load imageincbfpos.mat -ascii
 load imageincbfxpos.mat -ascii
 load imageincbfypos.mat -ascii
 load imageincbfzpos.mat -ascii
+elseif(ntypefile == 2);
+imageincbfpos=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field modulus');
+imageincbfxpos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field x component real part');
+imageincbfxpos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field x component imaginary part');
+imageincbfypos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field y component real part');
+imageincbfypos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field y component imaginary part');
+imageincbfzpos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field z component real part');
+imageincbfzpos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field z component imaginary part');
 
+
+end;
 imageincm=reshape(imageincbfpos,nfft,nfft);
 imageincxc=reshape(imageincbfxpos(:,1),nfft,nfft);
 imageincyc=reshape(imageincbfypos(:,1),nfft,nfft);
@@ -1257,9 +1524,11 @@ clear imageincbfpos
 clear imageincbfxpos
 clear imageincbfypos
 clear imageincbfzpos
-
+if (ntypefile == 0);
 load ximage.mat -ascii
-
+elseif(ntypefile == 2);
+ximage=h5read(namefileh5,'/Microscopy/x Image');
+end;
 %%%%%%%%%%%%%%%%% Image  %%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -1334,12 +1603,20 @@ end;
 %%%%%%%%%%%%%%%%%%%%%%% Lens for z<0 %%%%%%%%%%%%%%%%
 
 if (ncote==0 || ncote ==-1);
-
+if (ntypefile == 0);
 load imagebfneg.mat -ascii
 load imagebfxneg.mat -ascii
 load imagebfyneg.mat -ascii
 load imagebfzneg.mat -ascii
-
+elseif(ntypefile == 2);
+imagebfneg=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field modulus');
+imagebfxneg(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field x component real part');
+imagebfxneg(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field x component imaginary part');
+imagebfyneg(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field y component real part');
+imagebfyneg(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field y component imaginary part');
+imagebfzneg(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field z component real part');
+imagebfzneg(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field z component imaginary part');
+end;
 imagem=reshape(imagebfneg,nfft,nfft);
 imagexc=reshape(imagebfxneg(:,1),nfft,nfft);
 imageyc=reshape(imagebfyneg(:,1),nfft,nfft);
@@ -1350,11 +1627,20 @@ clear imagebfxneg
 clear imagebfyneg
 clear imagebfzneg
 
-
+if (ntypefile == 0);
 load imageincbfneg.mat -ascii
 load imageincbfxneg.mat -ascii
 load imageincbfyneg.mat -ascii
 load imageincbfzneg.mat -ascii
+elseif(ntypefile == 2);
+imageincbfneg=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field modulus');
+imageincbfxneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field x component real part');
+imageincbfxneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field x component imaginary part');
+imageincbfyneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field y component real part');
+imageincbfyneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field y component imaginary part');
+imageincbfzneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field z component real part');
+imageincbfzneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field z component imaginary part');
+end;
 
 imageincm=reshape(imageincbfneg,nfft,nfft);
 imageincxc=reshape(imageincbfxneg(:,1),nfft,nfft);
@@ -1365,8 +1651,11 @@ clear imageincbfneg
 clear imageincbfxneg
 clear imageincbfyneg
 clear imageincbfzneg
-
+if (ntypefile == 0);
 load ximage.mat -ascii
+elseif(ntypefile == 2);
+ximage=h5read(namefileh5,'/Microscopy/x Image');
+end;
 
 %%%%%%%%%%%%%%%%% Image  %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1447,10 +1736,21 @@ ncote
 if (ncote==0 || ncote ==1);
 ncote
 
+
+if (ntypefile == 0);
 load imagedfpos.mat -ascii
 load imagedfxpos.mat -ascii
 load imagedfypos.mat -ascii
 load imagedfzpos.mat -ascii
+elseif(ntypefile == 2);
+imagedfpos=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field modulus');
+imagedfxpos(:,1)=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field x component real part');
+imagedfxpos(:,2)=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field x component imaginary part');
+imagedfypos(:,1)=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field y component real part');
+imagedfypos(:,2)=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field y component imaginary part');
+imagedfzpos(:,1)=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field z component real part');
+imagedfzpos(:,2)=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field z component imaginary part');
+end;
 
 imagem=reshape(imagedfpos,nfft,nfft);
 imagexc=reshape(imagedfxpos(:,1),nfft,nfft);
@@ -1462,11 +1762,20 @@ clear imagedfxpos
 clear imagedfypos
 clear imagedfzpos
 
-
+if (ntypefile == 0);
 load imageincdfpos.mat -ascii
 load imageincdfxpos.mat -ascii
 load imageincdfypos.mat -ascii
 load imageincdfzpos.mat -ascii
+elseif(ntypefile == 2);
+imageincdfpos=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field modulus');
+imageincdfxpos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field x component real part');
+imageincdfxpos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field x component imaginary part');
+imageincdfypos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field y component real part');
+imageincdfypos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field y component imaginary part');
+imageincdfzpos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field z component real part');
+imageincdfzpos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field z component imaginary part');
+end;
 
 imageincm=reshape(imageincdfpos,nfft,nfft);
 imageincxc=reshape(imageincdfxpos(:,1),nfft,nfft);
@@ -1477,9 +1786,11 @@ clear imageincdfpos
 clear imageincdfxpos
 clear imageincdfypos
 clear imageincdfzpos
-
+if (ntypefile == 0);
 load ximage.mat -ascii
-
+elseif(ntypefile == 2);
+ximage=h5read(namefileh5,'/Microscopy/x Image');
+end;
 %%%%%%%%%%%%%%%%% Image  %%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -1554,11 +1865,20 @@ end;
 %%%%%%%%%%%%%%%%%%%%%%% Lens for z<0 %%%%%%%%%%%%%%%%
 
 if (ncote==0 || ncote ==-1);
-
+if (ntypefile == 0);
 load imagedfneg.mat -ascii
 load imagedfxneg.mat -ascii
 load imagedfyneg.mat -ascii
 load imagedfzneg.mat -ascii
+elseif(ntypefile == 2);
+imagedfneg=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field modulus');
+imagedfxneg(:,1)=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field x component real part');
+imagedfxneg(:,2)=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field x component imaginary part');
+imagedfyneg(:,1)=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field y component real part');
+imagedfyneg(:,2)=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field y component imaginary part');
+imagedfzneg(:,1)=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field z component real part');
+imagedfzneg(:,2)=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field z component imaginary part');
+end;
 
 imagem=reshape(imagedfneg,nfft,nfft);
 imagexc=reshape(imagedfxneg(:,1),nfft,nfft);
@@ -1570,11 +1890,20 @@ clear imagedfxneg
 clear imagedfyneg
 clear imagedfzneg
 
-
+if (ntypefile == 0);
 load imageincdfneg.mat -ascii
 load imageincdfxneg.mat -ascii
 load imageincdfyneg.mat -ascii
 load imageincdfzneg.mat -ascii
+elseif(ntypefile == 2);
+imageincdfneg=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field modulus');
+imageincdfxneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field x component real part');
+imageincdfxneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field x component imaginary part');
+imageincdfyneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field y component real part');
+imageincdfyneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field y component imaginary part');
+imageincdfzneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field z component real part');
+imageincdfzneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field z component imaginary part');
+end;
 
 imageincm=reshape(imageincdfneg,nfft,nfft);
 imageincxc=reshape(imageincdfxneg(:,1),nfft,nfft);
@@ -1586,7 +1915,11 @@ clear imageincdfxneg
 clear imageincdfyneg
 clear imageincdfzneg
 
+if (ntypefile == 0);
 load ximage.mat -ascii
+elseif(ntypefile == 2);
+ximage=h5read(namefileh5,'/Microscopy/x Image');
+end;
 
 %%%%%%%%%%%%%%%%% Image  %%%%%%%%%%%%%%%%%%%%%%
 

@@ -3,7 +3,7 @@ c     Fortran library subroutine entry point
 c     input file cdm.in
      $     lambda,beam,object,trope,
      $     materiaumulti,nnnr,tolinit,methodeit,polarizability,
-     $     nlecture,filereread,nmatf,
+     $     nlecture,filereread,nmatf,h5file,
 C     Definition du multicouche
      $     neps,zcouche,epscouche,materiaucouche,
 c     output file cdm.out
@@ -66,7 +66,9 @@ c     taille double complex (nfft2d,nfft2d,3)
      $     Ediffkzpos,Ediffkzneg,      
 c     taille entier (nxm*nym*nzm)
      $     Tabdip,Tabmulti,Tabzn)
-      
+
+      use HDF5
+
       implicit none
       
 c     integer
@@ -235,6 +237,19 @@ c     variable pour avoir l'image a travers la lentille
       integer*8 planf,planb,plan2f,plan2b,planfn,planbn
       integer FFTW_FORWARD,FFTW_ESTIMATE,FFTW_BACKWARD
 
+      character(40) :: name
+      character(LEN=100) :: h5file
+      character(LEN=100) :: datasetname
+      integer debug
+      integer error
+      
+      integer(hid_t) :: file_id
+      integer(hid_t) :: group_idopt,group_idmic,group_idnf,group_idof
+     $     ,group_idff,group_iddip
+      integer :: dim(4)
+  
+
+      
       call dfftw_init_threads(iret)
       if (iret.eq.0) then
          write(*,*) 'iret',iret
@@ -296,8 +311,31 @@ c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
       write(*,*) 'Box size         : ',nxm,nym,nzm
       write(*,*) 'Meshsize         : ',aretecube,'nm'
       write(*,*) 'Number of layer  : ',neps
+      write(*,*) 'Write  file      : ',nmatf
+     $     ,'0 ascii file: 1 no file: 2 hdf5 file'
+      write(*,*) 'Use FFTW'
+
+      if (nmatf.eq.2) then
+         debug=1
+         call hdf5create(h5file, file_id)
+         write(*,*) 'h5 file created  ',h5file
+         write(*,*) 'file_id', file_id
+         call h5gcreate_f(file_id,"Option", group_idopt, error)
+         write(*,*) 'error',error
+         call h5gcreate_f(file_id,"Object", group_iddip, error)
+         write(*,*) 'error',error
+         call h5gcreate_f(file_id,"Far Field", group_idff, error)
+         write(*,*) 'error',error
+         call h5gcreate_f(file_id,"Microscopy", group_idmic, error)
+         write(*,*) 'error',error
+c         call h5gcreate_f(file_id,"Optical Force", group_idof, error)
+c         write(*,*) 'error',error
+         call h5gcreate_f(file_id,"Near Field", group_idnf, error)
+         write(*,*) 'error',error
+      endif
 
 
+      
 c     Initialise nstop
       nstop=0
 
@@ -736,7 +774,7 @@ c     Built the object
      $        ,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
      $        ,polarizability ,nproche,epsilon,polarisa,rayon,xg,yg,zg
      $        ,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn,nmatf
-     $        ,infostr ,nstop)
+     $        ,file_id,group_iddip,infostr ,nstop)
          write(99,*) 'sphere',rayon
 
       elseif (object(1:12).eq.'inhomosphere') then
@@ -752,7 +790,7 @@ c     Built the object
      $        ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
      $        ,polarizability,nproche,epsilon,polarisa,rayon,lc,hc,ng
      $        ,localfieldx,neps,nepsmax,dcouche,zcouche,epscouche,tabzn
-     $        ,nmatf,infostr,nstop)
+     $        ,nmatf,file_id,group_iddip,infostr,nstop)
          localfieldx=0.d0
          write(99,*) 'sphere',rayon
       elseif (object(1:13).eq.'inhomocuboid1') then
@@ -769,7 +807,7 @@ c     Built the object
      $        ,nym ,nzm,polarizability ,nproche ,epsilon,polarisa,sidex
      $        ,sidey ,sidez ,xg ,yg ,zg,lc ,hc,ng,localfieldx,neps
      $        ,nepsmax ,dcouche ,zcouche ,epscouche ,tabzn ,nmatf
-     $        ,infostr,nstop)
+     $        ,file_id,group_iddip,infostr,nstop)
 
          localfieldx=0.d0
          write(99,*) 'cuboid',sidex,sidey,sidez
@@ -787,7 +825,7 @@ c     Built the object
      $        ,nym,nzm,nxmp,nymp,nzmp,polarizability ,nproche ,epsilon
      $        ,polarisa ,sidex ,sidey,sidez ,xg ,yg,zg,lc ,hc,ng
      $        ,localfieldx,neps ,nepsmax ,dcouche ,zcouche ,epscouche
-     $        ,tabzn ,nmatf,infostr ,nstop)
+     $        ,tabzn ,nmatf,file_id,group_iddip,infostr ,nstop)
          localfieldx=0.d0
          write(99,*) 'cuboid',sidex,sidey,sidez
       elseif (object(1:4).eq.'cube') then
@@ -796,8 +834,8 @@ c     Built the object
          call objetcubesurf(trope,eps,epsani ,eps0,xs,ys,zs,xswf,yswf
      $        ,zswf,k0,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny
      $        ,nz,polarizability,epsilon,polarisa,side,xg,yg,zg,neps
-     $        ,nepsmax ,dcouche,zcouche,epscouche,tabzn,nmatf,infostr
-     $        ,nstop)
+     $        ,nepsmax ,dcouche,zcouche,epscouche,tabzn,nmatf,file_id
+     $        ,group_iddip,infostr ,nstop)
 
       elseif(object(1:7).eq.'cuboid1') then
          write(99,*) 'cuboid:sidex,sidey,sizez ',sidex,sidey,sidez
@@ -807,7 +845,7 @@ c     Built the object
      $        ,nz,nxm,nym,nzm,polarizability,epsilon,polarisa,sidex
      $        ,sidey,sidez,xg ,yg,zg ,phiobj,thetaobj,psiobj,nproche
      $        ,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn,nmatf
-     $        ,infostr ,nstop)
+     $        ,file_id,group_iddip,infostr ,nstop)
          write(99,*) 'side',sidex,sidey,sidez,nx,ny,nz
        
        
@@ -819,7 +857,7 @@ c     Built the object
      $        ,nx ,ny,nz,nxm,nym,nzm,nxmp,nymp,nzmp, polarizability
      $        ,epsilon ,polarisa ,sidex,sidey,sidez,xg,yg,zg,nproche
      $        ,neps ,nepsmax ,dcouche,zcouche ,epscouche,tabzn,nmatf
-     $        ,infostr ,nstop)
+     $        ,file_id,group_iddip,infostr ,nstop)
          write(99,*) 'side',sidex,sidey,sidez,nx,ny,nz
       elseif(object(1:9).eq.'ellipsoid') then
          numberobjet=1
@@ -828,7 +866,7 @@ c     Built the object
      $        ,ny,nz,nxm,nym,nzm,polarizability,nproche,epsilon,polarisa
      $        ,demiaxea,demiaxeb ,demiaxec,xg,yg,zg,phiobj,thetaobj
      $        ,psiobj,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn
-     $        ,nmatf,infostr,nstop)
+     $        ,nmatf,file_id,group_iddip,infostr,nstop)
          write(99,*) 'ellipse',nbsphere,ndipole,nx,ny,nz
       elseif(object(1:8).eq.'nspheres') then
          call objetnspheressurf(trope,epsmulti,epsanimulti,numberobjet
@@ -836,7 +874,7 @@ c     Built the object
      $        ,ys,zs,xswf,yswf,zswf,k0 ,aretecube,tabdip,tabmulti,nnnr
      $        ,nmax,nbsphere ,ndipole,nx,ny,nz,polarizability,nproche
      $        ,epsilon ,polarisa,neps,nepsmax,dcouche ,zcouche,epscouche
-     $        ,tabzn,nmatf,infostr ,nstop)
+     $        ,tabzn,nmatf,file_id,group_iddip,infostr ,nstop)
          write(99,*) 'multisphere',nbsphere,ndipole,nx,ny,nz
       elseif(object(1:8).eq.'cylinder') then
          numberobjet=1
@@ -845,8 +883,8 @@ c     Built the object
      $        ,zswf,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx
      $        ,ny,nz,nxm,nym,nzm,polarizability,nproche,epsilon,polarisa
      $        ,rayon ,hauteur,xg ,yg,zg,phiobj,thetaobj,psiobj,neps
-     $        ,nepsmax ,dcouche ,zcouche ,epscouche,tabzn,nmatf,infostr
-     $        ,nstop)
+     $        ,nepsmax ,dcouche ,zcouche ,epscouche,tabzn,nmatf,file_id
+     $        ,group_iddip,infostr ,nstop)
          write(99,*) 'cylindre',nbsphere,ndipole,nx,ny,nz
       elseif(object(1:16).eq.'concentricsphere') then
          write(*,*) epsmulti,numberobjet
@@ -855,7 +893,7 @@ c     Built the object
      $        ,zs,xswf,yswf,zswf,k0,aretecube,tabdip,tabmulti,nnnr,nmax
      $        ,nbsphere ,ndipole,nx,ny,nz,polarizability,nproche,epsilon
      $        ,polarisa,neps ,nepsmax,dcouche ,zcouche ,epscouche,tabzn
-     $        ,nmatf,infostr,nstop)
+     $        ,nmatf,file_id,group_iddip,infostr,nstop)
          write(99,*) 'concentricsphere',nbsphere,ndipole,nx,ny,nz
       elseif(object(1:9).eq.'arbitrary') then
          numberobjet=1
@@ -863,7 +901,7 @@ c     Built the object
      $        ,yswf,zswf,k0,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole
      $        ,nx,ny,nz,polarizability,namefileobj,nproche,epsilon
      $        ,polarisa,neps,nepsmax ,dcouche,zcouche,epscouche,tabzn
-     $        ,nmatf,infostr,nstop)
+     $        ,nmatf,file_id,group_iddip,infostr,nstop)
          write(99,*) 'arbitrary',nbsphere,ndipole,nx,ny,nz
          write(*,*) 'arbitrary',nbsphere,ndipole,nx,ny,nz
       else
@@ -934,6 +972,116 @@ c     ecriture dans fichiers du epsilon
             enddo          
          endif
          close(66)
+      elseif (nmatf.eq.2) then
+         dim(1)=1
+         dim(2)=1
+         datasetname='nx'
+         call hdf5write1d_int(group_iddip,datasetname,nx,dim)
+         datasetname='ny'
+         call hdf5write1d_int(group_iddip,datasetname,ny,dim)
+         datasetname='nz'
+         call hdf5write1d_int(group_iddip,datasetname,nz,dim)
+
+         if (trope.eq.'iso') then
+            do i=1,ndipole
+               k=tabdip(i)
+               if (k.ne.0) then
+                  wrk(i,1)=epsilon(k,2,2)
+               else
+                  wrk(i,1)=(1.d0,0.d0)
+               endif
+            enddo
+            dim(1)=ndipole
+            dim(2)=nmax*3
+            datasetname='Epsilon real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,1))
+     $           ,dim)
+            datasetname='Epsilon imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,1))
+     $           ,dim)
+         else
+            do i=1,ndipole
+               k=tabdip(i)
+               if (k.ne.0) then
+                  wrk(i,1)=epsilon(k,1,1)
+                  wrk(i,2)=epsilon(k,2,2)
+                  wrk(i,3)=epsilon(k,3,3)
+                  wrk(i,4)=epsilon(k,1,2)
+                  wrk(i,5)=epsilon(k,1,3)
+                  wrk(i,6)=epsilon(k,2,1)
+                  wrk(i,7)=epsilon(k,2,3)
+                  wrk(i,8)=epsilon(k,3,1)
+                  wrk(i,9)=epsilon(k,3,2)
+               else
+                  wrk(i,1)=(1.d0,0.d0)
+                  wrk(i,2)=(1.d0,0.d0)
+                  wrk(i,3)=(1.d0,0.d0)
+                  wrk(i,4)=(0.d0,0.d0)
+                  wrk(i,5)=(0.d0,0.d0)
+                  wrk(i,6)=(0.d0,0.d0)
+                  wrk(i,7)=(0.d0,0.d0)
+                  wrk(i,8)=(0.d0,0.d0)
+                  wrk(i,9)=(0.d0,0.d0)
+               endif
+            enddo   
+
+            dim(1)=ndipole
+            dim(2)=nmax*3
+            datasetname='epsilon xx real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,1))
+     $           ,dim)
+            datasetname='epsilon xx imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,1))
+     $           ,dim)
+            datasetname='epsilon yy real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,2))
+     $           ,dim)
+            datasetname='epsilon yy imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,2))
+     $           ,dim)
+            datasetname='epsilon zz real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,3))
+     $           ,dim)
+            datasetname='epsilon zz imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,3))
+     $           ,dim)
+            datasetname='epsilon xy real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,4))
+     $           ,dim)
+            datasetname='epsilon xy imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,4))
+     $           ,dim)
+            datasetname='epsilon xz real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,5))
+     $           ,dim)
+            datasetname='epsilon xz imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,5))
+     $           ,dim)
+            datasetname='epsilon yx real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,6))
+     $           ,dim)
+            datasetname='epsilon yx imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,6))
+     $           ,dim)
+            datasetname='epsilon yz real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,7))
+     $           ,dim)
+            datasetname='epsilon yz imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,7))
+     $           ,dim)
+            datasetname='epsilon zx real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,8))
+     $           ,dim)
+            datasetname='epsilon zx imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,8))
+     $           ,dim)
+            datasetname='epsilon zy real part'
+            call hdf5write1d(group_iddip,datasetname,dreal(wrk(:,9))
+     $           ,dim)
+            datasetname='epsilon zy imaginary part'
+            call hdf5write1d(group_iddip,datasetname,dimag(wrk(:,9 ))
+     $           ,dim)
+         endif
       endif
 c     fin ecriture du epsilon
 c     epsilon
@@ -978,7 +1126,7 @@ c     epsilon
 
 c     cré le fichier de data pour connaitre les options pour matlab
 
-      if (nmatf.eq.0) then
+      if (nmatf.eq.0.or.nmatf.eq.2) then
          open(900,file='inputmatlab.mat')
          write(900,*) nproche
          write(900,*) nlocal
@@ -1005,13 +1153,84 @@ c     cré le fichier de data pour connaitre les options pour matlab
          write(900,*) indicen
          write(900,*) indice0
          write(900,*) ntypemic
+         write(900,*) nmatf
          close(900)
+         if (nmatf.eq.2) then
+            open(901,file='filenameh5')
+            write(901,*) h5file
+            close(901)
+            dim(1)=1
+            dim(2)=1
+            
+            datasetname='nproche'
+            call hdf5write1d_int(group_idopt,datasetname,nproche,dim)
+            datasetname='nlocal'
+            call hdf5write1d_int(group_idopt,datasetname,nlocal,dim)
+            datasetname='nmacro'
+            call hdf5write1d_int(group_idopt,datasetname,nmacro,dim)
+            datasetname='nsection'
+            call hdf5write1d_int(group_idopt,datasetname,nsection,dim)
+            datasetname='ndiffracte'
+            call hdf5write1d_int(group_idopt,datasetname,ndiffracte,dim
+     $           )
+            datasetname='nquickdiffracte'
+            call hdf5write1d_int(group_idopt,datasetname,nquickdiffracte
+     $           ,dim)
+            datasetname='nforce'
+            call hdf5write1d_int(group_idopt,datasetname,nforce,dim)
+            datasetname='nforced'
+            call hdf5write1d_int(group_idopt,datasetname,nforced,dim)
+            datasetname='ntorque'
+            call hdf5write1d_int(group_idopt,datasetname,ntorque,dim)
+            datasetname='ntorqued'
+            call hdf5write1d_int(group_idopt,datasetname,ntorqued,dim)
+            datasetname='nlentille'
+            call hdf5write1d_int(group_idopt,datasetname,nlentille,dim)
+            datasetname='nquicklens'
+            call hdf5write1d_int(group_idopt,datasetname,nquicklens,dim)
+            datasetname='nphi'
+            call hdf5write1d_int(group_idopt,datasetname,nphi,dim)
+            datasetname='ntheta'
+            call hdf5write1d_int(group_idopt,datasetname,ntheta+1,dim)
+       
+            if (trope.eq.'iso') then
+                datasetname='iso'
+                i=0
+                call hdf5write1d_int(group_idopt,datasetname,i,dim)
+            endif
+            
+            if (trope.eq.'ani') then
+               datasetname='iso'
+               i=1
+               call hdf5write1d_int(group_idopt,datasetname,i,dim)
+            endif
+            datasetname='nfft2d'
+            call hdf5write1d_int(group_idopt,datasetname,nfft2d,dim)
+            datasetname='k0'
+            call hdf5write1d(group_idopt,datasetname,k0,dim)
+            datasetname='numaper'
+            call hdf5write1d(group_idopt,datasetname,numaper,dim)
+            datasetname='nprochefft'
+            call hdf5write1d_int(group_idopt,datasetname,nprochefft,dim)
+            datasetname='nobjet'
+            call hdf5write1d_int(group_idopt,datasetname,nobjet,dim)
+            datasetname='nside'
+            call hdf5write1d_int(group_idopt,datasetname,ncote,dim)
+            datasetname='index upper'
+            call hdf5write1d(group_idopt,datasetname,indicen,dim)
+            datasetname='index lower'
+            call hdf5write1d(group_idopt,datasetname,indice0,dim)
+            datasetname='ntypemic'
+            call hdf5write1d_int(group_idopt,datasetname,ntypemic,dim)
+            datasetname='nmatf'
+            call hdf5write1d_int(group_idopt,datasetname,nmatf,dim)
+         endif
       endif
 
 c     ne fait que l'objet
       if (nobjet.eq.1) then 
          infostr='Dipole calculation completed'
-         return
+         goto 999
       endif
       
 c     multiplication by a factor 2: Toeplitz matrix transformed in a
@@ -1420,6 +1639,49 @@ c     write(*,*) 'iii',i,ndipole,k
                write(39,*) 0.d0
             endif            
          enddo
+      elseif (nmatf.eq.2) then
+         
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
+!$OMP DO SCHEDULE(STATIC)         
+         do i=1,ndipole
+            k=tabdip(i)
+            if (k.ne.0) then
+               incidentfieldx(k)=FF0(3*k-2)
+               incidentfieldy(k)=FF0(3*k-1)
+               incidentfieldz(k)=FF0(3*k)
+               incidentfield(k)=dsqrt(dreal(FF0(3*k-2) *dconjg(FF0(3*k
+     $              -2))+FF0(3*k-1)*dconjg(FF0(3*k-1)) +FF0(3*k)
+     $              *dconjg(FF0(3*k))))
+               wrk(i,1)=FF0(3*k-2)
+               wrk(i,2)=FF0(3*k-1)
+               wrk(i,3)=FF0(3*k)
+               wrk(i,4)=incidentfield(k)
+            else
+               wrk(i,1)=0.d0
+               wrk(i,2)=0.d0
+               wrk(i,3)=0.d0
+               wrk(i,4)=0.d0
+            endif            
+         enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL         
+         dim(1)=ndipole
+         dim(2)=nmax*3
+         datasetname='Incident field modulus'
+         call hdf5write1d(group_idnf,datasetname,dreal(wrk(:,4)), dim)
+         datasetname='Incident field x component real part'
+         call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,1)),dim)
+         datasetname='Incident field x component imaginary part'
+         call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,1)),dim)
+         datasetname='Incident field y component real part'
+         call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,2)),dim)
+         datasetname='Incident field y component imaginary part'
+         call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,2)),dim)
+         datasetname='Incident field z component real part'
+         call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,3)),dim)
+         datasetname='Incident field z component imaginary part'
+         call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,3)),dim)
+
       else
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
 !$OMP DO SCHEDULE(STATIC)         
@@ -1821,7 +2083,36 @@ c     save the incident field for wide field
      $              *i))))          
             enddo
 !$OMP ENDDO 
-!$OMP END PARALLEL   
+!$OMP END PARALLEL
+            if (nmatf.eq.2) then
+               dim(1)=subunit
+               dim(2)=nmax
+               datasetname='Incident field modulus wf'
+               call hdf5write1d(group_idnf,datasetname,incidentfield,
+     $              dim)
+               datasetname='Incident field x component real part wf'
+               call hdf5write1d(group_idnf,datasetname
+     $              ,dreal(incidentfieldx),dim)
+               datasetname
+     $              ='Incident field x component imaginary part wf'
+               call hdf5write1d(group_idnf,datasetname
+     $              ,dimag(incidentfieldx),dim)
+               datasetname='Incident field y component real part wf'
+               call hdf5write1d(group_idnf,datasetname
+     $              ,dreal(incidentfieldy),dim)
+               datasetname
+     $              ='Incident field y component imaginary part wf'
+               call hdf5write1d(group_idnf,datasetname
+     $              ,dimag(incidentfieldy),dim)
+               datasetname='Incident field z component real part wf'
+               call hdf5write1d(group_idnf,datasetname
+     $              ,dreal(incidentfieldz),dim)
+               datasetname
+     $              ='Incident field z component imaginary part wf'
+               call hdf5write1d(group_idnf,datasetname
+     $              ,dimag(incidentfieldz),dim)
+            endif
+            
          endif
 c     close Intensity of the incident field wide field
          close(136)
@@ -1926,7 +2217,7 @@ c     on n'est pas en rigoureux.
 
 
          if (nlocal.eq.1) then
-            write(*,*) 'compute local field'
+            write(*,*) 'compute local field large field'
             if (nmatf.eq.0) then
                do i=1,subunit
                   ii=3*(i-1)
@@ -1954,6 +2245,31 @@ c     on n'est pas en rigoureux.
                enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL              
+
+               if (nmatf.eq.2) then
+                 dim(1)=subunit
+                 dim(2)=nmax
+                 datasetname='Local field modulus wf'
+                 call hdf5write1d(group_idnf,datasetname,localfield,dim)
+                 datasetname='Local field x component real part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dreal(localfieldx),dim)
+                 datasetname='Local field x component imaginary part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dimag(localfieldx),dim)
+                 datasetname='Local field y component real part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dreal(localfieldy),dim)
+                 datasetname='Local field y component imaginary part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dimag(localfieldy),dim)
+                 datasetname='Local field z component real part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dreal(localfieldz),dim)
+                 datasetname='Local field z component imaginary part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dimag(localfieldz),dim)
+               endif
             endif
 c     Intensity of the local field wide field
             close(140)
@@ -2022,6 +2338,37 @@ c     pour l'instant faut au niveau du epsilonpour le champ macro
                enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL 
+               if (nmatf.eq.2) then
+                 dim(1)=subunit
+                 dim(2)=nmax
+                 datasetname='Macroscopic field modulus wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,macroscopicfield,dim)
+                 datasetname
+     $                ='Macroscopic field x component real part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dreal(macroscopicfieldx),dim)
+                 datasetname
+     $                ='Macroscopic field x component imaginary part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dimag(macroscopicfieldx),dim)
+                 datasetname
+     $                ='Macroscopic field y component real part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dreal(macroscopicfieldy),dim)
+                 datasetname
+     $                ='Macroscopic field y component imaginary part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dimag(macroscopicfieldy),dim)
+                 datasetname
+     $                ='Macroscopic field z component real part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dreal(macroscopicfieldz),dim)
+                 datasetname
+     $                ='Macroscopic field z component imaginary part wf'
+                 call hdf5write1d(group_idnf,datasetname
+     $                ,dimag(macroscopicfieldz),dim)
+               endif
             endif            
 c     close Intensity of the macroscopic field wide field
             close(144)
@@ -2037,7 +2384,7 @@ c     close Intensity of the macroscopic field wide field
          write(*,*) '*************************************************'
          subunit=0
          if (nlocal.eq.1) then
-            write(*,*) 'compute local field'
+            write(*,*) 'compute local field',nmatf
             if (nmatf.eq.0) then
                do i=1,ndipole
                   k=tabdip(i)
@@ -2061,6 +2408,50 @@ c     close Intensity of the macroscopic field wide field
                      write(43,*) 0.d0
                   endif
                enddo
+            elseif (nmatf.eq.2) then
+               write(*,*) 'coucou'
+               do i=1,ndipole
+                  k=tabdip(i)
+                  if (k.ne.0) then
+                     ii=3*(k-1)
+                     wrk(i,1)=FFloc(ii+1)
+                     wrk(i,2)=FFloc(ii+2)
+                     wrk(i,3)=FFloc(ii+3)
+                     wrk(i,4)= dsqrt(dreal(FFloc(ii+1) *dconjg(FFloc(ii
+     $                    +1))+FFloc(ii+2) *dconjg(FFloc(ii +2))
+     $                    +FFloc(ii+3) *dconjg(FFloc(ii+3))))
+                 
+                  else
+                     wrk(i,1)=0.d0
+                     wrk(i,2)=0.d0
+                     wrk(i,3)=0.d0
+                     wrk(i,4)=0.d0 
+                  endif
+               enddo
+               dim(1)=ndipole
+               dim(2)=nmax*3
+               datasetname='Local field modulus'
+               call hdf5write1d(group_idnf,datasetname,dreal(wrk(:,4)),
+     $              dim)
+               datasetname='Local field x component real part'
+               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,1))
+     $              ,dim)
+               datasetname='Local field x component imaginary part'
+               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,1))
+     $              ,dim)
+               datasetname='Local field y component real part'
+               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,2))
+     $              ,dim)
+               datasetname='Local field y component imaginary part'
+               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,2))
+     $              ,dim)
+               datasetname='Local field z component real part'
+               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,3))
+     $              ,dim)
+               datasetname='Local field z component imaginary part'
+               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,3))
+     $              ,dim)
+                 
             else
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k,ii)   
 !$OMP DO SCHEDULE(STATIC)
@@ -2125,6 +2516,62 @@ c     write(*,*) 'local',eps0,zs(i),Eloc,Em,'ani',epsani
                      write(47,*) 0.d0
                   endif
                enddo
+            elseif (nmatf.eq.2) then
+               do i=1,ndipole
+                  k=tabdip(i)
+                  if (k.ne.0) then
+                     ii=3*(k-1)
+                     Eloc(1)= FFloc(ii+1)
+                     Eloc(2)= FFloc(ii+2)
+                     Eloc(3)= FFloc(ii+3)
+                     do ii=1,3
+                        do jj=1,3
+                           epsani(ii,jj)=epsilon(k,ii,jj)
+                        enddo
+                     enddo 
+                     eps0=epscouche(numerocouche(zs(k),neps,nepsmax
+     $                    ,zcouche))
+                     call local_macro_surf(Eloc,Em,epsani,eps0
+     $                    ,aretecube,k0,nsens)
+                     wrk(i,1)=Em(1)
+                     wrk(i,2)=Em(2)
+                     wrk(i,3)=Em(3)
+                     wrk(i,4)=dsqrt(dreal(Em(1) *dconjg(Em(1))+Em(2)
+     $                    *dconjg(Em(2))+Em(3) *dconjg(Em(3))))
+                  else
+                     wrk(i,1)=0.d0
+                     wrk(i,2)=0.d0
+                     wrk(i,3)=0.d0
+                     wrk(i,4)=0.d0
+                  endif
+               enddo
+
+               dim(1)=ndipole
+               dim(2)=nmax*3
+               datasetname='Macroscopic field modulus'
+               call hdf5write1d(group_idnf,datasetname,dreal(wrk(:,4))
+     $              ,dim)
+               datasetname='Macroscopic field x component real part'
+               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,1))
+     $              ,dim)
+               datasetname
+     $              ='Macroscopic field x component imaginary part'
+               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,1))
+     $              ,dim)
+               datasetname='Macroscopic field y component real part'
+               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,2))
+     $              ,dim)
+               datasetname
+     $              ='Macroscopic field y component imaginary part'
+               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,2))
+     $              ,dim)
+               datasetname='Macroscopic field z component real part'
+               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,3))
+     $              ,dim)
+               datasetname
+     $              ='Macroscopic field z component imaginary part'
+               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,3))
+     $              ,dim)
             else
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k,ii,jj,Eloc,epsani,Em,eps0)   
 !$OMP DO SCHEDULE(STATIC)
@@ -2436,6 +2883,18 @@ c     $                 ,indicen,indice0
             close(51)
             close(52)
 
+            if (nmatf.eq.2) then
+               dim(1)=cnt
+               dim(2)=max((ntheta+1)*nphi,nfft2d*nfft2d)
+               datasetname='Poynting'
+               call hdf5write1d(group_idff,datasetname,poyntingfield
+     $              ,dim)
+               datasetname='theta for Poynting'
+               call hdf5write1d(group_idff,datasetname,thetafield,dim)
+               datasetname='phi for Poynting'
+               call hdf5write1d(group_idff,datasetname,phifield,dim)
+            endif
+            
             gasym=gasym/cscai          
             Cscai=Cscai/I0
             
@@ -2576,7 +3035,17 @@ c     put the field in memory with the right angles
             close(50)
             close(51)
             close(52)
-
+            if (nmatf.eq.2) then
+               dim(1)=cnt
+               dim(2)=max((ntheta+1)*nphi,nfft2d*nfft2d)
+               datasetname='Poynting'
+               call hdf5write1d(group_idff,datasetname,poyntingfield
+     $              ,dim)
+               datasetname='theta for Poynting'
+               call hdf5write1d(group_idff,datasetname,thetafield,dim)
+               datasetname='phi for Poynting'
+               call hdf5write1d(group_idff,datasetname,phifield,dim)
+            endif
             write(*,*) 'imaxk000',imaxk0,ncote,deltakx,indicen,indice0
 c     mise en memoire de kx et ky
             if (nmatf.eq.0) then
@@ -2663,6 +3132,11 @@ c     write(*,*) 'dessus diff',ncote
                close(54)
                close(520)
                close(521)
+            elseif (nmatf.eq.2) then
+               call writehdf5farfield(Ediffkzpos,Ediffkzneg,Eimagexpos
+     $              ,Eimageypos,Eimagezpos,Eimageincxpos,kxy,deltakx
+     $              ,deltaky,k0,imaxk0,nfft2d,indice0,indicen ,ncote
+     $              ,name,group_idff)
             endif
          endif
          write(*,*) '************ END Csca g AND POYNTING ************'
@@ -2878,6 +3352,11 @@ c!$OMP END PARALLEL
                   enddo
                enddo
             endif
+         elseif (nmatf.eq.2) then
+            call writehdf5farfield(Ediffkzpos,Ediffkzneg,Eimagexpos
+     $           ,Eimageypos,Eimagezpos,Eimageincxpos,kxy,deltakx
+     $           ,deltaky ,imaxk0,nfft2d,indice0,indicen ,ncote,name
+     $           ,group_idff)
          endif
          write(*,*) '******* END FAR FIELD WITH SLOW METHOD **********'
          write(*,*) ' '
@@ -3060,7 +3539,7 @@ c     gamma)
      $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
      $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaper ,numaperinc
      $           ,gross,zlensr,zlenst ,ntypemic , planf ,planb ,plan2f
-     $           ,plan2b ,nmatf ,nstop ,infostr)
+     $           ,plan2b ,nmatf,file_id ,group_idmic  ,nstop ,infostr)
             
          elseif (ntypemic.eq.2) then
             npolainc=0
@@ -3080,7 +3559,7 @@ c     gamma)
      $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
      $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaper ,numaperinc
      $           ,gross,zlensr,zlenst,ntypemic,planf,planb,plan2f,plan2b
-     $           ,nmatf ,nstop ,infostr)
+     $           ,nmatf,file_id ,group_idmic  ,nstop ,infostr)
          else
             write(*,*) 'holographic microscopy'
             
@@ -3220,6 +3699,16 @@ c     sauve le champ dans l'espace de fourier total en x,y
             enddo
             close(650)
             close(651)
+         elseif (nmatf.eq.2) then
+            do j=-imaxk0,imaxk0             
+               kxy(j+imaxk0+1)=dble(j)*deltakx/k0
+            enddo
+            dim(1)=2*imaxk0+1
+            dim(2)=nfft2d
+            datasetname='kx Fourier'
+            call hdf5write1d(group_idmic,datasetname,kxy,dim)
+            datasetname='ky Fourier'
+            call hdf5write1d(group_idmic,datasetname,kxy,dim)
          endif
 c     do i=1,nfft2d*nfft2d
 c     write(*,*) 'ptoui',i,Efourierincxneg(i),Efourierincyneg(i)
@@ -3300,26 +3789,42 @@ c     sauve le champ dans le plan de image.
                   write(631,*) dreal(Eimagezneg(indice))
      $                 ,dimag(Eimagezneg(indice))
                enddo
+               close(604)
+               close(605)
+               close(606)
+               close(607)
+               close(612)
+               close(613)
+               close(614)
+               close(615)
+               close(620)
+               close(621)
+               close(622)
+               close(623)
+               close(628)
+               close(629)
+               close(630)
+               close(631)
+            elseif (nmatf.eq.2) then
+               k=1
+               name='Fourier kz<0'
+               call writehdf5mic(Efourierxneg,Efourieryneg,Efourierzneg
+     $              ,nfft2d,imaxk0,Ediffkzneg,k,name,group_idmic)
+               name='Fourier+incident kz<0'
+               call writehdf5mic(Efourierincxneg,Efourierincyneg
+     $              ,Efourierinczneg,nfft2d,imaxk0,Ediffkzneg,k,name
+     $              ,group_idmic)
+               k=0
+               name='Image kz<0'
+               call writehdf5mic(Eimagexneg,Eimageyneg,Eimagezneg,nfft2d
+     $              ,imaxk0,Ediffkzneg,k,name,group_idmic)
+               name='Image+incident kz<0'
+               call writehdf5mic(Eimageincxneg,Eimageincyneg
+     $              ,Eimageinczneg,nfft2d,imaxk0,Ediffkzneg,k,name
+     $              ,group_idmic)
             endif
-            close(604)
-            close(605)
-            close(606)
-            close(607)
-            close(612)
-            close(613)
-            close(614)
-            close(615)
-            close(620)
-            close(621)
-            close(622)
-            close(623)
-            close(628)
-            close(629)
-            close(630)
-            close(631)
-            
          endif
-
+         
          if (ncote.eq.0.or.ncote.eq.1) then
 
             if (gross.eq.-1.d0) then
@@ -3403,26 +3908,43 @@ c     sauve le champ dans le plan image.
      $                 ,dimag(Eimagezpos(indice))
 
                enddo
+               close(600)
+               close(601)
+               close(602)
+               close(603)
+               close(608)
+               close(609)
+               close(610)
+               close(611)
+               
+               close(616)
+               close(617)
+               close(618)
+               close(619)
+               close(624)
+               close(625)
+               close(626)
+               close(627)
+            elseif (nmatf.eq.2) then
+               k=1
+               name='Fourier kz>0'
+               call writehdf5mic(Efourierxpos,Efourierypos,Efourierzpos
+     $              ,nfft2d,imaxk0,Ediffkzpos,k,name,group_idmic)
+               name='Fourier+incident kz>0'
+               call writehdf5mic(Efourierincxpos,Efourierincypos
+     $              ,Efourierinczpos,nfft2d,imaxk0,Ediffkzpos,k,name
+     $              ,group_idmic)
+               k=0
+               name='Image kz>0'
+               call writehdf5mic(Eimagexpos,Eimageypos,Eimagezpos,nfft2d
+     $              ,imaxk0,Ediffkzpos,k,name,group_idmic)
+               name='Image+incident kz>0'
+               call writehdf5mic(Eimageincxpos,Eimageincypos
+     $              ,Eimageinczpos,nfft2d,imaxk0,Ediffkzpos,k,name
+     $              ,group_idmic)
             endif
-            close(600)
-            close(601)
-            close(602)
-            close(603)
-            close(608)
-            close(609)
-            close(610)
-            close(611)
-            
-            close(616)
-            close(617)
-            close(618)
-            close(619)
-            close(624)
-            close(625)
-            close(626)
-            close(627)
          endif
-
+         
 c     sauve les coordonnees cartesiennes:
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)  
@@ -3447,6 +3969,17 @@ c     sauve les coordonnees cartesiennes:
             close(310)
             close(311)
             close(312)
+         elseif (nmatf.eq.2) then
+            dim(1)=nfft2d
+            dim(2)=nfft2d
+c            datasetname='kx Fourier'
+c            call hdf5write1d(group_idmic,datasetname,kxy,dim)
+            datasetname='x Image'
+            call hdf5write1d(group_idmic,datasetname,xy,dim)
+c             datasetname='ky Fourier'
+c            call hdf5write1d(group_idmic,datasetname,kxy,dim)
+            datasetname='y Image'
+            call hdf5write1d(group_idmic,datasetname,xy,dim)
          endif
       endif
       write(*,*) '*************** END MICROSCOPY ******************'
@@ -3851,7 +4384,17 @@ c     9999 format(201(d22.15,1x))
      $     beam(1:8).eq.'gwaveiso') then
       endif
 
-
+ 999  if (nmatf.eq.2) then
+!     fermeture du fichier hdf5
+         CALL h5gclose_f(group_idopt,error) 
+         CALL h5gclose_f(group_iddip,error)
+         CALL h5gclose_f(group_idff,error)
+         CALL h5gclose_f(group_idmic,error)
+c     CALL h5gclose_f(group_idof,error)
+         CALL h5gclose_f(group_idnf,error)
+         call hdf5close(file_id)
+         write(*,*) 'close h5file'
+      endif
       
       if (nstop == -1) then
          infostr = 'Calculation cancelled at the end!'

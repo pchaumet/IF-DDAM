@@ -33,7 +33,7 @@ Options::Options()
   nsideList = (QStringList() << "Side kz<0"  <<  "Both side (NA=1)" << "Side kz>0");
   
   nrigList = (QStringList() << "Rigorous" << "Renormalized Born");
-
+  nmatlabList = (QStringList() << "Save in ascii file" << "Do not save file" << "Save in HDF5 file");
   ntypemicList = (QStringList() << "Holographic" << "Brightfield" << "Darkfield & phase");
   
   rangeofstudyList = (QStringList() << "object" << "cube around object" << "wide field");
@@ -153,6 +153,7 @@ void Options::initOptions(){
   beam = "pwavecircular";
   object = "sphere";
   methodeit = "GPBICG1";
+  fileh5 = "ifdda.h5";
   polarizability = "RR";
   nfft2d = 128;
   discretization = 0;
@@ -292,6 +293,7 @@ void Options::initDb() {
              "nread integer, "
              "filereread varchar(255), "
 	     "nmatlab integer, "
+	     "fileh5 varchar(255), "
              "dipolepsilon integer, "
              "farfield integer, "
 	     "nearfield integer, "
@@ -328,7 +330,7 @@ void Options::initDb() {
 	     "meshsize double, "
 	     "nfft2d integer, "
 	     "advancedinterface integer) ");
-  query.exec("insert into run_tbl values ('new','GPBICG1','RR',0,0,'',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,36,72,1,0.9,-1,0,0,0,0,25,128,0)");
+  query.exec("insert into run_tbl values ('new','GPBICG1','RR',0,0,'',0,'ifdda.h5',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,36,72,1,0.9,-1,0,0,0,0,25,128,0)");
   QLOG_DEBUG () << query.lastError().text();
 }
 void 
@@ -471,6 +473,7 @@ for (int i = 0 ; i < this->getWaveMultiNumber(); i++) {
         QString::number(this->getNread()) +  ", '" +
         this->getFilereread() +  "', " +
         QString::number(this->getNmatlab()) +  ", " +
+        this->getH5File() +  "', " +
         QString::number(this->getDipolepsilon()) +  ", " +
         QString::number(this->getFarfield()) +  ", " +
         QString::number(this->getNearfield()) +  ", " +
@@ -646,7 +649,7 @@ Options::loadDb(QString name){
     }
   }
   
-  query.exec("select methode,polarizability,nread,filereread,nmatlab,dipolepsilon,farfield,nearfield,force,"
+  query.exec("select methode,polarizability,nread,filereread,nmatlab,fileh5,dipolepsilon,farfield,nearfield,force,"
 	     "localfield,macroscopicfield,nenergie,crosssection,crosssectionpoynting,quickdiffract,nrig,microscopy,"
 	     "microscopyFFT,opticalforce,opticalforcedensity,opticaltorque,opticaltorquedensity,nproche,ninterp," 
 	     "nxx,nyy,nzz,nxmp,nymp,nzmp,ntheta,nphi,na,nainc,gross,zlensr,zlenst,ntypemic,nside,meshsize,nfft2d,advancedinterface from run_tbl where parent='" + name + "'");
@@ -659,43 +662,44 @@ Options::loadDb(QString name){
     this->setNread(query.value(2).toInt());
     this->setFilereread(query.value(3).toString());
     this->setNmatlab(query.value(4).toInt());
-    this->setDipolepsilon(query.value(5).toInt());
-    this->setFarfield(query.value(6).toInt());
-    this->setNearfield(query.value(7).toInt());
-    this->setForce(query.value(8).toInt());
-    this->setLocalfield(query.value(9).toInt());
-    this->setMacroscopicfield(query.value(10).toInt());
-    this->setNenergie(query.value(11).toInt());
-    this->setCrosssection(query.value(12).toInt());
-    this->setCrosssectionpoynting(query.value(13).toInt());
-    this->setQuickdiffract(query.value(14).toInt());
-    this->setNrig(query.value(15).toInt());
-    this->setMicroscopy(query.value(16).toInt());
-    this->setMicroscopyFFT(query.value(17).toInt());
-    this->setOpticalforce(query.value(18).toInt());
-    this->setOpticalforcedensity(query.value(19).toInt());
-    this->setOpticaltorque(query.value(20).toInt());
-    this->setOpticaltorquedensity(query.value(21).toInt());
-    this->setNproche(query.value(22).toInt());
-    this->setNinterp(query.value(23).toInt());
-    this->setNxx(query.value(24).toInt());
-    this->setNyy(query.value(25).toInt());
-    this->setNzz(query.value(26).toInt());
-    this->setNxmp(query.value(27).toInt());
-    this->setNymp(query.value(28).toInt());
-    this->setNzmp(query.value(29).toInt());
-    this->setNtheta(query.value(30).toInt());
-    this->setNphi(query.value(31).toInt());
-    this->setNA(query.value(32).toDouble());
-    this->setNAinc(query.value(33).toDouble());
-    this->setGross(query.value(34).toDouble());
-    this->setZlensr(query.value(35).toDouble());
-    this->setZlenst(query.value(36).toDouble());
-    this->setNtypemic(query.value(37).toDouble());
-    this->setNside(query.value(38).toInt());
-    this->setMeshsize(query.value(39).toDouble());
-    this->setnfft2d(query.value(40).toInt());
-    this->setAdvancedinterface(query.value(41).toInt());
+    this->setH5File(query.value(5).toString());
+    this->setDipolepsilon(query.value(6).toInt());
+    this->setFarfield(query.value(7).toInt());
+    this->setNearfield(query.value(8).toInt());
+    this->setForce(query.value(9).toInt());
+    this->setLocalfield(query.value(10).toInt());
+    this->setMacroscopicfield(query.value(11).toInt());
+    this->setNenergie(query.value(12).toInt());
+    this->setCrosssection(query.value(13).toInt());
+    this->setCrosssectionpoynting(query.value(14).toInt());
+    this->setQuickdiffract(query.value(15).toInt());
+    this->setNrig(query.value(16).toInt());
+    this->setMicroscopy(query.value(17).toInt());
+    this->setMicroscopyFFT(query.value(18).toInt());
+    this->setOpticalforce(query.value(19).toInt());
+    this->setOpticalforcedensity(query.value(20).toInt());
+    this->setOpticaltorque(query.value(21).toInt());
+    this->setOpticaltorquedensity(query.value(22).toInt());
+    this->setNproche(query.value(23).toInt());
+    this->setNinterp(query.value(24).toInt());
+    this->setNxx(query.value(25).toInt());
+    this->setNyy(query.value(26).toInt());
+    this->setNzz(query.value(27).toInt());
+    this->setNxmp(query.value(28).toInt());
+    this->setNymp(query.value(29).toInt());
+    this->setNzmp(query.value(30).toInt());
+    this->setNtheta(query.value(31).toInt());
+    this->setNphi(query.value(32).toInt());
+    this->setNA(query.value(33).toDouble());
+    this->setNAinc(query.value(34).toDouble());
+    this->setGross(query.value(35).toDouble());
+    this->setZlensr(query.value(36).toDouble());
+    this->setZlenst(query.value(37).toDouble());
+    this->setNtypemic(query.value(38).toDouble());
+    this->setNside(query.value(39).toInt());
+    this->setMeshsize(query.value(40).toDouble());
+    this->setnfft2d(query.value(41).toInt());
+    this->setAdvancedinterface(query.value(42).toInt());
   }
 }
 void 
@@ -765,6 +769,10 @@ Options::setTolerance(double _tolerance){
 void 
 Options::setMethodeit(QString _methodeit){
   methodeit = _methodeit;
+}
+void 
+Options::setH5File(QString _fileh5){
+  fileh5 = _fileh5;
 }
 void 
 Options::setPolarizability(QString _polarizability){
@@ -1204,6 +1212,10 @@ Options::getMaterial(){
 QString 
 Options::getMethodeit(){
   return methodeit;
+}
+QString 
+Options::getH5File(){
+  return fileh5;
 }
 QString 
 Options::getPolarizability(){

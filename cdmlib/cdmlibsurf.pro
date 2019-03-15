@@ -22,7 +22,7 @@ DEFINES 	+= 	QT_NO_DEBUG_OUTPUT
 
 QMAKE_CC        =       gfortran -Warray-bounds -fcray-pointer -w
 
-QMAKE_CFLAGS    += -fopenmp -lfftw3_omp -lfftw3 -lm 
+QMAKE_CFLAGS    += -fopenmp -lfftw3_omp -lfftw3 -lm -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
 
 QMAKE_CFLAGS_RELEASE    = -O3
 
@@ -147,10 +147,23 @@ SOURCES		+= aleatoire.f \
                 passagefourierimagegross2.f \
                 diffractefft2dtoeposfour.f \
                 deltakroutine.f \
-		polamodifie.f
+		polamodifie.f \
+                hdf5close.f \ 
+                hdf5open.f \
+                hdf5read1d_int.f \
+                hdf5read2d_int.f \
+                hdf5write1d_int.f \
+                hdf5write2d_int.f \
+                hdf5create.f \
+                hdf5read1d.f \
+                hdf5read2d.f \
+                hdf5write1d.f \
+                hdf5write2d.f \
+                writehdf5mic.f \
+                writehdf5farfield.f
                 
 INCLUDEPATH 	+= .
 
-LIBS 		+= 	-lgfortran -lfftw3_omp -lfftw3 -lm
+LIBS 		+= 	-lgfortran -lfftw3_omp -lfftw3 -lm -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
 
 QMAKE_DISTCLEAN += lib/*

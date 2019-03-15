@@ -408,6 +408,11 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     nreadCheck = options->getNread();
     int nmatlabCheck;
     nmatlabCheck = options->getNmatlab();
+    char fileh5[100];
+    for(int i = 0; i < 100; i++)
+      fileh5[i] = ' ';
+    strncpy(fileh5,(char*)options->getH5File().toStdString().c_str(),
+	    options->getH5File().size());
     int advancedinterfaceCheck;
     advancedinterfaceCheck = options->getAdvancedinterface();  
     // sphere.in / cube.in files ( includes multiple spheres)
@@ -824,7 +829,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    Tabzn = run->getTabzn();
 
    cdmlibsurf_(&wavelength, beam, object, anisotropy, material,
-	       &discretization, &tolerance, methodeit, polarizability, &nreadCheck, filereread, &nmatlabCheck,
+	       &discretization, &tolerance, methodeit, polarizability, &nreadCheck, filereread, &nmatlabCheck, fileh5,
 	       // ligne du multicouche
 	   &neps, zcouche, (dcmplx*)epscouche, materiallayer,
 	       // champ local

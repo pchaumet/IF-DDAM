@@ -1,4 +1,16 @@
-	version 0.2.3 (fftw) et
+	version 0.3.1 (fftw+hdf5) 0.2.4 (fftw) et 0.1.13 (ffts)
+
+	1) Prise en compte du signe negatif du grossissement par
+	changement de FFT de backward en forward.
+
+-------------------------------------------------------------
+	version 0.3.0 (fftw+hdf5) 0.2.3 (fftw)  et 0.1.12 (ffts)
+
+	1) Mise en place de Hdf5. Il faut bien sur installer cette
+	librairie
+
+-------------------------------------------------------------
+	version 0.2.3 (fftw)  et 0.1.12 (ffts)
 
 	1) save as mis.
 	2) rajout de link dans le makefile pour fftw, marche aussi sur ubuntu.
