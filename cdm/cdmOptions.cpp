@@ -9,7 +9,7 @@ Options::Options()
   beamList = (QStringList() << "Linear plane wave" << "Circular plane wave"
 	                    << "Multiple wave" 
 			    << "Circular Gaussian" << "Linear Gaussian" 
-	                    << "Arbitrary wave (file)" );
+	      << "Speckle" << "Arbitrary wave (file)" );
 
   objectList = (QStringList() << "sphere" << "inhomogeneous sphere" << "cube" 
 		<< "cuboid (length)" << "cuboid (meshsize)" << "ellipsoid" << "multiple spheres" 
@@ -128,6 +128,7 @@ void Options::initOptions(){
   nxx = nyy = nzz = 0;
   meshsize = 50;
   xgaus = ygaus = zgaus = 0;
+  speckseed= 0;
   dipolepsilon = 0;
   farfield = 0;
   nearfield = 0;
@@ -203,8 +204,9 @@ void Options::initDb() {
 	     "polarizationRL double, "
              "xgaus double, "
 	     "ygaus double, "
-	     "zgaus double)");
-  query.exec("insert into beam_tbl values ('new','','',0,0,0,0,0,0,0,0)");
+	     "zgaus double, "
+	     "speckseed int)");
+  query.exec("insert into beam_tbl values ('new','','',0,0,0,0,0,0,0,0,0)");
   QLOG_DEBUG () << query.lastError().text();
   query.exec("create table media_tbl "
 	     "(parent varchar(255) not null, "
@@ -376,7 +378,8 @@ Options::saveDb(QString name, QString description){
         QString::number(this->getPolarizationRL()) +  ", " +
         QString::number(this->getXgaus()) +  ", " +
 	QString::number(this->getYgaus()) +  ", " +
-        QString::number(this->getZgaus()) + ")";
+        QString::number(this->getZgaus()) +  ", " +
+        QString::number(this->getSpeckseed()) + ")";
   query.exec(queryStr);
   QLOG_DEBUG () << "BEAM_TBL query " << queryStr;
   QLOG_DEBUG () << "BEAM_TBL " << query.lastError().text();
@@ -472,7 +475,7 @@ for (int i = 0 ; i < this->getWaveMultiNumber(); i++) {
         QString::number(this->getNrig()) +  ", " +
         QString::number(this->getNread()) +  ", '" +
         this->getFilereread() +  "', " +
-        QString::number(this->getNmatlab()) +  ", " +
+        QString::number(this->getNmatlab()) +  ", '" +
         this->getH5File() +  "', " +
         QString::number(this->getDipolepsilon()) +  ", " +
         QString::number(this->getFarfield()) +  ", " +
@@ -540,7 +543,7 @@ Options::loadDb(QString name){
     this->setTolerance(query.value(12).toDouble());
   }
   query.exec("select beamfile,incidenceangle_theta_z,incidenceangle_phi_x,"
-	     "polarizationTM,polarizationTE,polarizationRL,xgaus,ygaus,zgaus "
+	     "polarizationTM,polarizationTE,polarizationRL,xgaus,ygaus,zgaus,speckseed "
 	     "from beam_tbl where parent='" + name + "'");
   QLOG_DEBUG () << "SELECT OPTIONS_TBL" << query.lastError().text();
   while (query.next()) {
@@ -553,6 +556,7 @@ Options::loadDb(QString name){
     this->setXgaus(query.value(6).toDouble());
     this->setYgaus(query.value(7).toDouble());
     this->setZgaus(query.value(8).toDouble());
+    this->setSpeckseed(query.value(9).toInt());
   }
   QLOG_DEBUG() << "Options::loadDb>> Object Number:" <<  this->getObjectNumber();
  
@@ -835,6 +839,10 @@ Options::setYgaus(double _ygaus) {
 void 
 Options::setZgaus(double _zgaus) {
  zgaus = _zgaus;
+}
+void 
+Options::setSpeckseed(int _speckseed) {
+ speckseed = _speckseed;
 }
 void 
 Options::setP0(double _P0) {
@@ -1287,6 +1295,11 @@ double
 Options::getZgaus(){
   return zgaus;
 }
+int
+Options::getSpeckseed(){
+  return speckseed;
+}
+
 double 
 Options::getP0(){
   return P0;

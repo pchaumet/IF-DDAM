@@ -1,3 +1,24 @@
+	version 0.3.2 (fftw+hdf5) 0.2.5 (fftw) et 0.1.14 (ffts)
+
+	1) niso remplace dans hdf5 de ifdda.m
+	2) stop pour zcouche et dipole sur la couche pour wf.
+	3) ajout xyz wf dans hdf5
+	4) correction bug parallel dans fonctiongreeninterfft.f, oublie de dy!
+	5) correction taille tableau dans ratint.f.
+	6) correction dans cdmOptions.cpp ' oubliee! pour file h5
+	7) Correction de produitfftmatvectsurplusboite.f ii oublie dans OMP
+	8) Changement ds speckle pour centrer qd wf.
+	9) objetparainhomogene et objetsphereinhomogene, objet
+	paranxnynzinhomo, mise a zero de zg par erreur.
+	10) Modification de sphere inhomogeneous pour permettre
+	deplacement sphere inhomogene dans le cpp d'objet.
+	11) variables xgaus, ygaus, zgaus passes en metre.
+	12) Mise en place du speckle+parallelelise+numaper+relecture.f
+	13) changer legende de gaussian  car polarise suivant x ou y
+
+
+-------------------------------------------------------------
+
 	version 0.3.1 (fftw+hdf5) 0.2.4 (fftw) et 0.1.13 (ffts)
 
 	1) Prise en compte du signe negatif du grossissement par

@@ -8,12 +8,12 @@ c     ellipsoid+arbitrary
      $     namefileobj,
 c     planewavecircular.in / planewavelinear.in files
      $     theta, phi, pp, ss,thetam ,phim, ppm, ssm,E0m,nbinc, P0, w0,
-     $     nrig, ninterp, xgaus, ygaus, zgaus,namefileinc,numberobjetmax
-     $     ,filereread,nlecture,neps,nepsmax,zcouche,epscouche,aretecube
-     $     ,nx,ny,nz,hc,lc,ng,nstop,infostr)
+     $     nrig, ninterp,ir,xgaus, ygaus, zgaus,namefileinc
+     $     ,numberobjetmax,filereread,nlecture,neps,nepsmax,zcouche
+     $     ,epscouche,aretecube,nx,ny,nz,hc,lc,ng,nstop,infostr)
       implicit none
       integer ntmp,ierror,test,ii,jj,i,k,nlecture,nnnr,numberobjet
-     $     ,numberobjetmax,nstop,long,long1,nx,ny,nz,ng
+     $     ,numberobjetmax,nstop,long,long1,nx,ny,nz,ng,ir
       double precision tmp,lambda,tolinit, side, sidex, sidey, sidez,
      $     hauteur,demiaxea,demiaxeb,demiaxec,thetaobj,phiobj,psiobj
      $     ,theta, phi, pp, ss, P0, w0, xgaus, ygaus, zgaus,xg,yg,zg
@@ -149,6 +149,17 @@ c     ecriture des faisceaux
                write(1001) phim(k)
                write(1001) E0m(k)
             enddo
+         elseif (Beam(1:7).eq.'speckle') then
+            write(1000,*) 'pola    =',pp
+            write(1000,*) 'seed    =',IR
+            write(1000,*) 'xgaus  =',xgaus
+            write(1000,*) 'ygaus  =',ygaus
+            write(1000,*) 'zgaus  =',zgaus
+            write(1001) pp
+            write(1001) IR
+            write(1001) xgaus
+            write(1001) ygaus
+            write(1001) zgaus
          elseif (Beam(1:11).eq.'gwaveiso') then
             write(1000,*) 'pola    =',pp
             write(1000,*) 'xgaus  =',xgaus
@@ -593,7 +604,28 @@ c*************************************************************
                call comparaisoncomplexe(ctmp,E0m(k),test)
                if (test.ne.0) goto 1000
             enddo
+         elseif (Beam(1:7).eq.'speckle') then
+            read(1000) tmp
+            write(*,*) 'r',tmp,pp
+            call comparaisonreel(tmp,pp,test)
+            if (test.ne.0) goto 1000
+            read(1000) ntmp
+            write(*,*) 'r',ntmp,IR
+            if (ntmp.ne.IR) goto 1000
+            read(1000) tmp
+             write(*,*) 'r',tmp,xgaus
+            call comparaisonreel(tmp,xgaus,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            write(*,*) 'r',tmp,ygaus
+            call comparaisonreel(tmp,ygaus,test)
+            if (test.ne.0) goto 1000
+            write(*,*) 'r',tmp,zgaus
+            read(1000) tmp
+            call comparaisonreel(tmp,zgaus,test)
+            if (test.ne.0) goto 1000
          elseif (Beam(1:11).eq.'gwaveiso') then
+            read(1000) tmp
             call comparaisonreel(tmp,pp,test)
             if (test.ne.0) goto 1000
             call comparaisonreel(tmp,xgaus,test)

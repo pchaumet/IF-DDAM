@@ -104,7 +104,7 @@ c     calcul FFT du vecteur B
             call dfftw_execute_dft(planf,b21,b21)
             call dfftw_execute_dft(planf,b31,b31)
 
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indice)
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,indice)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)     
             do j=1,ny
                do i=1,nx

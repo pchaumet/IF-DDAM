@@ -38,7 +38,7 @@
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
       
-      write(*,*) 'inhomogenous cuboid',eps
+      write(*,*) 'inhomogenous cuboid',eps,zg
 c     Initialization
       nbsphere=0
       ndipole=0
@@ -135,7 +135,6 @@ c     test si l'objet est sur une couche ou plusieurs
       write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
       if (nmaxc-nminc.ge.1) then
 c     shift the layers
-         zg=0.d0
          do k=nminc,nmaxc-1           
             do i=1,nz
                z=-sidez/2.d0+aretecube*(dble(i)-0.5d0)+zg

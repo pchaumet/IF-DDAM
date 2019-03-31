@@ -248,7 +248,7 @@ c     variable pour avoir l'image a travers la lentille
      $     ,group_idff,group_iddip
       integer :: dim(4)
   
-
+      write(*,*) 'zg',zgaus,zgmulti
       
       call dfftw_init_threads(iret)
       if (iret.eq.0) then
@@ -1410,6 +1410,9 @@ c     $        ,theta,phi
       elseif  (beam(1:11).eq.'gwavelinear') then
          E0=1.d0
          psi=datan2(ss,pp)*180.d0/pi
+         xgaus=xgaus*1.d-9
+         ygaus=ygaus*1.d-9
+         zgaus=zgaus*1.d-9
 c         write(*,*) 'routine gauss',psi,ss,pp
 c     write(*,*) 'data',epscouche,zcouche,neps,nepsmax,k0,w0,x0,y0,z0
 c     $        ,theta,phi,psi,E0,xs,ys,zs,aretecube,nx,ny,nz,ndipole
@@ -1466,7 +1469,10 @@ c     tmp=1.d0
      $        *P0/(w0*w0*pi)
          I0=(cdabs(FF0(1))**2+ cdabs(FF0(2)) **2+cdabs(FF0(3))**2)
       elseif  (beam(1:13).eq.'gwavecircular') then
-         E0=1.d0      
+         E0=1.d0
+         xgaus=xgaus*1.d-9
+         ygaus=ygaus*1.d-9
+         zgaus=zgaus*1.d-9
          call gaussiansurfcirc(epscouche,zcouche,neps,nepsmax,k0,w0
      $        ,xgaus,ygaus,zgaus,theta,phi,ss,E0,xs,ys,zs,FF0,aretecube
      $        ,nx,ny,nz,ndipole,nmax,nfft2d,nfft2d,Efourierincxneg
@@ -1518,6 +1524,9 @@ c     incidente
 
       elseif  (beam(1:8).eq.'gwaveiso') then
          E0=1.d0
+         xgaus=xgaus*1.d-9
+         ygaus=ygaus*1.d-9
+         zgaus=zgaus*1.d-9
          if (pp.lt.0.d0.or.pp.gt.1.d0) then
             nstop=1
             infostr='problem in plane incident wave'
@@ -1593,13 +1602,15 @@ c     tmp=1.d0
       elseif  (beam(1:7).eq.'speckle') then
          E0=1.d0
          psi=datan2(ss,pp)
-         IR=1
-         call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0,IR,xs,ys
-     $        ,zs,xgaus ,ygaus,zgaus,psi,FF0,aretecube,nx,ny,nz ,ndipole
-     $        ,nmax ,nfft2d,nfft2d,Efourierincxneg ,Efourierincyneg
-     $        ,Efourierinczneg,Efourierincxpos ,Efourierincypos
-     $        ,Efourierinczpos,fluxinc ,fluxref,fluxtrans,irra ,nstop
-     $        ,infostr,plan2b)
+         xgaus=xgaus*1.d-9
+         ygaus=ygaus*1.d-9
+         zgaus=zgaus*1.d-9
+         call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0,numaper
+     $        ,IR,xs,ys,zs,xgaus ,ygaus,zgaus,psi,FF0,aretecube,nx,ny,nz
+     $        ,nxm,nym,nzm ,ndipole ,nmax ,nfft2d,nfft2d,Efourierincxneg
+     $        ,Efourierincyneg ,Efourierinczneg,Efourierincxpos
+     $        ,Efourierincypos ,Efourierinczpos,fluxinc ,fluxref
+     $        ,fluxtrans,irra ,nstop ,infostr,plan2b)
          if (nstop.eq.1) return
          
       elseif  (beam(1:9).eq.'arbitrary') then
@@ -1722,7 +1733,7 @@ c         write(*,*) 'relecture',filereread
      $        xgmulti, ygmulti, zgmulti, epsmulti, epsanimulti, demiaxea
      $        ,demiaxeb,demiaxec,thetaobj,phiobj,psiobj, namefileobj,
      $        theta, phi, pp, ss, thetam ,phim, ppm, ssm,E0m, nbinc, P0,
-     $        w0,nrig, ninterp,xgaus,ygaus,zgaus,namefileinc,
+     $        w0,nrig, ninterp,ir,xgaus,ygaus,zgaus,namefileinc,
      $        numberobjetmax ,filereread,nlecture1,neps,nepsmax,zcouche
      $        ,epscouche,aretecube ,nx,ny,nz,hc,lc,ng,nstop ,infostr)
          if (nstop.eq.1) return
@@ -1910,6 +1921,9 @@ c     the new grid
          kkm=(nxm-nx)/2
          jjm=(nym-ny)/2
          iim=(nzm-nz)/2
+         write(*,*) 'Lateral x',kkm
+         write(*,*) 'Lateral y',jjm
+         write(*,*) 'Lateral z',iim
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)
@@ -1941,7 +1955,41 @@ c     initialize
 !$OMP ENDDO 
 !$OMP END PARALLEL
 
-         
+c     verification que aucun z n'est sur l'interface
+         do i=1,nzm
+            z=zmin+dble(i-iim-1)*aretecube
+            do l=0,neps
+               call comparaisonreel(z,zcouche(l),test)
+               if (test.eq.0) then
+                  nstop=1
+                  infostr='Dipole on a interface for wide field'
+               endif
+            enddo
+         enddo
+
+c     write xyz wf for hdf5
+         if (nmatf.eq.2) then
+            do i=1,nzm
+               zswf(i)=zmin+dble(i-iim-1)*aretecube
+            enddo
+            do j=1,nym
+               yswf(j)=ymin+dble(j-jjm-1)*aretecube
+            enddo
+            do k=1,nxm
+               xswf(k)=xmin+dble(k-kkm-1)*aretecube
+            enddo
+            dim(1)=nzm
+            dim(2)=nmax
+            datasetname='zwf'
+            call hdf5write1d(group_idnf,datasetname,zswf,dim)
+            dim(1)=nym
+            datasetname='ywf'
+            call hdf5write1d(group_idnf,datasetname,yswf,dim)
+            dim(1)=nxm
+            datasetname='xwf'
+            call hdf5write1d(group_idnf,datasetname,xswf,dim)
+            
+         endif
 c     create the new vector position and memorize teh local field
          do i=1,nzm
             do j=1,nym
@@ -1969,7 +2017,6 @@ c     endif
                   subunit=subunit+1
                   Tabzn(subunit)=i
                   nsubunit=3*(subunit-1)
-
                   if (comparaison(x,y,z,xs(l),ys(l),zs(l)
      $                 ,lambda).eq.1.and.l.le.nbsphere)  then
                      ll=3*(l-1)        
@@ -2019,7 +2066,9 @@ c     comptute the incident field if is not computed yet
      $                       ,xr(nsubunit+1),xr(nsubunit+2),xr(nsubunit
      $                       +3),nstop,namefileinc,infostr)
                      endif
+                   
                   endif
+                
                enddo
             enddo
          enddo
@@ -2048,12 +2097,12 @@ c            write(*,*) 'grosse boite',fluxinc ,fluxref ,fluxtrans,irra
      $           ,irra,nstop ,infostr,plan2b)
 c            write(*,*) 'grosse boite',fluxinc ,fluxref ,fluxtrans,irra
          elseif  (beam(1:7).eq.'speckle') then
-            call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0,IR
-     $           ,xswf,yswf,zswf,xgaus ,ygaus,zgaus,psi,xr,aretecube
-     $           ,nxm,nym,nzm ,subunit,nmax,nfft2d,nfft2d,Eimagexneg
-     $           ,Eimageyneg ,Eimagezneg,Eimagexpos,Eimageypos
-     $           ,Eimagezpos,fluxinc ,fluxref ,fluxtrans,irra,nstop
-     $           ,infostr,plan2b)
+            call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0
+     $           ,numaper,IR,xswf,yswf,zswf,xgaus ,ygaus,zgaus,psi,xr
+     $           ,aretecube,nxm,nym,nzm,nxm,nym,nzm,subunit,nmax,nfft2d
+     $           ,nfft2d,Eimagexneg ,Eimageyneg ,Eimagezneg,Eimagexpos
+     $           ,Eimageypos ,Eimagezpos,fluxinc ,fluxref ,fluxtrans
+     $           ,irra,nstop ,infostr,plan2b)
          endif
          
          
@@ -2170,12 +2219,16 @@ c     $           ,epscouche,subunit,nmax,n1m,nzm,nzm,nbs,nmat,nmatim
          endif
 c     produit ici de la matrice avec le vecteur
 c     write(*,*) 'FF fait',FF(1),FF(2),FF(3)
-         
+         write(*,*) 'coucou'
+
+
+    
+
          call produitfftmatvectsurplusboite(xi,xr,subunit,subunit,nxm
      $        ,nym,nzm ,nxm2,nym2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
      $        ,matindplan,b31,b32,b33,b11,b12,b13,a11,a12,a13 ,a22,a23
      $        ,a31 ,a32 ,a33,planbn,planfn)
-
+        
 c     remet la valeur du champ calculé précédemment dans l'objet quand
 c     on n'est pas en rigoureux.
          if (nrig.ne.0) then

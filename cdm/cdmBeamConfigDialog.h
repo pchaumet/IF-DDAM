@@ -44,6 +44,7 @@ class BeamConfigDialog : public QDialog
   QLineEdit    *xgaus;
   QLineEdit    *ygaus;
   QLineEdit    *zgaus;
+  QLineEdit    *speckseed;
   QVector<QLineEdit*>   thetam;
   QVector<QLineEdit*>   phim;
   QVector<QLineEdit*>   ppm;

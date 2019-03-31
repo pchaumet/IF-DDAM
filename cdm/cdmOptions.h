@@ -63,6 +63,7 @@ class Options
    double getXgaus();
    double getYgaus();
    double getZgaus();
+   int getSpeckseed();
    double getP0();
    double getW0();
 
@@ -185,6 +186,7 @@ class Options
    void setXgaus(double _xgaus);
    void setYgaus(double _ygaus);
    void setZgaus(double _zgaus);
+   void setSpeckseed(int _speckseed);
    void setP0(double P0);
    void setW0(double W0);
 
@@ -320,6 +322,7 @@ class Options
     double xgaus;
     double ygaus;
     double zgaus;
+    int speckseed;
     double P0;
     double W0;
 

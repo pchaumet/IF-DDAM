@@ -111,7 +111,6 @@ c     test si l'objet est sur une couche ou plusieurs
       write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
       if (nmaxc-nminc.ge.2) then
 c     shift the layers
-         zg=0.d0
          do k=nminc,nmaxc-1           
             do i=1,nnnr
                z=-rayon+aretecube*(dble(i)-0.5d0)

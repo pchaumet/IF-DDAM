@@ -174,6 +174,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     if (options->getBeam() == "Circular Gaussian") strcpy (beam,"gwavecircular");
     if (options->getBeam() == "Linear Gaussian") strcpy (beam,"gwavelinear");
     if (options->getBeam() == "Antenna") strcpy (beam,"antenna");
+    if (options->getBeam() == "Speckle") strcpy (beam,"speckle");
     if (options->getBeam() == "Arbitrary wave (file)") strcpy (beam,"arbitrary");
     
     QLOG_DEBUG () << "Beam:" << options->getBeam();
@@ -274,7 +275,6 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     macroscopicfieldCheck = options->getMacroscopicfield();
     int nside;
     nside  = options->getNside();
-    int iseedspeckle;
     int ninterp;
     ninterp = options->getNinterp();
     int crosssectionCheck;
@@ -637,7 +637,8 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    double zgaus;
    zgaus = options->getZgaus();
    QLOG_DEBUG () << "Zgaus:" << QString::number(zgaus,'g',5);
-
+   int speckseed;
+   speckseed = options->getSpeckseed();
    // wave multi
    double thetam[MAX_WAVEMULTI_NUMBER];
    double phim[MAX_WAVEMULTI_NUMBER];
@@ -848,7 +849,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
            &demiaxea, &demiaxeb, &demiaxec, 
 	   &thetaobj, &phiobj, &psiobj, namefileobj,
            // planewave
-	   &theta, &phi, &pp, &ss, &iseedspeckle, &P0, &W0, &xgaus, &ygaus, &zgaus, namefileinc,
+	   &theta, &phi, &pp, &ss, &speckseed, &P0, &W0, &xgaus, &ygaus, &zgaus, namefileinc,
            // wave multi
            thetam, phim, ppm, ssm, (dcmplx*)E0m, &wavemultinumber,
 	   infostr, stopFlag,

@@ -213,6 +213,12 @@ OptionsWindow::tofile(){
     opt << "  polarization TM (1) TE (0):" << options->getPolarizationTM() << endl;
     opt << "  gaussian X:" << options->getXgaus() << endl;
     opt << "  gaussian Y:" << options->getYgaus() << endl;
+    opt << "  gaussian Z:" << options->getZgaus() << endl;}
+  else if (options->getBeam() == "Speckle"  ) {
+    opt << "  polarization TM (1) TE (0):" << options->getPolarizationTM() << endl;
+    opt << "  Seed :" << options->getSpeckseed() << endl;
+    opt << "  gaussian X:" << options->getXgaus() << endl;
+    opt << "  gaussian Y:" << options->getYgaus() << endl;
     opt << "  gaussian Z:" << options->getZgaus() << endl;
   }
   

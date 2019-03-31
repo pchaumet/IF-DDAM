@@ -48,14 +48,18 @@ light_source {CamPos, color Gray25
 }
 
 
-light_source  { < 20 , 30 , -20 > color <1,1,1> }
+light_source  { < 200 , 300 , -200 > color <1,1,1> }
 
-light_source  { <-60, 50, 40> color <0.3,0.3,0.3>}
+light_source  { <-600, 500, 400> color <0.3,0.3,0.3>}
+
+light_source  { < -500 , 300 , -200 > color <1,1,1> }
+
+//light_source  { < 0 , -50 , 0 > color <1,1,1> }
 
 
 //--------------------------  lens --------
  #declare zlens1 = 20; //position lens			      
- #declare R   = 80.0;   //sphere radius
+ #declare R   = 60.0;   //sphere radius
  #declare Over= 1;   //sphere overlap
  intersection{
   sphere{<0,0,0>,R  translate <zlens1-R+Over,0,0>}
@@ -78,7 +82,7 @@ light_source  { <-60, 50, 40> color <0.3,0.3,0.3>}
  intersection{
   sphere{<0,0,0>,R  translate <zlens2-R+Over,0,0>}
   sphere{<0,0,0>,R  translate <zlens2+R-Over,0,0 >}
-  texture{ T_Glass4 }
+  texture{ Dark_Green_Glass }
   interior {ior 1.5} 
  finish {diffuse 5.
                   brilliance 10.0
@@ -245,11 +249,11 @@ scale<2,2,2> translate<-2.0,0.5,11> }
 text { ttf "timrom.ttf" "y" 0.05, 0 pigment { Black }
 scale<2,2,2> translate<1,12.0,0> }
 
-text { ttf "symbol.ttf" "Q" 0.05, 0 pigment { Green }
-scale<3,3,3> translate<-12,0,0> rotate<0,-25,0>}
+//text { ttf "symbol.ttf" "Q" 0.05, 0 pigment { Green }
+//scale<3,3,3> translate<-12,0,0> rotate<0,-25,0>}
 
-text { ttf "symbol.ttf" "j" 0.05, 0 pigment { Green }
-scale<3,3,3> rotate<0,45,0> translate<0,-10,0>  }
+//text { ttf "symbol.ttf" "j" 0.05, 0 pigment { Green }
+//scale<3,3,3> rotate<0,45,0> translate<0,-10,0>  }
 
 //Kinc
 
@@ -271,7 +275,7 @@ scale<2,2,2> translate<-18.5,2.0, 0>rotate<0,-45,0>  }
 #declare demitore = difference{ object{tora} object{boite1}  }
 #declare quarttore = difference{ object{demitore} object{boite2}  }
 
-object{quarttore rotate<0,-90,0> translate<0,0,0>}
+//object{quarttore rotate<0,-90,0> translate<0,0,0>}
 
 
 text { ttf "timrom.ttf" "Objective lens" 0.05, 0 pigment { Black }
@@ -280,5 +284,17 @@ scale<3,3,3>  rotate<0,90,0>  translate<20,15.0, 0>  }
 text { ttf "timrom.ttf" "Tube lens" 0.05, 0 pigment { Black }
 scale<3,3,3> rotate<0,90,0>  translate<40,15.0, 0>  }
 
-text { ttf "timrom.ttf" "CCD camera" 0.05, 0 pigment { Black }
+text { ttf "timrom.ttf" "CCD camera:" 0.05, 0 pigment { Black }
+scale<3,3,3> rotate<0,90,0>  translate<60,18.0, 0>  }
+text { ttf "timrom.ttf" "Image plane" 0.05, 0 pigment { Black }
 scale<3,3,3> rotate<0,90,0>  translate<60,15.0, 0>  }
+
+//text { ttf "timrom.ttf" "N=7" 0.05, 0 pigment { Black }
+//scale<3,3,3> rotate<0,0,0>  translate<5,-10,0>  }
+text { ttf "timrom.ttf" "Discretization" 0.05, 0 pigment { Black }
+scale<3,3,3> rotate<0,0,0>  translate<3,-13.0,0>  }
+
+
+
+text { ttf "timrom.ttf" "IF-DDA" 0.5, 0 pigment { Red }
+scale<10,10,10> rotate<0,0,0>  translate<5,-30,0>  }

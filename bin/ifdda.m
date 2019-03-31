@@ -30,7 +30,7 @@ nlentille=h5read(namefileh5,'/Option/nlentille')
 nquicklens=h5read(namefileh5,'/Option/nquicklens')
 nphi=h5read(namefileh5,'/Option/nphi')
 ntheta=h5read(namefileh5,'/Option/ntheta')
-niso=h5read(namefileh5,'/Option/niso')
+niso=h5read(namefileh5,'/Option/iso')
 nfft=h5read(namefileh5,'/Option/nfft2d')
 k0=h5read(namefileh5,'/Option/k0')
 numaper=h5read(namefileh5,'/Option/numaper')
@@ -354,6 +354,9 @@ uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 
  else
 
+
+if (ntypefile == 0);
+
    
 load xwf.mat -ascii
 load ywf.mat -ascii
@@ -363,7 +366,6 @@ nxm=max(size(xwf));
 nym=max(size(ywf));
 nzm=max(size(zwf));
 
-if (ntypefile == 0);
 
 load incidentfieldwf.mat -ascii
 load incidentfieldxwf.mat -ascii
@@ -371,6 +373,14 @@ load incidentfieldywf.mat -ascii
 load incidentfieldzwf.mat -ascii
 
 elseif (ntypefile ==2);
+
+xwf=h5read(namefileh5,'/Near Field/xwf');
+ywf=h5read(namefileh5,'/Near Field/ywf');
+zwf=h5read(namefileh5,'/Near Field/zwf');
+
+nxm=max(size(xwf));
+nym=max(size(ywf));
+nzm=max(size(zwf));
 
 incidentfieldwf=h5read(namefileh5,'/Near Field/Incident field modulus wf');
 incidentfieldxwf(:,1)=h5read(namefileh5,'/Near Field/Incident field x component real part wf');
@@ -469,6 +479,11 @@ uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 
  else
    
+
+
+if (ntypefile ==0);
+
+
 load xwf.mat -ascii
 load ywf.mat -ascii
 load zwf.mat -ascii
@@ -476,12 +491,19 @@ load zwf.mat -ascii
 nxm=max(size(xwf));
 nym=max(size(ywf));
 nzm=max(size(zwf));
-if (ntypefile ==0);
+
 load localfieldwf.mat -ascii
 load localfieldxwf.mat -ascii
 load localfieldywf.mat -ascii
 load localfieldzwf.mat -ascii
+
 elseif (ntypefile ==2);
+
+
+xwf=h5read(namefileh5,'/Near Field/xwf');
+ywf=h5read(namefileh5,'/Near Field/ywf');
+zwf=h5read(namefileh5,'/Near Field/zwf');
+
 localfieldwf=h5read(namefileh5,'/Near Field/Local field modulus wf');
 localfieldxwf(:,1)=h5read(namefileh5,'/Near Field/Local field x component real part wf');
 localfieldxwf(:,2)=h5read(namefileh5,'/Near Field/Local field x component imaginary part wf');
@@ -577,6 +599,9 @@ uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 'Callback',{@plotmacrofield,nx,ny,nz,x,y,z,matxymacrofield,matxymacrofieldx,matxymacrofieldy,matxymacrofieldz});
 
  else
+
+if (ntypefile == 0);
+
 load xwf.mat -ascii
 load ywf.mat -ascii
 load zwf.mat -ascii
@@ -584,13 +609,19 @@ load zwf.mat -ascii
 nxm=max(size(xwf));
 nym=max(size(ywf));
 nzm=max(size(zwf));
-if (ntypefile == 0);  
+
 load macroscopicfieldwf.mat -ascii
 load macroscopicfieldxwf.mat -ascii
 load macroscopicfieldywf.mat -ascii
 load macroscopicfieldzwf.mat -ascii
 
 elseif (ntypefile ==2);
+
+
+xwf=h5read(namefileh5,'/Near Field/xwf');
+ywf=h5read(namefileh5,'/Near Field/ywf');
+zwf=h5read(namefileh5,'/Near Field/zwf');
+
 macroscopicfieldwf=h5read(namefileh5,'/Near Field/Macroscopic field modulus wf');
 macroscopicfieldxwf(:,1)=h5read(namefileh5,'/Near Field/Macroscopic field x component real part wf');
 macroscopicfieldxwf(:,2)=h5read(namefileh5,'/Near Field/Macroscopic field x component imaginary part wf');

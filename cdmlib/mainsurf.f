@@ -14,7 +14,7 @@ c     variables for the object
      $     ,nzmp
       integer subunit,nphi,ntheta
 c     parameter (nxm=3,nym=3,nzm=3,nphi=72,ntheta=35)
-      parameter (nxm=20,nym=20,nzm=20,nphi=72,ntheta=36)
+      parameter (nxm=4,nym=4,nzm=4,nphi=72,ntheta=36)
 c     definition of the size for the code
       INTEGER nmax, ntotalm
       character(2) polarizability
@@ -191,10 +191,9 @@ c     beam='gwavecircular'
 c      beam='pwavecircular'
 c      beam='wavelinearmulti'
 c      beam='gwaveiso'
-c     beam='speckle'
+c      beam='speckle'
 c     beam='arbitrary' !pas fait
       if (beam(1:11).eq.'pwavelinear') then
-c         theta=65.287098590488455d0
          theta=0.d0
          phi=0.d0
          pp=0.d0
@@ -273,12 +272,12 @@ c      object='inhomo'
 
       if (object(1:6).eq.'sphere') then
          numberobjet=1
-         rayonmulti(1)=500.d0         
+         rayonmulti(1)=50.d0         
          xgmulti(1)=0.d0
          ygmulti(1)=0.d0
          zgmulti(1)=0.d0
          materiaumulti(1)='xx'
-         nnnr=10
+         nnnr=2
          epsmulti(1)=(1.1d0,0.d0)
       elseif (object(1:4).eq.'cube') then
          numberobjet=1
@@ -314,20 +313,26 @@ c      object='inhomo'
          epsmulti(1)=(1.01d0,0.0d0)
          materiaumulti(1)='xx'
       elseif (object(1:8).eq.'nspheres') then
-         numberobjet=2
+         numberobjet=3
          xgmulti(1)=0.d0
          ygmulti(1)=0.d0
-         zgmulti(1)=0.d0
-         rayonmulti(1)=10.d0
-         epsmulti(1)=(2.25d0,0.d0)
+         zgmulti(1)=300.d0
+         rayonmulti(1)=1500.d0
+         epsmulti(1)=(1.3d0,0.d0)
          materiaumulti(1)='xx'
-         xgmulti(2)=30.d0
-         ygmulti(2)=0.d0
-         zgmulti(2)=0.d0
-         rayonmulti(2)=15.d0
-         epsmulti(2)=(1.25d0,0.d0)
+         xgmulti(2)=2500.d0
+         ygmulti(2)=2500.d0
+         zgmulti(2)=300.d0
+         rayonmulti(2)=400.d0
+         epsmulti(2)=(1.1d0,0.d0)
          materiaumulti(2)='xx'
-         nnnr=20
+         xgmulti(3)=-2500.d0
+         ygmulti(3)=-2500.d0
+         zgmulti(3)=300.d0
+         rayonmulti(3)=400.d0
+         epsmulti(3)=(1.1d0,0.d0)
+         materiaumulti(3)='xx'
+         nnnr=50
       elseif (object(1:9).eq.'ellipsoid') then
          demiaxea=10.d0
          demiaxeb=20.d0
@@ -398,16 +403,16 @@ c      methodeit='GPBICOR'
 c*******************************************************
 c     defini ce que l'on veut calculer
 c*******************************************************
-      nproche=1 !0 calcul le champ dans l'objet, 1 dans le cube
+      nproche=2 !0 calcul le champ dans l'objet, 1 dans le cube
                 !contenant l'objet 2 dans la boite nxm,nym,nzm
       nxmp=0 ! si boite plus large que l'objet suivant x
       nymp=0 ! si boite plus large que l'objet suivant y
       nzmp=0 ! si boite plus large que l'objet suivant z
       nlocal=1                  ! 0 ne calcul pas le champ local, 1 calcul le champ local
       nmacro=1 ! 0 ne calcul pas le champ macro, 1 calcul le champ macro
-      nsection=1
-      ndiffracte=1 !0  ne calcul pas le champ diffracte, 1 le calcul
-      nquickdiffracte=1 ! 0 calcul le champ diffracte classique, 1 par FFT
+      nsection=0
+      ndiffracte=0 !0  ne calcul pas le champ diffracte, 1 le calcul
+      nquickdiffracte=0 ! 0 calcul le champ diffracte classique, 1 par FFT
       nrig=0 ! 0 calcul rigoureusement le champ, 1 Born renormalise
       ninterp=0 ! niveau d'interpolation si tenseur non rigoureux
       ncote=1 ! 1 calcul des deux cotes le champ diffracté, 0 dessous, 2 dessus
@@ -416,13 +421,13 @@ c     nforce=1 ! calcul la force exercee par la lumiere sur l'objet
 c     nforced=1 ! calcul la densite de force dans l'objet
 c     ntorque=1 ! calcul le couple exerce par la lumiere sur l'objet
 c     ntorqued=1 ! calcul la desnite de couple dans l'objet l'objet
-      nlentille=1 !calcul l'image a travers une lentille: 0 pas de lentille, 1 au dessus, -1 au dessous (on élcaire par en dessous)
-      nquicklens=1!image a travers la lentille sans FFT (0) ou avec FFT(1)
+      nlentille=0 !calcul l'image a travers une lentille: 0 pas de lentille, 1 au dessus, -1 au dessous (on élcaire par en dessous)
+      nquicklens=0!image a travers la lentille sans FFT (0) ou avec FFT(1)
       nenergie=0 !0: calcul du champ diffracte. 1 calcul du champ total
       nlecture=0 ! 0 ne relit pas, 1 relit ou cree le fichier FF
 ! (dipole) au premier coup
       nobjet=0                  ! si 1 ne fait que l'objet
-      nmatf=0 ! 1 ne cre pas les fichiers .mat 0 sinon
+      nmatf=2 ! 1 ne cre pas les fichiers .mat 0 sinon
       h5file='ifdda.h5'
       gross=100.d0              !grossissement
       numaperinc=0.9d0          !ouverture numerique de l'incident
@@ -448,8 +453,8 @@ c      epscouche(1)=1.d0
       epscouche(1)=1.d0
 c      epscouche(2)=1.d0
 c      epscouche(2)=1.d0 
-      zcouche(0)=-rayonmulti(1)*1.5d0
-      zcouche(1)=rayonmulti(1)*1.5d0
+      zcouche(0)=-rayonmulti(1)*15.d0
+      zcouche(1)=rayonmulti(1)*15.d0
      
       materiaucouche(0)='xx'
       materiaucouche(1)='xx'

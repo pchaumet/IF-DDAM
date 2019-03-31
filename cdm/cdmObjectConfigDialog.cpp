@@ -64,6 +64,9 @@ ObjectConfigDialog::ObjectConfigDialog( QWidget *parent,Qt::WindowFlags fl,
      else if (options->getObject() == "inhomogeneous sphere") {
       objectconfiglayout->addRow(tr("Sphere radius (nm):"),sphereradius.at(i));
       objectconfiglayout->addRow(tr("Sphere seed :"),sphereseed.at(i));
+      objectconfiglayout->addRow(tr("Position X:"),positionx.at(i));
+      objectconfiglayout->addRow(tr("Position Y:"),positiony.at(i));
+      objectconfiglayout->addRow(tr("Position Z:"),positionz.at(i));
       objectconfiglayout->addRow(tr("Coherence length (nm):"),spherecoherencelength.at(i));
       objectconfiglayout->addRow(tr("Standard deviation (nm):"),spherestandardev.at(i));
      }

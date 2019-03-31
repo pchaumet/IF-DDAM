@@ -1,7 +1,7 @@
       SUBROUTINE ratint(xa,ya,n,x,y,dy)
       INTEGER n,NMAX
-      double precision x,xa(n),TINY
-      double complex dy,y,ya(n)
+      double precision x,xa(10),TINY
+      double complex dy,y,ya(10)
       PARAMETER (NMAX=10,TINY=1.d-25)
       INTEGER i,m,ns
       double precision h,hh

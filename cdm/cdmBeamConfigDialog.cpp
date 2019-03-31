@@ -23,7 +23,7 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
    xgaus = new QLineEdit(QString::number(options->getXgaus()));
    ygaus = new QLineEdit(QString::number(options->getYgaus()));
    zgaus = new QLineEdit(QString::number(options->getZgaus()));
-
+   speckseed = new QLineEdit(QString::number(options->getSpeckseed()));
    tabwavemulticonfig = new QTabWidget();
 
    okButton = new QPushButton("Ok");
@@ -86,18 +86,25 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
     if (options->getBeam() != "gwaveiso") layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     if (options->getBeam() != "gwaveiso") layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
     if (options->getBeam() != "antenna")
-      layout->addRow(tr("polarization TM (1) TE (0):"),polarizationTM);
-    layout->addRow(tr("Focus X:"),xgaus);
-    layout->addRow(tr("Focus Y:"),ygaus);
-    layout->addRow(tr("Focus Z:"),zgaus);
+      layout->addRow(tr("Polarization along x(1) y(0)::"),polarizationTM);
+    layout->addRow(tr("Focus X (nm):"),xgaus);
+    layout->addRow(tr("Focus Y(nm):"),ygaus);
+    layout->addRow(tr("Focus Z(nm):"),zgaus);
    }
    else if (options->getBeam() == "Circular Gaussian" ) {
     layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
     layout->addRow(tr("polarization:"),polarizationlayout);
-    layout->addRow(tr("Focus X:"),xgaus);
-    layout->addRow(tr("Focus Y:"),ygaus);
-    layout->addRow(tr("Focus Z:"),zgaus);
+    layout->addRow(tr("Focus X(nm):"),xgaus);
+    layout->addRow(tr("Focus Y(nm):"),ygaus);
+    layout->addRow(tr("Focus Z(nm):"),zgaus);
+   }
+    else if (options->getBeam() == "Speckle" ) {
+    layout->addRow(tr("Polarization along x(1) y(0):"),polarizationTM);
+    layout->addRow(tr("Seed :"),speckseed);
+    layout->addRow(tr("Shift X(nm):"),xgaus);
+    layout->addRow(tr("Shift Y(nm):"),ygaus);
+    layout->addRow(tr("Shift Z(nm):"),zgaus);
    }
    else if (options->getBeam() == "Arbitrary wave (file)") {
     layout->addRow(tr("File path:"),beamfile);
@@ -134,6 +141,7 @@ BeamConfigDialog::updateOptions()
    options->setXgaus(xgaus->text().toDouble());
    options->setYgaus(ygaus->text().toDouble());
    options->setZgaus(zgaus->text().toDouble());
+   options->setSpeckseed(speckseed->text().toInt());
    
    if (options->getBeam() == "Multiple wave") {
 	   QVector<double> _thetam;

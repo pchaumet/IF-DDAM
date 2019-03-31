@@ -17,7 +17,7 @@
      $     ,b31(ntotalm) ,b32(ntotalm),b33(ntotalm) 
       double precision sphi,cphi,s2phi,c2phi,aretecube,a(0:2*n1m*n1m)
 
-      integer nav1,nav2,nap1,nap2,n,kkav1,kkav2,kkap1,kkap2
+      integer nav1,nav2,nap1,nap2,n,nlong,kkav1,kkav2,kkap1,kkap2
       double precision long,If1,If2,If3,If4
       
       integer ninter
@@ -26,15 +26,19 @@
       double complex ya(10),y,dy
       integer*8 planb
       FFTW_BACKWARD=+1
-
+      n=4
+      ya=0.d0
+      xa=0.d0
+      dy=0.d0
       dinterp=dble(ninterp)
 c     initialise la matrice FFT
       do nn=1,ntp
          do ll=nn,ntp
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ii,jj,indice,i,j,n1,kk)
 !$OMP& PRIVATE(Ixx,Ixy,Ixz,Izz,Izx,sphi,cphi,s2phi,c2phi)
-!$OMP& PRIVATE(Sxx,Sxy,Sxz,Syy,Syz,Szx,Szy,xa,ya)
-!$OMP& PRIVATE(long,n,nav1,nav2,nap1,nap2,kkav1,kkav2,kkap1,kkap2)
+!$OMP& PRIVATE(Sxx,Sxy,Sxz,Syy,Syz,Szx,Szy)
+!$OMP& FIRSTPRIVATE(xa,ya,dy)
+!$OMP& PRIVATE(long,nlong,nav1,nav2,nap1,nap2,kkav1,kkav2,kkap1,kkap2)
 !$OMP DO SCHEDULE(DYNAMIC) COLLAPSE(2)  
             do jj=1,ny2
                do ii=1,nx2
@@ -71,11 +75,10 @@ c     reconstruction des fonctions de Green par interpolation
                         long=1.d300
                      else
                         long=dsqrt(dble(n1*ninterp*ninterp))
-                        n=nint(long)
-
-                        if (dabs(dble(n-long)).le.1.d-10) then
+                        nlong=nint(long)
+                        if (dabs(dble(nlong)-long).le.1.d-10) then
 c     test pour savoir si long est un entier
-                           kk=matindice(matindplan(ll,nn),n+1)
+                           kk=matindice(matindplan(ll,nn),nlong+1)
                            Ixx=matrange(kk,1)
                            Ixy=matrange(kk,2)
                            Ixz=matrange(kk,3)
@@ -92,40 +95,44 @@ c     test pour savoir si long est un entier
                            kkap1=matindice(matindplan(ll,nn),nap1+1)
                            kkap2=matindice(matindplan(ll,nn),nap2+1)
 
-
 c     interpolation par une fonction rationelle a quatre abscisses
 
                            xa(1)=dble(nav2)
                            xa(2)=dble(nav1)
                            xa(3)=dble(nap1)
                            xa(4)=dble(nap2)
-                           n=4
+
 
                            ya(1)=matrange(kkav2,1)
                            ya(2)=matrange(kkav1,1)
                            ya(3)=matrange(kkap1,1)
                            ya(4)=matrange(kkap2,1)
                            call ratint(xa,ya,n,long,Ixx,dy)
+
                            ya(1)=matrange(kkav2,2)
                            ya(2)=matrange(kkav1,2)
                            ya(3)=matrange(kkap1,2)
                            ya(4)=matrange(kkap2,2)
                            call ratint(xa,ya,n,long,Ixy,dy)
+
                            ya(1)=matrange(kkav2,3)
                            ya(2)=matrange(kkav1,3)
                            ya(3)=matrange(kkap1,3)
                            ya(4)=matrange(kkap2,3)
                            call ratint(xa,ya,n,long,Ixz,dy)
+
                            ya(1)=matrange(kkav2,4)
                            ya(2)=matrange(kkav1,4)
                            ya(3)=matrange(kkap1,4)
                            ya(4)=matrange(kkap2,4)
                            call ratint(xa,ya,n,long,Izz,dy)
+
                            ya(1)=matrange(kkav2,5)
                            ya(2)=matrange(kkav1,5)
                            ya(3)=matrange(kkap1,5)
                            ya(4)=matrange(kkap2,5)
                            call ratint(xa,ya,n,long,Izx,dy)
+
 
                         endif 
                      endif
