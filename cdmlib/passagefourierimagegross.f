@@ -66,7 +66,7 @@
                sintmp=dsqrt(u1*u1+u2*u2)
                u1=u1/sintmp
                u2=u2/sintmp
-               tmp=dsqrt(u(3)/v(3))
+               tmp=dsqrt(u(3)/v(3)*indiceopt)
                if (sintmp.eq.0.d0) then
                   Eimx(indice)=Ex(kk)
                   Eimy(indice)=Ey(kk)

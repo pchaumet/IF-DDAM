@@ -171,7 +171,6 @@ c     appele du multicouche pour avoir le champ a l'origine (x=y=0)
      $                 ,Arz,Atx,Aty,Atz)                               
 c     const2=cdexp(icomp*(var1*dble(nkx)+var2*dble(nky)))
                   const2=cdexp(-icomp*(kx*x0+ky*y0+kz*z0))
-                  write(*,*) 'const2',const2,kx,ky,kz
                   indice=ii+nfft2d*(jj-1)
                   Egausxref(indice)=Ex*const2
                   Egausyref(indice)=Ey*const2

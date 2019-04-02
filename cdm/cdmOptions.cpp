@@ -121,7 +121,7 @@ void Options::initOptions(){
   nxm = nym = nzm = 10;
   ntheta = 36;
   nphi = 72;
-  na = 1;
+  na = 0.9;
   nainc= 0.9;
   ntypemic= 0;
   nxmp = nymp = nzmp = 0;
@@ -150,7 +150,7 @@ void Options::initOptions(){
   opticaltorque = 0;
   opticaltorquedensity = 0;
   nproche = 0;
-  ninterp = 0;
+  ninterp = 2;
   beam = "pwavecircular";
   object = "sphere";
   methodeit = "GPBICG1";
@@ -245,7 +245,7 @@ void Options::initDb() {
 	     "psiobj double, "
              "hauteur double, "
              "primary key (parent, objectnum))");
-  query.exec("insert into object_tbl values ('new',0,'sphere','',0,0,0,10,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
+  query.exec("insert into object_tbl values ('new',0,'sphere','',0,0,0,100,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0)");
   QLOG_DEBUG () << query.lastError().text();
   query.exec("create table epsilon_tbl "
 	     "(parent varchar(255) not null, "
@@ -332,7 +332,7 @@ void Options::initDb() {
 	     "meshsize double, "
 	     "nfft2d integer, "
 	     "advancedinterface integer) ");
-  query.exec("insert into run_tbl values ('new','GPBICG1','RR',0,0,'',0,'ifdda.h5',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,36,72,1,0.9,-1,0,0,0,0,25,128,0)");
+  query.exec("insert into run_tbl values ('new','GPBICG1','RR',0,0,'',0,'ifdda.h5',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,36,72,1,0.9,-1,0,0,0,0,25,128,0)");
   QLOG_DEBUG () << query.lastError().text();
 }
 void 

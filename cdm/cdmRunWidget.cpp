@@ -165,19 +165,19 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     // cdm.in file
     double wavelength;
     wavelength = options->getWavelength();
-    QLOG_DEBUG () << "Wavelength:" << QString::number(wavelength,'g',5);
+    QLOG_INFO () << "Wavelength:" << QString::number(wavelength,'g',5);
     char beam[64];
     
     if (options->getBeam() == "Circular plane wave") strcpy (beam,"pwavecircular");
     if (options->getBeam() == "Linear plane wave") strcpy (beam,"pwavelinear");
-    if (options->getBeam() == "Multiplane wave") strcpy (beam,"wavelinearmulti");
+    if (options->getBeam() == "Multiple wave") strcpy (beam,"wavelinearmulti");
     if (options->getBeam() == "Circular Gaussian") strcpy (beam,"gwavecircular");
     if (options->getBeam() == "Linear Gaussian") strcpy (beam,"gwavelinear");
     if (options->getBeam() == "Antenna") strcpy (beam,"antenna");
     if (options->getBeam() == "Speckle") strcpy (beam,"speckle");
     if (options->getBeam() == "Arbitrary wave (file)") strcpy (beam,"arbitrary");
     
-    QLOG_DEBUG () << "Beam:" << options->getBeam();
+    QLOG_INFO () << "Beam:" << options->getBeam();
     char namefileinc[64];
     for(int i = 0; i < 64; i++)
      namefileinc[i] = ' ';

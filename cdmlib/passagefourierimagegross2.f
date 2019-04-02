@@ -54,7 +54,7 @@
                sintmp=dsqrt(u1*u1+u2*u2)
                u1=u1/sintmp
                u2=u2/sintmp
-               tmp=dsqrt(u(3)/v(3))
+               tmp=dsqrt(u(3)/v(3)*k0n/k0)
                if (sintmp.ne.0.d0) then
 
                   tmpx=Ex(indice)

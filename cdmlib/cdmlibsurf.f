@@ -374,7 +374,12 @@ c     arret de suite si pas assez de place pour propa
          return
       endif
       
-
+      if (nsection.eq.1.and.beam(1:11).ne.'pwavelinear'.and.beam(1:13)
+     $     .ne.'pwavecircular') then 
+         infostr='Can not compute cross section: Not a plane wave'
+         nstop=-1
+         return
+      endif
       if (nlentille.eq.1) nenergie=1
       
 c      if (nenergie.eq.1.and.nquickdiffracte.eq.1) then
@@ -436,7 +441,6 @@ c     arret pour tolerance dans la méthode itérative
          nstop = 1;
          return
       endif
-
       do k=1, numberobjet
          write (*,*) 'Material object',k,':',materiaumulti(k)
       enddo
