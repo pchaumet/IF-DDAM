@@ -1,14 +1,15 @@
 	version 0.3.3 (fftw+hdf5) 0.2.5 (fftw) et 0.1.14 (ffts)
 
+
 	1) Changement dans la conservation d'energie pour l'image sur la
 	camera. On fera l'hypothese que la CCD est dans l'air et pas dans
 	le milieu ou le champ est diffracte.
 	tmp=dsqrt(u(3)/v(3)*indiceopt)=dsqrt(u(3)/v(3)*k0n/k0)
 	2) Change init de rayon sphere,  NA et ninterp.
-	3) cross section pas calculee si pas onde plane.
+	3) Cross section pas calculee si pas onde plane.
 	4) "Multiple wave" a la place de Multiplane wave!!!
-
-
+	5) champcirculaire.f corrigé AR
+	6) champcircmicro.f corrigé AR
 
 	
 -------------------------------------------------------------

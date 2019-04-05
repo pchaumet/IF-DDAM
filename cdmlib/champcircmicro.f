@@ -55,6 +55,7 @@ c     tet si milieu homogene
          do i=1,neps
             wi(i)=cdsqrt(eps(i)*k02*uncomp)
          enddo
+         if (neps.eq.0) wi(1)=wb
          bsca(1)=E0*cdexp(icomp*wa*disz(0))
          bsca(2)=-eps(0)*E0*wi(1)*cdexp(icomp*wa*disz(0))
          max=neps*2+2
@@ -73,7 +74,7 @@ c     tet si milieu homogene
          matsca(2,1)=-wi(1)*eps(0)*cdexp(-icomp*wa*disz(0))
          matsca(2,2)=-wa*eps(1)*cdexp(icomp*wi(1)*disz(0))
          matsca(2,3)=wa*eps(1)*cdexp(-icomp*wi(1)*disz(0))
-         
+         if (neps.eq.0) goto 900
          matsca(max,max-2)=-eps(neps)*wb*cdexp(icomp*wi(neps)*disz(neps)
      $        )
          matsca(max,max-1)=eps(neps)*wb*cdexp(-icomp*wi(neps)*disz(neps)
@@ -96,7 +97,7 @@ c     tet si milieu homogene
      $           )
          enddo
 
-         job=11
+ 900     job=11
          LDA=nmax
          call zgefa(matsca,lda,max,ipvt,info)
          if (INFO.ne.0) then
@@ -167,7 +168,7 @@ c     tet si milieu homogene
          wi(i)=cdsqrt(eps(i)*k02-kp2*uncomp)
          if (dimag(wi(i)).lt.0.d0) wi(i)=-wi(i)
       enddo
-
+      if (neps.eq.0) wi(1)=wb
 
       bsca(1)=Esca0*cdexp(icomp*wa*disz(0))
       bsca(2)=-eps(0)*Esca0*wi(1)*cdexp(icomp*wa*disz(0))
@@ -194,7 +195,8 @@ c     tet si milieu homogene
       matsca(2,2)=-wa*eps(1)*cdexp(icomp*wi(1)*disz(0))
       matsca(2,3)=wa*eps(1)*cdexp(-icomp*wi(1)*disz(0))
 
-      
+      if (neps.eq.0) goto 901
+
       matsca(max,max-2)=-eps(neps)*wb*cdexp(icomp*wi(neps)*disz(neps))
       matsca(max,max-1)=eps(neps)*wb*cdexp(-icomp*wi(neps)*disz(neps))
       matsca(max,max)=eps(neps+1)*wi(neps)*cdexp(icomp*wb*disz(neps))
@@ -215,7 +217,7 @@ c     tet si milieu homogene
 
       enddo
 
-      job=11
+ 901  job=11
       LDA=nmax
       call zgefa(matsca,lda,max,ipvt,info)
       if (INFO.ne.0) then
@@ -244,7 +246,7 @@ c     tet si milieu homogene
       matprod(2,2)=(kp2+w0*wi(1))*cdexp(icomp*wi(1)*disz(0))
       matprod(2,3)=(kp2-w0*wi(1))*cdexp(-icomp*wi(1)*disz(0))
 
-      
+      if (neps.eq.0) goto 902
       matprod(max,max-2)=(kp2+w0*wi(neps))*cdexp(icomp*wi(neps)
      $     *disz(neps))
       matprod(max,max-1)=(kp2-w0*wi(neps))*cdexp(-icomp*wi(neps)
@@ -269,7 +271,7 @@ c     tet si milieu homogene
 
       enddo
 
-      job=11
+ 902  job=11
       LDA=nmax
       call zgefa(matprod,lda,max,ipvt,info)
       if (INFO.ne.0) then
