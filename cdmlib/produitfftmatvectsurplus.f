@@ -23,7 +23,6 @@ c     calcul pour une surface le produit: xr=xr+A xi avec FFT
       FFTW_ESTIMATE=64
       nxy=nx2*ny2
       dntotal=dble(nxy)
-
       
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)         
 !$OMP DO SCHEDULE(STATIC)     
@@ -64,13 +63,14 @@ c     calcul FFT du vecteur B
 !$OMP ENDDO 
 !$OMP END PARALLEL
 
-
          call dfftw_execute_dft(planb,x1,x1)
          call dfftw_execute_dft(planb,x2,x2)
          call dfftw_execute_dft(planb,x3,x3)
-
+         
          do ll=1,ntp
+
             kk=matindplan(ll,nn)
+
             if (ll.ge.nn) then
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indice)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2) 
@@ -88,6 +88,7 @@ c     calcul FFT du vecteur B
 !$OMP ENDDO 
 !$OMP END PARALLEL               
             else
+
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indice)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)              
                do j=1,ny2
@@ -109,7 +110,7 @@ c     calcul FFT du vecteur B
             call dfftw_execute_dft(planf,b21,b21)
             call dfftw_execute_dft(planf,b31,b31)
             
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indice)
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indice,ii)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)
             do j=1,ny
                do i=1,nx

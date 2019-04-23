@@ -28,6 +28,13 @@
          thetat=thetam(i)
          phit=phim(i)
          E0=E0m(i)
+
+         if (cdabs(E0).eq.0.d0) then
+            nstop=1
+            infostr='One of the plane wave has a null magnitude'
+            return
+         endif
+         
          call champlineaire(eps,disz,neps,nepsmax,x,y,z,k0,E0,ss,pp
      $        ,thetat,phit,infostr,nstop,Exs,Eys,Ezs)
 

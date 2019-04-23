@@ -91,7 +91,7 @@ c     initialisation de l'amplitude des ondes planes.
             kx=deltak*dble(nkx)
             ky=deltak*dble(nky)
             kp2=kx*kx+ky*ky
-            if (kp2.le.kmax*kmax*numaper*0.999d0) then
+            if (kp2.le.kmax*kmax*numaper*numaper*0.999d0) then
 c     le faisceau se deplace vers les z positifs
                kz=dsqrt(kmax*kmax-kp2)               
                ran=SUNIF(-1)
@@ -159,7 +159,7 @@ c     range pour la FFT suivant y
                kx=deltak*dble(nkx)
                ky=deltak*dble(nky)
                kp2=kx*kx+ky*ky
-               if (kp2.le.kmax*kmax*numaper*0.999d0) then
+               if (kp2.le.kmax*kmax*numaper*numaper*0.999d0) then
                   indice=nkx+nfft2d2+1+nfft2d*(nky+nfft2d2)
                   Ax=Egausxtra(indice)
                   Ay=Egausytra(indice)
@@ -245,7 +245,7 @@ c*************************************
             kx=deltak*dble(nkx)
             ky=deltak*dble(nky)
             kp2=kx*kx+ky*ky
-            if (kp2.le.kmax*kmax*numaper*0.999d0) then
+            if (kp2.le.kmax*kmax*numaper*numaper*0.999d0) then
 
                indice=nkx+nfft2d2+1+nfft2d*(nky+nfft2d2)
                Ax=Egausxtra(indice)

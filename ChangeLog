@@ -1,4 +1,42 @@
-	version 0.3.3 (fftw+hdf5) 0.2.5 (fftw) et 0.1.14 (ffts)
+	version 0.3.4 (fftw+hdf5) 0.2.6 (fftw) et 0.1.15 (ffts)
+
+
+	quand l'incident constant le soft affiche une seule couleur grise
+	quand on fait in plot.
+
+	L'echelle sur les plots ne contient pas des fois assez de chiffres
+	significatifs ce qui fait que l'échelle va de par exemple 2.6 à
+	2.6...
+
+	supprimer la petite icone en haut à gauche à coté de start
+	computation.
+
+	Espace entre near field et microscopy
+
+	Ediffkposx pas tracé.
+
+	1) test pour champlineaire multi si une des onde plane a une
+	amplitude nulle.
+	2) ajout test si option wide field alors que pas de boite plus
+	grande rechange l'option nproche.
+	3) suppression du test de comparaison de nnnr au cube par rapport a
+	nmax dans cdmlib.f
+	4) if (kp2.le.kmax*kmax*numaper*0.999d0) then
+	numaper au carre dans specklesurf.f
+	5) Correction dans produitfftmatvectsurplus pour openmp il manque
+	ii.
+	6) Ajout de Born et Born ordre 1 dans cdmlib et microbf et microdf
+	et dans le menu.
+	7) ajout de la doc en anglais seulement pour l'instant.
+	8) correction polarisation de gaussian et speckle. Changement ds
+	cdmlib et cdmBeamConfigDialog.cpp. pola défini avec angle psi.
+	9) ajout de la doc en francais.
+	10) correction polarisabilite LR
+
+
+	-------------------------------------------------------------
+
+	version 0.3.3 (fftw+hdf5) 0.2.6 (fftw) et 0.1.15 (ffts)
 
 
 	1) Changement dans la conservation d'energie pour l'image sur la
@@ -8,10 +46,10 @@
 	2) Change init de rayon sphere,  NA et ninterp.
 	3) Cross section pas calculee si pas onde plane.
 	4) "Multiple wave" a la place de Multiplane wave!!!
-	5) champcirculaire.f corrigé AR
-	6) champcircmicro.f corrigé AR
+	5) champcirculaire.f corrigé.
+	6) champcircmicro.f corrigé.
 
-	
+
 -------------------------------------------------------------
 
 	version 0.3.2 (fftw+hdf5) 0.2.5 (fftw) et 0.1.14 (ffts)

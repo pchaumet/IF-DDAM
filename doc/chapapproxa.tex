@@ -1,0 +1,184 @@
+\chapter{Approximation to increase the efficiency of the code}\label{chapapprox}
+\markboth{\uppercase{Approximated method}}{\uppercase{Approximated method}}
+
+\minitoc
+
+\section{Introduction}
+
+In the previous chapter we have presented the DDA in a simple way
+where the object under study is a set of radiating dipole. In an
+approach more rigorous, with the Maxwell's equation, we get in
+Gaussian unit:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \venab \times \ve{E}^{\rm m}(\ve{r}) & = & i \frac{\omega}{c}
+\ve{B}(\ve{r}) \\
+\venab \times \ve{B}(\ve{r}) & = & -i \frac{\omega}{c}
+\varepsilon(\ve{r}) \ve{E}^{\rm m}(\ve{r}), \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+where $\varepsilon(\ve{r})$ denotes the relative permittivity of the
+object and $\ve{E}^{\rm m}$ the macroscopic field inside the object,
+then we get
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \venab \times ( \venab \times \ve{E}^{\rm m}(\ve{r}) ) & = &
+\varepsilon(\ve{r}) k_0^2 \ve{E}^{\rm m}(\ve{r}), \ee 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+with $k_0=\omega^2/c^2$. Using the relationship
+$\varepsilon=\varepsilon_{\rm mul}+4\pi \chi$, where $\chi$ denotes
+the linear field susceptibility and $\varepsilon_{\rm mul}$ the
+relative permittivity of the multilayer system. Note that
+$\varepsilon_{\rm mul}$ depends only of $z$. Then, we have:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \venab \times ( \venab \times \ve{E}^{\rm m}(\ve{r}) )
+-\varepsilon_{\rm mul} k_0^2 \ve{E}^{\rm m}(\ve{r}) & = & 4\pi
+\chi(\ve{r}) k_0^2 \ve{E}^{\rm m}(\ve{r}) . \label{champref}\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To solve this equation one needs the Green function defined as:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \venab \times ( \venab \times \ve{G}(\ve{r},\ve{r}') )
+-\varepsilon_{\rm mul} k_0^2 \ve{G}(\ve{r},\ve{r}') & = & 4\pi k_0^2
+\ve{I} \delta(\ve{r}-\ve{r}'), \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+and the solution of Eq.~(\ref{champref}) reads:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be\ve{E}^{\rm m}(\ve{r}) = \ve{E}_{\rm ref}(\ve{r}) +\int_{\Omega}
+\ve{G}(\ve{r},\ve{r}') \chi(\ve{r}') \ve{E}^{\rm m}(\ve{r}') {\rm d}
+\ve{r}',\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+where $\ve{E}_{\rm ref}$ is the field in the absence of the object and
+$\Omega$ the support of the object under study. When we solve
+Eq.~(\ref{champref}) the field $\ve{E}^{\rm m}$ corresponds to the
+macroscopic field inside the object.  To solve Eq.~(\ref{champref}) we
+discretize the object in a set of $N$ subunits with a cubic meshsize
+$d$, then the integral equation becomes the sum of $N$ integrals:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be\ve{E}^{\rm m}(\ve{r}_i) = \ve{E}_{\rm ref}(\ve{r}_i)
++\sum_{j=1}^{N} \int_{V_j} \ve{G}(\ve{r}_i,\ve{r}') \chi(\ve{r}')
+\ve{E}^{\rm m}(\ve{r}') {\rm d} \ve{r}',\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+with $V_j=d^3$.  Assuming the field, the Green function and the
+susceptibility constant over a subunit we get:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be\ve{E}^{\rm m}(\ve{r}_i) = \ve{E}_{\rm ref}(\ve{r}_i) +\sum_{j=1}^N
+\ve{G}(\ve{r}_i,\ve{r}_j) \chi(\ve{r}_j) \ve{E}^{\rm m}(\ve{r}_j)
+d^3.\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We can share into two parts the Green function,
+$\ve{G}=\ve{M}+\ve{T}$, where $\ve{M}$ is the Green function who take
+into account of the multiple reflection between the different layers
+and $\ve{T}$ is the Green function of the homogeneous space.  Using,
+in first approximation (the radiative reaction term neglected)
+$\int_{V_i}\ve{T}(\ve{r}_i,\ve{r}') {\rm d} \ve{r}'=
+-4\pi/(3\varepsilon_{\rm mul}(\ve{r}_i))$~\cite{Yaghjian_PIEEE_80}, we
+get:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be\ve{E}^{\rm m}(\ve{r}_i) = \ve{E}_{\rm ref}(\ve{r}_i) +\sum_{j=1}^N
+\ve{G}'(\ve{r}_i,\ve{r}_j) \chi(\ve{r}_j) d^3 \ve{E}^{\rm
+  m}(\ve{r}_j)-\frac{4\pi}{3\varepsilon_{\rm
+    mul}(\ve{r}_i)}\chi(\ve{r}_i) \ve{E}^{\rm m}(\ve{r}_i),\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+where $\ve{G}'=\ve{M}+\ve{T}$ for $i \neq j$ and $\ve{G}'=\ve{M}$ for
+$i=j$, then we can write
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be\ve{E}(\ve{r}_i) & = & \ve{E}_{\rm ref}(\ve{r}_i) +\sum_{j=1}^N
+\ve{G}'(\ve{r}_i,\ve{r}_j) \alpha_{\rm CM}(\ve{r}_j) \ve{E}(\ve{r}_j)
+\\ {\rm with} \phantom{000} \ve{E}(\ve{r}_i) & = &
+\frac{\varepsilon(\ve{r}_i)+2\varepsilon_{\rm
+    mul}(\ve{r}_i)}{3\varepsilon_{\rm mul}(\ve{r}_i)} \ve{E}^{\rm
+  m}(\ve{r}_i) \\ \alpha_{\rm CM}(\ve{r}_j) & = & \frac{3}{4\pi}
+\varepsilon_{\rm mul}(\ve{r}_i) d^3
+\frac{\varepsilon(\ve{r}_i)-\varepsilon_{\rm
+    mul}(\ve{r}_i)}{\varepsilon(\ve{r}_i)+2\varepsilon_{\rm
+    mul}(\ve{r}_i)} .\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The field $\ve{E}(\ve{r}_i)$ is the local field, {\it i.e.}  the field
+at the position $i$ in the absence of the subunit $i$. Then the linear
+system can be written formally as
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{E} =  \ve{E}_{\rm ref}+ \ve{A} \ve{D}_\alpha \ve{E}, \label{eqmsym}\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+where $\ve{A}$ is a matrix which contains all the Green function and
+$\ve{D}_\alpha$ is a tridiagonal matrix with the polarizabilities of
+each element of discretization. In the next chapter we detail how to
+solve Eq.~(\ref{eqmsym}) rigorously, but in this present chapter we
+detail different approached methods to avoid the tedious resolution of
+Eq.~(\ref{eqmsym}).  The scattered field is computed through
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be\ve{E}^{\rm d}(\ve{r}) & = & \sum_{j=1}^N \ve{G}(\ve{r},\ve{r}_j)
+\alpha(\ve{r}_j) \ve{E}(\ve{r}_j). \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Approximated method}
+
+
+\subsection{Born}
+
+
+The most simple approximation is the Born approximation which consists
+to assume the field inside the object equal to the reference field for
+each element of discretization:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{E}^{\rm m}(\ve{r}_i) = \ve{E}_{\rm ref}(\ve{r}_i), \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This approximation hold if the contrast is weak and the object small
+compare to the wavelength of illumination.
+
+
+\subsection{Renormalized Born }
+
+The renormalized Born approximation consists to assume the local field
+inside the object equal to the reference field :
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{E}(\ve{r}_i) = \ve{E}_{\rm ref}(\ve{r}_i). \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In that case the macroscopic field reads:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{E}^{\rm m}(\ve{r}_i) = \frac{3}{\varepsilon(\ve{r}_i)+2}
+\ve{E}_{\rm ref}(\ve{r}_i). \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This approximation is better that the classical Born approximation
+when the permittivity is high.
+
+
+\subsection{Born at the order 1}
+
+To be more precise that the renormalized Born approximation, one can
+perform the Born series at the order one:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be\ve{E}(\ve{r}_i) & = & \ve{E}_{\rm ref}(\ve{r}_i) +\sum_{j=1}^N
+\ve{G}'(\ve{r}_i,\ve{r}_j) \alpha(\ve{r}_j) \ve{E}_{\rm
+  ref}(\ve{r}_j). \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In that case we take into account the simple scattering.
+
+\section{Computation of the Green function}
+
+
+Even though we are using an efficient integration scheme to evaluate
+the Green tensor, see Ref.~\onlinecite{Paulus_PRE_00}, it takes a lot of
+time to evaluate it for all the different pair of points covering the
+object. Note that due to the translational invariance of the reference
+medium in the $(x,y)$ plane,
+$\ve{G}(\ve{r},\ve{r}')=\ve{G}(\|\ve{r}_{\parallel}-\ve{r}_{\parallel}'\|,z,z')$. For
+each couple $(z,z')$, the number of pairs with different distances of
+a Cartesian $(x,y)$ mesh with $n_x\times n_y$ points ($n_x>n_y)$ is
+equal to $n_x(n_x+1)+(n_x-n_y)n_y$. To accelerate the computation, we
+approximate $\ve{G}(\|\ve{r}_{\parallel}-\ve{r}_{\parallel}'\|,z,z')$
+using an interpolation of a discrete set of points, $\ve{G}(qd
+n_d,z,z')$ with $q=1,\cdots, {\rm int}\sqrt{ n_x^2+n_y^2}$ and $n_d$ a
+natural number. Linear and polynomial interpolations could not
+evaluate the Green tensor properly when
+$\|\ve{r}_{\parallel}-\ve{r}_{\parallel}'\|<\lambda$, as the fast decay
+of the evanescent waves was not accounted for accurately. We obtained
+much better results using rational functions, that is quotients of
+polynomials. Rational functions have the ability to model functions
+with poles (Press et al. 1986) and permit an accurate approximation of
+the $1/r^3$ behavior of the Green tensor in the near field range.
+
+In the code, in the section numerical parameters, the drop menu Green
+function permits to choose to compute rigorously the Green function
+or evaluate the Green tensor with interpolation for $n_d=1, 2, 3, 4$.
+Notice that by default the code uses $n_d=2$ which is enough
+accurate. Note that only the computation with interpolation is
+parallelized.

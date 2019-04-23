@@ -86,7 +86,7 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
     if (options->getBeam() != "gwaveiso") layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     if (options->getBeam() != "gwaveiso") layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
     if (options->getBeam() != "antenna")
-      layout->addRow(tr("Polarization along x(1) y(0)::"),polarizationTM);
+      layout->addRow(tr("Polarization along x(0) or y(90)::"),polarizationTM);
     layout->addRow(tr("Focus X (nm):"),xgaus);
     layout->addRow(tr("Focus Y(nm):"),ygaus);
     layout->addRow(tr("Focus Z(nm):"),zgaus);
@@ -100,7 +100,7 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
     layout->addRow(tr("Focus Z(nm):"),zgaus);
    }
     else if (options->getBeam() == "Speckle" ) {
-    layout->addRow(tr("Polarization along x(1) y(0):"),polarizationTM);
+    layout->addRow(tr("Polarization along x(0) or y(90):"),polarizationTM);
     layout->addRow(tr("Seed :"),speckseed);
     layout->addRow(tr("Shift X(nm):"),xgaus);
     layout->addRow(tr("Shift Y(nm):"),ygaus);

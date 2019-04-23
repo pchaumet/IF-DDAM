@@ -455,14 +455,7 @@ c     write(*,*) 'There is no discretization!',nx,ny,nz
 c     infostr='There is no discretization!'
 c     return
 c     endif
-      if (nnnr*nnnr*nnnr.gt.nmax) then
-         nstop=1
-         write(*,*) 'nxm nym and nzm too small',nnnr,nnnr*nnnr*nnnr,nmax
-         infostr
-     $        ='nxm nym and nzm too small compare to the discretization'
-         return
-      endif
-
+  
 c     open the output file:
       open(99,file='output')
       write(99,*) '************* OUTPUT FILE ***************'
@@ -762,9 +755,15 @@ c     look  for compute near field with FFT
       if (beam(1:5).eq.'gwave'.and.nproche.eq.-1) nproche=0
       nprochefft=0
       write(*,*) 'nproche',nproche
+
+c     test si wide field demandé
       if (nproche.ge.1) then
-         nprochefft=nproche
-         nproche=0
+         if (nx.ne.nxm.or.ny.ne.nym.or.nz.ne.nzm) then
+            nprochefft=nproche
+            nproche=0
+         else
+            nproche=0
+         endif
       endif
 
       if (nobjet.eq.-1.and.nproche.ge.1) nobjet=0
@@ -1251,7 +1250,7 @@ c     circulant matrix with a doble size.
 
 c     if the computation asked is rigourous then compute the Green
 c     function and its FFT
-      if (nrig.eq.0) then
+      if (nrig.eq.0.or.nrig.eq.3) then
 
          write(*,*) '*************************************************'      
          write(*,*) '****** INITIALIZE PLAN FOR FFT ******************'
@@ -1413,7 +1412,7 @@ c     $        ,theta,phi
          
       elseif  (beam(1:11).eq.'gwavelinear') then
          E0=1.d0
-         psi=datan2(ss,pp)*180.d0/pi
+         psi=pp
          xgaus=xgaus*1.d-9
          ygaus=ygaus*1.d-9
          zgaus=zgaus*1.d-9
@@ -1531,13 +1530,7 @@ c     incidente
          xgaus=xgaus*1.d-9
          ygaus=ygaus*1.d-9
          zgaus=zgaus*1.d-9
-         if (pp.lt.0.d0.or.pp.gt.1.d0) then
-            nstop=1
-            infostr='problem in plane incident wave'
-            return
-         endif
-         ss=dsqrt(1.d0-pp)
-         psi=datan2(ss,pp)*180.d0/pi
+         psi=pp
          write(*,*) 'routine iso',psi,ss,pp
 c     write(*,*) 'data',epscouche,zcouche,neps,nepsmax,k0,w0,x0,y0,z0
 c     $        ,theta,phi,psi,E0,xs,ys,zs,aretecube,nx,ny,nz,ndipole
@@ -1605,7 +1598,7 @@ c     tmp=1.d0
 
       elseif  (beam(1:7).eq.'speckle') then
          E0=1.d0
-         psi=datan2(ss,pp)
+         psi=pp
          xgaus=xgaus*1.d-9
          ygaus=ygaus*1.d-9
          zgaus=zgaus*1.d-9
@@ -1850,7 +1843,7 @@ c            write(*,*) 'opt'
          write(*,*) ' '
       elseif (nrig.eq.1) then
          write(*,*) '*************************************************'      
-         write(*,*) '************* BEGIN BORN APPROXIMATION***********'
+         write(*,*) '*** BEGIN RENOMALIZED BORN APPROXIMATION ********'
          write(*,*) '*************************************************'
          
 c     Born approximation field
@@ -1862,8 +1855,82 @@ c     Born approximation field
 !$OMP ENDDO 
 !$OMP END PARALLEL           
 
-         write(*,*) '************* EN BORN APPROXIMATION *************'
+         write(*,*) '** END  RENOMALIZED BORN APPROXIMATION *********'
          write(*,*) ' '
+
+      elseif (nrig.eq.2) then 
+         write(*,*) '*************************************************'      
+         write(*,*) '************* BEGIN BORN APPROXIMATION **********'
+         write(*,*) '*************************************************'
+         nsens=-1
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(k,kk,Em,Eloc,ii,jj,epsani,eps0,z)   
+!$OMP DO SCHEDULE(STATIC) 
+         do k=1,nbsphere
+            z=zs(k)
+            kk=3*(k-1)
+            Em(1)=FF0(kk+1)
+            Em(2)=FF0(kk+2)
+            Em(3)=FF0(kk+3)
+            do ii=1,3
+               do jj=1,3
+                  epsani(ii,jj)=epsilon(k,ii,jj)
+               enddo
+            enddo
+            eps0=epscouche(numerocouche(z,neps,nepsmax,zcouche))
+            call local_macro_surf(Eloc,Em,epsani,eps0,aretecube,k0
+     $           ,nsens)
+            FFloc(kk+1)=Eloc(1)
+            FFloc(kk+2)=Eloc(2)
+            FFloc(kk+3)=Eloc(3)
+         enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL          
+         
+         write(*,*) '************** END BORN APPROXIMATION ***********'
+         write(*,*) ' '
+      elseif (nrig.eq.3) then
+         
+         write(*,*) '*************************************************'      
+         write(*,*) '************** BEGIN BORN ORDER 1 ***************'
+         write(*,*) '*************************************************'
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
+!$OMP DO SCHEDULE(STATIC) 
+         do i=1,nbsphere3
+            xr(i)=FF0(i)           
+         enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)  
+!$OMP DO SCHEDULE(STATIC)
+         do i=1,nbsphere
+            k=3*(i-1)
+            xi(k+1)=polarisa(i,1,1)*xr(k+1)+polarisa(i,1,2)*xr(k+2)
+     $           +polarisa(i,1,3)*xr(k+3)
+            xi(k+2)=polarisa(i,2,1)*xr(k+1)+polarisa(i,2,2)*xr(k+2)
+     $           +polarisa(i,2,3)*xr(k+3)
+            xi(k+3)=polarisa(i,3,1)*xr(k+1)+polarisa(i,3,2)*xr(k+2)
+     $           +polarisa(i,3,3)*xr(k+3)
+         enddo        
+!$OMP ENDDO 
+!$OMP END PARALLEL
+
+         call produitfftmatvectsurplus(xi,xr,nbsphere,ndipole,nx,ny,nz
+     $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax,matindplan
+     $        ,Tabdip,b31,b32,b33,FF,b11,b12,b13,a11,a12,a13,a22,a23,a31
+     $        ,a32 ,a33,planb,planf)
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k) 
+!$OMP DO SCHEDULE(STATIC)       
+         do i=1,nbsphere
+            k=3*(i-1)
+            FFloc(k+1)=xr(k+1)
+            FFloc(k+2)=xr(k+2)
+            FFloc(k+3)=xr(k+3)       
+         enddo            
+!$OMP ENDDO 
+!$OMP END PARALLEL      
+         
       endif
 c     dipole a partir champ local
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
@@ -2223,10 +2290,6 @@ c     $           ,epscouche,subunit,nmax,n1m,nzm,nzm,nbs,nmat,nmatim
          endif
 c     produit ici de la matrice avec le vecteur
 c     write(*,*) 'FF fait',FF(1),FF(2),FF(3)
-         write(*,*) 'coucou'
-
-
-    
 
          call produitfftmatvectsurplusboite(xi,xr,subunit,subunit,nxm
      $        ,nym,nzm ,nxm2,nym2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax

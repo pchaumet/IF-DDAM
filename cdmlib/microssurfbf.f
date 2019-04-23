@@ -2,11 +2,11 @@
      $     ,nxm,nym,nzm,nplanm,nmatim,ntotalm,nmax,matindplan,matindice
      $     ,Tabdip,b31 ,b32 ,b33,FF,FF0,FFloc,b11,b12,b13,a11,a12,a13
      $     ,a22,a23 ,a31 ,a32 ,a33 ,WRK,epscouche,zcouche,neps,nepsmax
-     $     ,xs,ys,zs,nlar,ldabi,polarisa ,methodeit ,nrig,ncote,tolinit
-     $     ,aretecube ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d
-     $     ,nproche ,Eimagexpos ,Eimageypos ,Eimagezpos, Eimageincxpos
-     $     ,Eimageincypos ,Eimageinczpos, Efourierxpos, Efourierypos
-     $     ,Efourierzpos, Efourierincxpos ,Efourierincypos,
+     $     ,xs,ys,zs,nlar,ldabi,polarisa,epsilon ,methodeit ,nrig,ncote
+     $     ,tolinit ,aretecube ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0
+     $     ,nfft2d ,nproche ,Eimagexpos ,Eimageypos ,Eimagezpos,
+     $     Eimageincxpos ,Eimageincypos ,Eimageinczpos, Efourierxpos,
+     $     Efourierypos ,Efourierzpos, Efourierincxpos ,Efourierincypos,
      $     Efourierinczpos, Eimagexneg ,Eimageyneg ,Eimagezneg,
      $     Eimageincxneg,Eimageincyneg ,Eimageinczneg, Efourierxneg
      $     ,Efourieryneg,Efourierzneg, Efourierincxneg ,Efourierincyneg
@@ -27,7 +27,7 @@
      $     *nxm*nym),b33(4*nxm*nym)
       double complex, dimension(3*nxm*nym*nzm) :: xr,xi
       double complex, dimension(3*nxm*nym*nzm,12) :: wrk
-      double complex, dimension(nxm*nym*nzm,3,3) :: polarisa
+      double complex, dimension(nxm*nym*nzm,3,3) :: polarisa,epsilon
       double complex, dimension(3*nxm*nym*nzm) :: FF,FF0,FFloc
       integer, dimension(nxm*nym*nzm) :: Tabdip
       character(12) methodeit
@@ -60,9 +60,10 @@
       double precision dcouche(nepsmax),zcouche(0:nepsmax),x,y,indice0
      $     ,indicen,z,kz
       double complex Arx,Ary,Arz,Atx,Aty,Atz,Emx,Emy,Emz,ctmp,Stenseur(3
-     $     ,3)
+     $     ,3),Em(3),Eloc(3),epsani(3,3)
       integer*8 planf,planb,plan2f,plan2b,planfn,planbn
-      integer FFTW_FORWARD,FFTW_ESTIMATE,FFTW_BACKWARD
+      integer FFTW_FORWARD,FFTW_ESTIMATE,FFTW_BACKWARD,nsens
+     $     ,numerocouche
       character(64) infostr,beam
 
       character(LEN=100) :: datasetname
@@ -246,6 +247,73 @@ c     calcul champ local
                      enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL           
+                  elseif (nrig.eq.2) then 
+                     nsens=-1
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(k,kk,Em,Eloc,ii,jj,epsani,eps0,z)   
+!$OMP DO SCHEDULE(STATIC) 
+                     do k=1,nbsphere
+                        z=zs(k)
+                        kk=3*(k-1)
+                        Em(1)=FF0(kk+1)
+                        Em(2)=FF0(kk+2)
+                        Em(3)=FF0(kk+3)
+                        do ii=1,3
+                           do jj=1,3
+                              epsani(ii,jj)=epsilon(k,ii,jj)
+                           enddo
+                        enddo
+                        eps0=epscouche(numerocouche(z,neps,nepsmax
+     $                       ,zcouche))
+                        call local_macro_surf(Eloc,Em,epsani,eps0
+     $                       ,aretecube,k0,nsens)
+                        FFloc(kk+1)=Eloc(1)
+                        FFloc(kk+2)=Eloc(2)
+                        FFloc(kk+3)=Eloc(3)
+                     enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL          
+         
+                  elseif (nrig.eq.3) then
+         
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
+!$OMP DO SCHEDULE(STATIC) 
+                     do i=1,nbsphere3
+                        xr(i)=FF0(i)           
+                     enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)  
+!$OMP DO SCHEDULE(STATIC)
+                     do i=1,nbsphere
+                        k=3*(i-1)
+                        xi(k+1)=polarisa(i,1,1)*xr(k+1)+polarisa(i,1,2)
+     $                       *xr(k+2)+polarisa(i,1,3)*xr(k+3)
+                        xi(k+2)=polarisa(i,2,1)*xr(k+1)+polarisa(i,2,2)
+     $                       *xr(k+2)+polarisa(i,2,3)*xr(k+3)
+                        xi(k+3)=polarisa(i,3,1)*xr(k+1)+polarisa(i,3,2)
+     $                       *xr(k+2)+polarisa(i,3,3)*xr(k+3)
+                     enddo        
+!$OMP ENDDO 
+!$OMP END PARALLEL
+
+                     call produitfftmatvectsurplus(xi,xr,nbsphere
+     $                    ,ndipole,nx,ny,nz,nx2,ny2,nxm,nym,nzm,nzm
+     $                    ,nplanm,ntotalm,nmax,matindplan,Tabdip,b31,b32
+     $                    ,b33,FF,b11,b12,b13,a11,a12,a13,a22,a23,a31
+     $                    ,a32 ,a33,planb,planf)
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k) 
+!$OMP DO SCHEDULE(STATIC)       
+                     do i=1,nbsphere
+                        k=3*(i-1)
+                        FFloc(k+1)=xr(k+1)
+                        FFloc(k+2)=xr(k+2)
+                        FFloc(k+3)=xr(k+3)       
+                     enddo            
+!$OMP ENDDO 
+!$OMP END PARALLEL          
+
                   endif
 
 c     dipole a partir champ local

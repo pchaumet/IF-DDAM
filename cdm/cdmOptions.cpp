@@ -30,9 +30,9 @@ Options::Options()
 
   nfft2dList = (QStringList() << "128" << "256" <<  "512"  << "768" << "1024" << "1536" << "2048" << "3072" << "4096");
 
-  nsideList = (QStringList() << "Side kz<0"  <<  "Both side (NA=1)" << "Side kz>0");
+  nsideList = (QStringList() << "Side kz<0"  <<  "Both side" << "Side kz>0");
   
-  nrigList = (QStringList() << "Rigorous" << "Renormalized Born");
+  nrigList = (QStringList() << "Rigorous" << "Renormalized Born" << "Born"<< "Born order 1");
   nmatlabList = (QStringList() << "Save in ascii file" << "Do not save file" << "Save in HDF5 file");
   ntypemicList = (QStringList() << "Holographic" << "Brightfield" << "Darkfield & phase");
   

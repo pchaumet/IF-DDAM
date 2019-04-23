@@ -1,0 +1,358 @@
+\chapter{Etude possible avec le code}\label{chap5}
+\markboth{\uppercase{Etude possible avec le code}}{\uppercase{Etude
+    possible avec le code}}
+
+\minitoc
+
+\section{Introduction}
+
+Définir son objet avec la bonne orientation n'est pas chose
+facile. C'est pourquoi la première option {\it Only dipoles with
+  epsilon}, permet de vérifier rapidement si l'objet rentré est bien
+celui désiré, sans qu'aucun calcul ne soit lancé. Une fois ceci fait,
+il y a trois grand champs: l'étude en champ lointain, l'étude en champ
+proche et les forces optiques.
+
+\vskip10mm
+
+{\underline{Important}}: Notons que dans la DDA le calcul qui prend le
+plus de temps est le calcul du champ local du fait de la résolution du
+système d'équations linéaires. Une option a été rajoutée qui consiste
+à relire le champ local à partir d'un fichier. Quand cette option est
+sélectionnée, le nom d'un fichier est demandé, soit on rentre un
+ancien fichier soit un nouveau nom:
+
+\begin{itemize}
+\item Si c'est un nouveau nom, le calcul de champ local sera effectué
+  puis stocké ainsi que la configuration choisie.
+\item Si c'est un ancien nom, le champ local sera relu avec une
+  vérification qu'entre l'écriture et la relecture la configuration
+  n'ait pas été changée. Ceci permet de relancer des calculs très
+  rapidement pour une même configuration mais pour différentes
+  études.
+\end{itemize}
+
+
+Notons aussi que si le calcul demandé a une importante discrétisation
+et que nous ne sommes pas intéressés pour avoir les fichiers de sortie
+en .mat (soit pour utiliser matlab, soit juste pour les contrôler),
+alors nous avons l'option ``Do not write mat file''. Ceci demande au
+code d'écrire aucun fichier .mat et permet au code d'aller plus vite,
+de moins remplir le disque dur et d'être mieux parallélisé.
+
+\section{Etude en champ lointain}
+
+Quand l'option champ lointain est sélectionnée trois possibilités
+apparaissent:
+
+\begin{itemize}
+
+\item {\it Cross section}: Cette option permet de calculer la section
+  efficace d'extinction ($C_{\rm ext}$), d'absorption ($C_{\rm abs}$)
+  et de diffusion ($C_{\rm sca}$) par la différence des deux première,
+  {\it i.e.}: $C_{\rm sca}=C_{\rm ext}-C_{\rm abs}$.  Les sections
+  efficaces sont évaluées avec:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \be C_{\rm ext} & = & \frac{4\pi k_0}{\|\ve{E}_0\|^2} \sum_{j=1}^{N}
+  {\rm Im} \left[ \ve{E}^*_0(\ve{r}_j).  \ve{p}(\ve{r}_j) \right] \\
+  C_{\rm abs} & = & \frac{4\pi k_0}{\|\ve{E}_0\|^2} \sum_{j=1}^{N}
+  \left[ {\rm Im} \left[ \ve{p}(\ve{r}_j). (\alpha^{-1}(\ve{r}_j))^*
+      \ve{p}^*(\ve{r}_j) \right] -\frac{2}{3} k_0^3
+    \| \ve{p}^*(\ve{r}_j) \|^2 \right] \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ Il faut bien voir que les sections efficaces ne peuvent être
+ calculées que si l'objet est dans un espace homogène. Le code en
+ espace libre est plus adapté pour ce type de calcul, mais cela permet
+ pour le code multicouche de vérifier si la discrétisation est bien
+ choisie quand une sphère est étudiée.
+
+
+\item {\it Cross section+Poynting}: Cette option calcule la section
+  efficace de diffusion à partir de l'intégration du champ lointain
+  diffracté par l'objet sur 4$\pi$ stéradians, le facteur asymétrique
+  quand la configuration correspond à l'espace homogène, et sinon
+  calcule la puissance rayonnée ($\left< \ve{S} \right> .\ve{n} R^2$
+  avec $\ve{S}$ le vecteur de Poynting, $\ve{n}$ la direction
+  d'observation) par unité d'angle solide qui sera représenté en
+  3D. Les valeurs {\it Ntheta} et {\it Nphi} permettent de donner le
+  nombre de points utilisés pour calculer la section efficace
+  d'extinction et représenter le vecteur de Poynting. Plus l'objet est
+  grand et plus {\it Ntheta} et {\it Nphi} doivent être grand ce qui
+  conduit pour des objets de plusieurs longueurs d'onde à des calculs
+  coûteux en temps.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \be C_{\rm sca} & = & \frac{k_0^4}{\|\ve{E}_0\|^2} \int \left\|
+    \sum_{j=1}^N \left[ \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.
+      \ve{p}(\ve{r}_j)) \right] e^{-i k_0 \ve{n}.\ve{r}_j} \right\|^2
+  {\rm d}\Omega \\ g & = & \frac{k_0^3}{C_{\rm sca} \|\ve{E}_0\|^2}
+  \int \ve{n}.\ve{k}_0 \left\| \sum_{j=1}^N \left[
+      \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.  \ve{p}(\ve{r}_j)) \right] e^{-i
+      k_0 \ve{n}.\ve{r}_j} \right\|^2 {\rm d}\Omega \\ \left< \ve{S}
+  \right> .\ve{n} R^2 & = & \frac{c k_0^4}{8\pi } \left\| \sum_{j=1}^N
+    \left[ \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.  \ve{p}(\ve{r}_j)) \right]
+    e^{-i k_0 \ve{n}.\ve{r}_j} \right\|^2 \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  Une autre solution pour aller plus vite (option {\it quick
+    computation}) et de passer par des FFT pour le calcul du champ
+  diffracté. Dans ce cas il convient bien sûr de discrétiser en ayant
+  en tête que la relation $\Delta x \Delta k=2\pi/N$ relie la maille
+  de la discrétisation avec la taille de la FFT. La valeur de $N$ peut
+  être choisie avec le menu déroulant. Ceci convient pour des objets
+  plus grands que la longueur d'onde. En effet $L=N\Delta x$
+  correspond à la taille de l'objet, soit $\Delta k=2\pi/L$, et si la
+  taille de l'objet est trop petite alors le $\Delta k$ est trop grand
+  est l'intégration est alors imprécise. A noter que, vu que
+  l'intégration se fait sur deux plans parallèle au plan $(x,y)$, ne
+  convient pas si l'incident fait un angle de plus de 70 degrés avec
+  l'axe $z$. La représentation 3D du vecteur de Poynting se fait comme
+  précédemment, i.e. avec {\it Ntheta} et {\it Nphi} à partir d'une
+  interpolation sur les points calculés avec la FFT ce qui conduit
+  parfois à des formes bizarres dans le plan $(x,y)$ si $N$ est trop
+  faible.
+
+\item {\it Conservation d'énergie}. Cette étude permet de calculer la
+  quantité d'énergie absorbée, réfléchie et transmise par l'objet
+  choisi. Si l'objet est non absorbant alors la quantité d'énergie
+  absorbée doit être proche de zéro et traduit le niveau de
+  conservation d'énergie de la DDA. Attention celle-ci peut dépendre
+  de la précision choisie pour la méthode itérative et de la forme de
+  la polarisabilité.
+
+\end{itemize}
+
+\section{Microscopie}
+
+Cette option permet calculer l'image obtenue pour différents types de
+microscopes (holographique, champ clair, champ sombre et phase). Nous
+considérons un microscope fait par une lentille objectif et une
+lentille de tube dans une configuration $4f$ et les conditions de
+Sine-Abbe~\cite{Abbe}. Le code demande l'ouverture numérique de la
+lentille objectif et l'ouverture numérique du condenseur pour le champ
+brillant, sombre et le microscope de phase.Les lentilles sont placées
+parallèles au plan $(x,y)$ e leur axe optique est confondu avec l'axe
+$z$. Par défaut les plans focaux des deux lentilles sont placés à
+l'origine du repère, mais il est possible de changer via le champ
+``Position of the focal plane'' pour le microscope en tansmission et
+en réflexion (Fig.~\ref{lentille}). Le grossissement du microscope est
+$M$ et doit être plus grand que 1. Le menu déroulant propose trois
+microscopes différents.
+
+
+\begin{itemize}
+
+\item {\it Holographic}: Ce mode calcul le champ diffracté par l'objet
+  (Fourier plane) et l'image obtenue à travers le microscope à la
+  position du foyer image (Image plane) avec et sans la présence du
+  champ incident.  Le champ incident est celui défini dans le code
+  dans la partie illumination properties.
+
+  
+\item {\it Brightfield}: Pour ce microscope il convient aussi de
+  définir l'ouverture numérique du condenseur. Ce microscope considère
+  un éclairement incohérent dans l'ouverture numérique du
+  condenseur. Le code somme donc les éclairement avec de nombreuses
+  incidentes et pour différentes polarisations. Le résultat obtenu est
+  donné uniquement dans le plan image sans le champ incident (c'est un
+  champ sombre mais avec un éclairement dans tout le cône du
+  condenseur) et avec le champ incident (brighfield).
+
+
+\item {\it Darkfield \& phase}: La microscopie en champ sombre éclaire
+  l'objet suivant un anneau dont l'ouverture numérique est égale à
+  celle du condenseur. La somme incohérente de tous les champs
+  diffractés est faite. Le résultat est donné dans le plan image du
+  microscope sans le champ incident (champ sombre) et pour le
+  microscope de phase il est rajouté au champ obtenu par le champ
+  sombre le champ incident déphasé de $\pi/2$.
+
+  
+\end{itemize}
+
+Le menu déroulant permet de choisir de simuler un microscope en
+transmission (Side $k_Z>0$), en réflexion (Side $k_Z>0$), ou les deux
+cas.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics*[draft=false,width=140mm]{microscopie.eps}
+\caption{Schéma simplifié du microscope. Le foyer objet des lentilles
+  objectifs sont à l'origine du repère par défaut, mais ils peuvent
+  êre changés dans le code. L'axe des lentille est confondu avec l'axe
+  $z$ et l'observation se fait sur la CCD placée au foyer image des
+  lentilles de tube.}
+\label{lentille}
+\end{center}
+\end{figure}
+
+
+Le calcul peut s'effectuer à partir de la somme du rayonnement des
+dipôles (très long quand l'objet a beaucoup de dipôles, mais quand
+l'objet est petit c'est de loin le plus pratique) ou avec des FFT
+(option {\it quick computation}) avec la même valeur de $N$ que celle
+choisie précédemment (A utiliser quand l'objet est gros et comporte
+beaucoup de dipôle). Dans ce cas $\Delta x \Delta k=2\pi/N$ avec
+$\Delta x$ la maille de discrétisation de l'objet qui correspond aussi
+à la discrétisation du plan image au grossissement près. Celui a donc
+une taille de $L=G N \Delta x$. Il est évident que si la maille de
+discrétisation de l'objet est petite alors il faut un grand $N$ pour
+avoir un $\Delta k$ plus petit que $k_0$.
+
+Le principe du calcul du champ lointain par un objet et comment
+obtenir l'image à travers un microscope de grossissement $M>1$ a été
+détaillé dans la Ref.~\cite{Khadir_JOSAA_19}. Nous allons donc
+reprendre les grandes lignes rapidement mais le lecteur intéressé par
+les détails peut aller voir la référence.  Le champ diffracté en champ
+lointain à une distance $r$ dans la direction $(k_x,k_y)$ peut
+s'écrire comme $\ve{E}= \ve{S}(k_x,k_y) \frac{e^{i k r}}{r}$. Le champ
+après la première lentille (lentille objectif) est alors défini comme
+$\ve{e}(k_{\parallel})=\frac{\ve{S}(k_x,k_y)}{-2 i \pi \gamma}$ avec
+$\gamma=\sqrt{\epsilon_{\rm mul} k_0^2-k_x^2-k_y^2}$ où la valeur
+$\epsilon_{\rm mul}$ correspond à la permittivité du substrat, pour le
+microscope en réflexion et à la permittivité du superstrat pour le
+microscope en transmission. Un microscope transforme une onde plane
+avec un vecteur $\ve{k}$ en une autre plane avec un vecteur $\ve{k}'$
+avec $\ve{k}'=[\ve{k}'_{\parallel},\gamma']$ où
+$\ve{k}'_{\parallel}=(-k_x/M,-k_y/M)$ et
+$\gamma'=\sqrt{k_0^2-k_{\parallel}^{'2}}$ (on considérera que l'indice
+du plan image est de 1 car la caméra CCD est dans l'air). Le champ
+dans l'espace image, après la lentille de tube s'écrit alors:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{E}_\mathrm{ob}(\ve{r})=\frac{1}{M} \iint
+\sqrt{\frac{\gamma}{\gamma'}} \tilde{h}(\ve{k}_{\parallel})
+\ve{e}'(\ve{k}_{\parallel}) \exp [i \ve{k}' \cdot (\ve{r} -\ve{r}_f) ]
+   {\rm d} \ve{k}_{\parallel},
+\label{objectfield}
+\ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+où $\tilde{h}(\ve{k}_{\parallel})$ est une fonction de coupure qui
+permet uniquement la transmission si le signal est dans l'ouverture
+numérique ($NA$) de la lentille objectif, c'est à dire
+$\tilde{h}(\ve{k}_{\parallel}) = 1$ pour $\mid \ve{k}_{\parallel}
+\mid < k_0 \mathrm{NA} $ et $0$ sinon et $\ve{r}_f$ est la position de
+la lentille. Nous avons
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{e}'(\ve{k}_{\parallel}) =
+\ve{R}(\ve{k}_{\parallel})\ve{e}(\ve{k}_{\parallel}),   \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+et $\ve{R}(\ve{k}_\parallel)$ est tune matrice de rotation donnée par:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{equation}
+\ve{R}(\ve{k}_\parallel)=
+\begin{pmatrix}
+  u_{x}^2(1-\cos\theta)+\cos\theta & u_{x} u_{y}(1-\cos\theta) & u_{y}
+  \sin\theta \\ u_{x} u_{y}(1-\cos\theta) &
+  u_{y}^2(1-\cos\theta)+\cos\theta & -u_{x} \sin\theta\\ -u_{y}
+  \sin\theta & u_{x} \sin\theta & \cos\theta
+\end{pmatrix},
+\end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+avec $\ve{u}=\frac{\hat{\ve{k}}\times\ve{z}}{\mid \hat{\ve{k}} \times
+  \ve{z} \mid}$ l'axe de rotation. Notons que $\ve{u}$ n'a pas de
+composante $z$. $\theta$ est l'angle de rotation et est défini par
+$\cos \theta=\hat{\ve{k}}.\hat{\ve{k}'} $ et $\sin
+\theta=\|\hat{\ve{k}}\times \hat{\ve{k}'}\|$
+
+
+\section{Etude en champ proche}
+
+Quand l'option champ proche est sélectionnée deux possibilités
+apparaissent:
+
+\begin{itemize}
+
+\item {\it Local field}: Cette option permet de tracer le champ local
+  à la position de chaque élément de discrétisation. Le champ local
+  étant le champ à la position de chaque élément de discrétisation en
+  l'absence de lui même, cela correspond à ce qu'on appelle aussi le
+  champ microscopique. C'est le champ qui est calculé lors de la
+  résolution du système d'équations linéaires.
+
+\item {\it Macroscopic field}: Cette option permet de tracer le champ
+  macroscopique à la position de chaque élément de discrétisation. Le
+  lien entre le champ local et le champ macroscopique est donné
+  Ref.~\cite{Chaumet_PRE_04}:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \be \ve{E}_{\rm macro} & = & 3 \varepsilon_{\rm mul} \left(
+  \varepsilon+2\varepsilon_{\rm mul} -i \frac{k_0^3 d^3
+    \varepsilon_{\rm mul}^{3/2}}{2 \pi} (\varepsilon-\varepsilon_{\rm
+    mul})\right)^{-1} \ve{E}_{\rm local} \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  Nous avons donc une relation linéaire avec une petite partie
+  imaginaire qui tient compte de la réaction de rayonnement.
+\end{itemize}
+
+La dernière option permet de choisir le maillage dans lequel le champ
+local et macroscopique sont représentés. 
+
+\begin{itemize}
+
+\item {\it Object}: Seul le champ dans l'objet est représenté. Cette
+  option est passée automatiquement à la suivante quand des FFT sont
+  utilisées que ce soit pour l'illumination ou la
+  diffraction. L'option calculant l'émissivité, le choix de calcul
+  avec la méthode de la propagation du faisceau ou l'option de
+  relecture passe aussi à l'option suivante.
+
+
+\item {\it Cube}: Le champ est représenté dans un cube ou le
+  parallélépipède contenant l'objet.
+
+\item {\it Wide field}: Le champ est représenté dans une boite plus
+  grande que l'objet. La taille de la boite est fixée à la taille de
+  l'objet (wide field) + Additional sideband ($x$, $y$ ou $z$) de
+  chaque côté de l'objet. Par exemple pour une sphère avec un rayon
+  $r=100$~nm et discrétisation de 10, soit une maille de 10 nm, avec
+  un Additional sideband $x$ de 2, 3 pour $y$ et 4 pour $z$, nous
+  avons une boîte de taille totale:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \be l_x & = & 100 + 2\times 2 \times 10 = 140~{\rm nm} \\
+  l_y & = & 100 + 2\times 3 \times 10 = 160~{\rm nm} \\
+  l_z & = & 100 + 2\times 4 \times 10 = 180~{\rm nm} 
+  \ee
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  Le champ à l'intérieur de la zone de champ proche Wide Field est
+  calculé comme:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \be \ve{E}=\ve{E}_0+\ve{A} \ve{D} \ve{E}, \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  ce qui dans le cas rigoureux donne le champ dans toute la zone de
+  champ proche, c'est à dire dans l'objet et dans le voisinage qui a
+  été donné par les ``Additional sideband''.
+
+  
+
+\end{itemize}
+
+%\section{Force et couple optique}
+
+%Quand l'option force est sélectionnée quatre possibilités apparaissent:
+%\begin{itemize}
+
+%\item {\it Optical force}: Calcul de la force optique s'exerçant sur
+%  le ou les objets.
+
+%\item {\it Optical force density}: Permet de tracer la densité de
+%%  force optique.
+
+%\item {\it Optical torque}: Calcul du couple optique s'exerçant sur le
+%  ou les objets. Le couple est calculé pour une origine placé au
+%  centre de gravité de l'objet.
+
+%\item {\it Optical torque density}: Permet de tracer la densité de
+%  couple force optique.
+
+% \end{itemize}
+
+%Le couple et la force optique sont calculées avec~\cite{Chaumet_OL_00,Chaumet_JAP_07a}:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%\be \ve{F} & = & (1/2) \sum_{j=1}^N {\rm Re}\left(\sum_{v=1}^{3}
+%  p_v(\ve{r}_j) \frac{\partial (E_v(\ve{r}_j))^*}{\partial u}\right) \\
+% \ve{\Gamma} & = & \sum_{j=1}^N \left[ \ve{r}^g_{j} \times
+%   \ve{F}(\ve{r}_{j})+ \frac{1}{2} {\rm Re} \left\{ \ve{p}(\ve{r}_{j})
+ %    \times \left[ \ve{p}(\ve{r}_{j})/{\alpha_{\rm
+ %          CM}}(\ve{r}_{j})\right]^* \right\} \right].  \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% où $u$ et $v$ représente $x$ ,$y$, ou $z$. $\ve{r}^g_{j}$ est le
+% vecteur entre l'élément $j$ et le centre de masse de l'objet.
+% 

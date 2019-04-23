@@ -2,7 +2,7 @@
      $     ,polarisabilite)
       implicit none
       integer dddis
-      double precision rayon,volume,pi,k0,SLDR,rayon1
+      double precision rayon,volume,pi,k0,SLDR,rayon1,maille
       double complex eps,rapport,pola,icomp,pola1
       double complex polarisabilite,k03,eps0,indice
       character(2) methode
@@ -26,6 +26,7 @@ c      write(*,*) rayon,eps,eps0,k0,methode,dis
       if (dddis.eq.0) then
          volume=rayon*rayon*rayon
       elseif (dddis.eq.1) then
+         maille=rayon
          rayon=rayon*((0.75d0/pi)**(1.d0/3.d0))
          volume=rayon*rayon*rayon
       else
@@ -49,9 +50,9 @@ c         polarisabilite=pola
      $        *indice*rayon)*cdexp(icomp*k0*rayon*indice)-1.d0))        
       elseif (methode.eq.'LR') then
          SLDR=1.d0/5.d0
-         pola1=pola/(1.d0+pola*(-1.8915316d0+eps/eps0* 0.1648469d0-eps
-     $        /eps0*1.7700004d0*SLDR)*k0*indice*indice*k0/rayon)
-         polarisabilite=eps0*pola1/(1.d0-2.d0/3.d0*icomp*k03*pola1)     
+         polarisabilite=eps0*pola/( 1.d0+pola*( (-1.8915316d0+eps/eps0
+     $        * 0.1648469d0-eps/eps0*1.7700004d0*SLDR)*k0*k0*indice
+     $        *indice/maille-2.d0/3.d0*icomp*k03*indice*indice*indice) )
       else
          write(*,*) 'methode incorrecte'
          write(*,*) 'methode',methode

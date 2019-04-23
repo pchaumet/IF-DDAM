@@ -1,0 +1,63 @@
+\chapter{Propriétés du multicouche}\label{chapl}
+\markboth{\uppercase{Propriétés du multicouche}}{\uppercase
+{Propriétés du multicouche}}
+
+\minitoc
+
+\section{Introduction}
+
+
+Dans la section propriétés du multicouche, vous devez d'abord choisir
+le nombre d'interface. A noter que le chiffre zéro est exclu, car cela
+correspond au code d'espace homogène beaucoup plus efficace pour cette
+configuration. Une fois le nombre $n$ d'interface choisi, cliquer sur
+{\it Props}. Il apparaît une nouvelle fenêtre avec $n$ interfaces et
+$n+1$ milieux. Le premier milieu correspond au substrat c'est à dire
+le milieu par lequel arrive la lumière, forcément celui-ci est
+transparent. Après il faut rentrer la position de l'interface en
+nanométre puis rentrer le milieu de la seconde interface et ainsi de
+suite, pour arriver au dernier milieu (le superstrat) qui peut être
+transparent ou absorbant.
+
+
+Un exemple est donné Fig.~\ref{configlayer}, on voit de suite qu'il
+faut faire attention car la première ligne correspond donc à la
+permittivité qui a le $z$ le plus faible. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{configlayer.eps}
+\end{center}
+\caption{Comment configurer le multicouche.}
+\label{configlayer}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Remarques}
+
+\begin{itemize}
+
+\item Si on étudie le microscope en transmission alors le dernier
+  milieu doit être transparent.
+
+\item Si l'objet étudié est à cheval sur une ou plusieurs interfaces,
+  il faut savoir que les dipôles constituant l'objet ne peuvent pas
+  être situés sur une interface. Si c'est le cas alors, le code bouge
+  légèrement l'interface (moins d'une demie maille) pour que cela
+  n'arrive pas.
+
+
+\item Le code est limité à 10 interfaces maximum.
+
+\item Attention si il y a une grande distance entre deux interfaces
+  (plusieurs dizaines ou centaines de longueur d'onde), il peut arriver
+  que le code n'arrive pas à calculer le tenseur de Green.
+
+ 
+
+  \item Le système multicouche prend en compte les modes guidés car le
+    tenseur de Green est calculé avec le théorème des rédisus.
+
+  \end{itemize}

@@ -182,7 +182,7 @@ OptionsWindow::tofile(){
      return;
   QTextStream opt(&optfile);
   // Fill ASCII options here
-  opt << "calculation options [0=Rigorous, 1=renormalized Born]:" << options->getNrig() << endl;
+  opt << "calculation options [0=Rigorous, 1=Renormalized Born], 2=Born, 3=Born order 1:" << options->getNrig() << endl;
   opt << "illumination properties options:" << endl;
   opt << " wavelength:" << options->getWavelength() << endl;
   opt << " P0:" << options->getP0() << endl;

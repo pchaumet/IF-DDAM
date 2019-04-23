@@ -1,0 +1,56 @@
+\chapter{Properties of the multilayer }\label{chapl}
+\markboth{\uppercase{Properties of the multilayer}}{\uppercase
+{Properties of the multilayer}}
+
+\minitoc
+
+\section{Introduction}
+
+In the section properties of the multilayer, you should first choose
+the number of interface. Note that you can not choose zero, as in that
+case the free space code is more efficient. Once the number $n$ of
+interface is fixed click on {\it Props}. It appears a new window with
+$n$ interfaces and $n+1$ media. The first medium corresponds to the
+substrate, {\it i.e.} the medium through which the light comes. The
+permittivity of this medium is obviously transparent (no
+absorption). Then the position of the first interface in nanometer is
+asked followed by the second medium, etc.
+
+
+An example is given in Fig.~\ref{configlayer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{configlayer.eps}
+\end{center}
+\caption{How to configure the layer.}
+\label{configlayer}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+The last medium corresponds to the superstrate.
+
+
+\section{Remarks}
+
+\begin{itemize}
+
+\item The last medium if one studies a microscope in transmission can
+  not be absorbing.
+
+\item If the object under study contains one or more interfaces, note
+  that any dipole (element of discretization) can be on a interface,
+  then the code slightly moves the interface (less than one half mesh)
+  to avoid this.
+
+\item The code is limited to 10 interfaces.
+
+\item Notice that if there is a large distance between two layers
+  (several hundred of wavelength) the computation of the Green function
+  can fail.
+
+  \item The multilayer support guided mode resonance as the Green
+    function is computed with the residue theorem.
+
+  \end{itemize}
