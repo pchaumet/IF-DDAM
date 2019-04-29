@@ -72,7 +72,14 @@ indicen=inputmatlab(23);        % indicen
 ntypemic=inputmatlab(24);       % type microsocopy
 ntypefile=inputmatlab(25);      % mat file or hdf5 file
 
-  
+if (ntypefile == 1);
+disp('Data files do not computed')
+disp('Please use Advanced interface')
+disp('and uncheck the option "Do not write file" if necessary')
+return;
+end;
+
+
 if (ntypefile == 2);
 
 

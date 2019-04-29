@@ -1,19 +1,28 @@
 	version 0.3.4 (fftw+hdf5) 0.2.6 (fftw) et 0.1.15 (ffts)
 
 
-	quand l'incident constant le soft affiche une seule couleur grise
-	quand on fait in plot.
-
-	L'echelle sur les plots ne contient pas des fois assez de chiffres
-	significatifs ce qui fait que l'échelle va de par exemple 2.6 à
-	2.6...
-
-	supprimer la petite icone en haut à gauche à coté de start
-	computation.
 
 	Espace entre near field et microscopy
 
 	Ediffkposx pas tracé.
+
+	
+	1) quand l'incident constant le soft affiche une seule couleur
+	grise quand on fait un plot. corrige
+	2) L'echelle sur les plots ne contient pas des fois assez de
+	chiffres significatifs ce qui fait que l'échelle va de par exemple
+	2.6 à 2.6...corrigé
+	3) supprimer la petite icone en haut à gauche à coté de start
+	computation.
+	4) eps0 pas défini dans calcul champ macro comme variable private
+	5) ecrit toujours inputmat, mais si fichier pas demandé arrete ifdda
+
+
+-----------------------------------------------------------------
+
+	version 0.3.4 (fftw+hdf5) 0.2.6 (fftw) et 0.1.15 (ffts)
+
+
 
 	1) test pour champlineaire multi si une des onde plane a une
 	amplitude nulle.

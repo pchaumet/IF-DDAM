@@ -167,7 +167,7 @@ public:
 
     virtual QwtText label( double value ) const
     {
-        QwtText text(QString::number(value,'E',1));
+        QwtText text(QString::number(value,'E',3));
         return text;
     }
 };
@@ -247,7 +247,11 @@ PlotRaster::PlotRaster( QWidget *parent , QVector<QwtPoint3D> *_data,
     QLOG_INFO() << "Max field:" << QString::number(maxz);
     QwtInterval rangex = QwtInterval(minx,maxx);
     QwtInterval rangey = QwtInterval(miny,maxy);
-    QwtInterval rangez = QwtInterval(minz,maxz);
+    QwtInterval rangez;
+    if (minz == maxz) 
+       rangez = QwtInterval(minz*0.5,maxz*1.5);
+    else
+       rangez = QwtInterval(minz,maxz);
     rasterdata->setInterval( Qt::XAxis, rangex );
     rasterdata->setInterval( Qt::YAxis, rangey );
     rasterdata->setInterval( Qt::ZAxis, rangez );
@@ -267,8 +271,10 @@ PlotRaster::PlotRaster( QWidget *parent , QVector<QwtPoint3D> *_data,
     rightAxis->setColorMap( rangez, colormap2 );
     rightAxis->setSpacing(2);    
     rightAxis->setScaleDraw(new MyQwtScaleDraw());
-    setAxisScale( QwtPlot::yRight, minz, maxz, 0 );
-    
+    if (minz == maxz)
+       setAxisScale( QwtPlot::yRight, minz*0.5, maxz*1.5, 0 );
+    else
+       setAxisScale( QwtPlot::yRight, minz, maxz, 0 );
     enableAxis( QwtPlot::yRight );
     plotLayout()->setAlignCanvasToScales( true );
     replot();

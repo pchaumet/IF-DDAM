@@ -1129,105 +1129,102 @@ c     epsilon
 
 c     cré le fichier de data pour connaitre les options pour matlab
 
-      if (nmatf.eq.0.or.nmatf.eq.2) then
-         open(900,file='inputmatlab.mat')
-         write(900,*) nproche
-         write(900,*) nlocal
-         write(900,*) nmacro
-         write(900,*) nsection
-         write(900,*) ndiffracte    
-         write(900,*) nquickdiffracte
-         write(900,*) nforce
-         write(900,*) nforced
-         write(900,*) ntorque
-         write(900,*) ntorqued
-         write(900,*) nlentille
-         write(900,*) nquicklens
-         write(900,*) nphi
-         write(900,*) ntheta+1
-         if (trope.eq.'iso') write(900,*) 0
-         if (trope.eq.'ani') write(900,*) 1
-         write(900,*) nfft2d
-         write(900,*) k0
-         write(900,*) numaper
-         write(900,*) nprochefft
-         write(900,*) nobjet
-         write(900,*) ncote
-         write(900,*) indicen
-         write(900,*) indice0
-         write(900,*) ntypemic
-         write(900,*) nmatf
-         close(900)
-         if (nmatf.eq.2) then
-            open(901,file='filenameh5')
-            write(901,*) h5file
-            close(901)
-            dim(1)=1
-            dim(2)=1
-            
-            datasetname='nproche'
-            call hdf5write1d_int(group_idopt,datasetname,nproche,dim)
-            datasetname='nlocal'
-            call hdf5write1d_int(group_idopt,datasetname,nlocal,dim)
-            datasetname='nmacro'
-            call hdf5write1d_int(group_idopt,datasetname,nmacro,dim)
-            datasetname='nsection'
-            call hdf5write1d_int(group_idopt,datasetname,nsection,dim)
-            datasetname='ndiffracte'
-            call hdf5write1d_int(group_idopt,datasetname,ndiffracte,dim
-     $           )
-            datasetname='nquickdiffracte'
-            call hdf5write1d_int(group_idopt,datasetname,nquickdiffracte
-     $           ,dim)
-            datasetname='nforce'
-            call hdf5write1d_int(group_idopt,datasetname,nforce,dim)
-            datasetname='nforced'
-            call hdf5write1d_int(group_idopt,datasetname,nforced,dim)
-            datasetname='ntorque'
-            call hdf5write1d_int(group_idopt,datasetname,ntorque,dim)
-            datasetname='ntorqued'
-            call hdf5write1d_int(group_idopt,datasetname,ntorqued,dim)
-            datasetname='nlentille'
-            call hdf5write1d_int(group_idopt,datasetname,nlentille,dim)
-            datasetname='nquicklens'
-            call hdf5write1d_int(group_idopt,datasetname,nquicklens,dim)
-            datasetname='nphi'
-            call hdf5write1d_int(group_idopt,datasetname,nphi,dim)
-            datasetname='ntheta'
-            call hdf5write1d_int(group_idopt,datasetname,ntheta+1,dim)
-       
-            if (trope.eq.'iso') then
-                datasetname='iso'
-                i=0
-                call hdf5write1d_int(group_idopt,datasetname,i,dim)
-            endif
-            
-            if (trope.eq.'ani') then
-               datasetname='iso'
-               i=1
-               call hdf5write1d_int(group_idopt,datasetname,i,dim)
-            endif
-            datasetname='nfft2d'
-            call hdf5write1d_int(group_idopt,datasetname,nfft2d,dim)
-            datasetname='k0'
-            call hdf5write1d(group_idopt,datasetname,k0,dim)
-            datasetname='numaper'
-            call hdf5write1d(group_idopt,datasetname,numaper,dim)
-            datasetname='nprochefft'
-            call hdf5write1d_int(group_idopt,datasetname,nprochefft,dim)
-            datasetname='nobjet'
-            call hdf5write1d_int(group_idopt,datasetname,nobjet,dim)
-            datasetname='nside'
-            call hdf5write1d_int(group_idopt,datasetname,ncote,dim)
-            datasetname='index upper'
-            call hdf5write1d(group_idopt,datasetname,indicen,dim)
-            datasetname='index lower'
-            call hdf5write1d(group_idopt,datasetname,indice0,dim)
-            datasetname='ntypemic'
-            call hdf5write1d_int(group_idopt,datasetname,ntypemic,dim)
-            datasetname='nmatf'
-            call hdf5write1d_int(group_idopt,datasetname,nmatf,dim)
+      open(900,file='inputmatlab.mat')
+      write(900,*) nproche
+      write(900,*) nlocal
+      write(900,*) nmacro
+      write(900,*) nsection
+      write(900,*) ndiffracte    
+      write(900,*) nquickdiffracte
+      write(900,*) nforce
+      write(900,*) nforced
+      write(900,*) ntorque
+      write(900,*) ntorqued
+      write(900,*) nlentille
+      write(900,*) nquicklens
+      write(900,*) nphi
+      write(900,*) ntheta+1
+      if (trope.eq.'iso') write(900,*) 0
+      if (trope.eq.'ani') write(900,*) 1
+      write(900,*) nfft2d
+      write(900,*) k0
+      write(900,*) numaper
+      write(900,*) nprochefft
+      write(900,*) nobjet
+      write(900,*) ncote
+      write(900,*) indicen
+      write(900,*) indice0
+      write(900,*) ntypemic
+      write(900,*) nmatf
+      close(900)
+      if (nmatf.eq.2) then
+         open(901,file='filenameh5')
+         write(901,*) h5file
+         close(901)
+         dim(1)=1
+         dim(2)=1
+         
+         datasetname='nproche'
+         call hdf5write1d_int(group_idopt,datasetname,nproche,dim)
+         datasetname='nlocal'
+         call hdf5write1d_int(group_idopt,datasetname,nlocal,dim)
+         datasetname='nmacro'
+         call hdf5write1d_int(group_idopt,datasetname,nmacro,dim)
+         datasetname='nsection'
+         call hdf5write1d_int(group_idopt,datasetname,nsection,dim)
+         datasetname='ndiffracte'
+         call hdf5write1d_int(group_idopt,datasetname,ndiffracte,dim)
+         datasetname='nquickdiffracte'
+         call hdf5write1d_int(group_idopt,datasetname,nquickdiffracte
+     $        ,dim)
+         datasetname='nforce'
+         call hdf5write1d_int(group_idopt,datasetname,nforce,dim)
+         datasetname='nforced'
+         call hdf5write1d_int(group_idopt,datasetname,nforced,dim)
+         datasetname='ntorque'
+         call hdf5write1d_int(group_idopt,datasetname,ntorque,dim)
+         datasetname='ntorqued'
+         call hdf5write1d_int(group_idopt,datasetname,ntorqued,dim)
+         datasetname='nlentille'
+         call hdf5write1d_int(group_idopt,datasetname,nlentille,dim)
+         datasetname='nquicklens'
+         call hdf5write1d_int(group_idopt,datasetname,nquicklens,dim)
+         datasetname='nphi'
+         call hdf5write1d_int(group_idopt,datasetname,nphi,dim)
+         datasetname='ntheta'
+         call hdf5write1d_int(group_idopt,datasetname,ntheta+1,dim)
+         
+         if (trope.eq.'iso') then
+            datasetname='iso'
+            i=0
+            call hdf5write1d_int(group_idopt,datasetname,i,dim)
          endif
+         
+         if (trope.eq.'ani') then
+            datasetname='iso'
+            i=1
+            call hdf5write1d_int(group_idopt,datasetname,i,dim)
+         endif
+         datasetname='nfft2d'
+         call hdf5write1d_int(group_idopt,datasetname,nfft2d,dim)
+         datasetname='k0'
+         call hdf5write1d(group_idopt,datasetname,k0,dim)
+         datasetname='numaper'
+         call hdf5write1d(group_idopt,datasetname,numaper,dim)
+         datasetname='nprochefft'
+         call hdf5write1d_int(group_idopt,datasetname,nprochefft,dim)
+         datasetname='nobjet'
+         call hdf5write1d_int(group_idopt,datasetname,nobjet,dim)
+         datasetname='nside'
+         call hdf5write1d_int(group_idopt,datasetname,ncote,dim)
+         datasetname='index upper'
+         call hdf5write1d(group_idopt,datasetname,indicen,dim)
+         datasetname='index lower'
+         call hdf5write1d(group_idopt,datasetname,indice0,dim)
+         datasetname='ntypemic'
+         call hdf5write1d_int(group_idopt,datasetname,ntypemic,dim)
+         datasetname='nmatf'
+         call hdf5write1d_int(group_idopt,datasetname,nmatf,dim)
       endif
 
 c     ne fait que l'objet
@@ -2432,7 +2429,9 @@ c     write(*,*) 'macro',Em(1),Em(2),Em(3)
      $                 +cdabs(Em(3))**2)
                enddo
             else
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,ii,jj,Eloc,epsani,Em)   
+               nsens=1
+               
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,ii,jj,Eloc,epsani,Em,eps0)   
 !$OMP DO SCHEDULE(STATIC)               
                do i=1,subunit              
                   ii=3*(i-1)

@@ -156,25 +156,26 @@ In that case we take into account the simple scattering.
 
 
 Even though we are using an efficient integration scheme to evaluate
-the Green tensor, see Ref.~\onlinecite{Paulus_PRE_00}, it takes a lot of
-time to evaluate it for all the different pair of points covering the
-object. Note that due to the translational invariance of the reference
-medium in the $(x,y)$ plane,
+the Green tensor, see Ref.~\onlinecite{Paulus_PRE_00}, it takes a lot
+of time to evaluate it for all the different pair of points covering
+the object. Note that due to the translational invariance of the
+reference medium in the $(x,y)$ plane,
 $\ve{G}(\ve{r},\ve{r}')=\ve{G}(\|\ve{r}_{\parallel}-\ve{r}_{\parallel}'\|,z,z')$. For
 each couple $(z,z')$, the number of pairs with different distances of
 a Cartesian $(x,y)$ mesh with $n_x\times n_y$ points ($n_x>n_y)$ is
-equal to $n_x(n_x+1)+(n_x-n_y)n_y$. To accelerate the computation, we
+equal to $n_y(2 n_x-n_y+1)/2$. To accelerate the computation, we
 approximate $\ve{G}(\|\ve{r}_{\parallel}-\ve{r}_{\parallel}'\|,z,z')$
-using an interpolation of a discrete set of points, $\ve{G}(qd
-n_d,z,z')$ with $q=1,\cdots, {\rm int}\sqrt{ n_x^2+n_y^2}$ and $n_d$ a
-natural number. Linear and polynomial interpolations could not
-evaluate the Green tensor properly when
-$\|\ve{r}_{\parallel}-\ve{r}_{\parallel}'\|<\lambda$, as the fast decay
-of the evanescent waves was not accounted for accurately. We obtained
-much better results using rational functions, that is quotients of
-polynomials. Rational functions have the ability to model functions
-with poles (Press et al. 1986) and permit an accurate approximation of
-the $1/r^3$ behavior of the Green tensor in the near field range.
+using an interpolation of a discrete set of points,
+$\ve{G}(qd/n_d,z,z')$ with $q=1,\cdots, {\rm int}\sqrt{ n_x^2+n_y^2}$
+and $n_d$ a natural number. Linear and polynomial interpolations could
+not evaluate the Green tensor properly when
+$\|\ve{r}_{\parallel}-\ve{r}_{\parallel}'\|<\lambda$, as the fast
+decay of the evanescent waves was not accounted for accurately. We
+obtained much better results using rational functions, that is
+quotients of polynomials. Rational functions have the ability to model
+functions with poles (Press et al. 1986) and permit an accurate
+approximation of the $1/r^3$ behavior of the Green tensor in the near
+field range.
 
 In the code, in the section numerical parameters, the drop menu Green
 function permits to choose to compute rigorously the Green function

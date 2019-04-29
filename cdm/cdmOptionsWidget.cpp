@@ -245,7 +245,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   studyforcelayout->addWidget(emptyopticaltorquedensityLabel,3,0,Qt::AlignLeft);
   studyforcelayout->addWidget(opticaltorquedensityLabel,3,1,Qt::AlignLeft);
   studyforcelayout->addWidget(opticaltorquedensity,3,2,Qt::AlignLeft);
-
+  
 
   QGridLayout *studymicroscopylayout = new QGridLayout();
 
@@ -466,7 +466,7 @@ subtitle5->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
   layout->addRow(studymicroscopylayout);
 
   
-  force = new QCheckBox(this);
+  force = new QCheckBox(NULL);
   connect(force , SIGNAL(stateChanged(int)),this,
 	SLOT(forceCheckBoxStateChanged(int)));
   //QLabel* subtitle3 = new QLabel("Optical Force");
