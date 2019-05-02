@@ -139,6 +139,6 @@ c     $                 ,Egausyref(indice),Egauszref(indice),i,j
      
       fluxref=fluxref*tmp
       fluxtrans=fluxtrans*tmp
-      write(*,*) 'nnn',fluxref,fluxtrans,'irra',tmp
+
       return
       end

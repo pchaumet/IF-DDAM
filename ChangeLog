@@ -1,12 +1,10 @@
-	version 0.3.4 (fftw+hdf5) 0.2.6 (fftw) et 0.1.15 (ffts)
+	version 0.3.5 (fftw+hdf5) 0.2.8 (fftw) et 0.1.17 (ffts)
 
 
 
-	Espace entre near field et microscopy
+	Ediffkposx pas tracé car crée que quand FFT choisie.
 
-	Ediffkposx pas tracé.
 
-	
 	1) quand l'incident constant le soft affiche une seule couleur
 	grise quand on fait un plot. corrige
 	2) L'echelle sur les plots ne contient pas des fois assez de
@@ -17,8 +15,14 @@
 	4) eps0 pas défini dans calcul champ macro comme variable private
 	5) ecrit toujours inputmat, mais si fichier pas demandé arrete ifdda
 
+	6) born renormalise E=3E/(epsilon+2) il manque epsilon mul dans la
+	doc.
+	7) Calcul Mie ajoutte dans champ lointain si pas fait avant.
+	8) Mis doc dans la fonction Help F et E.
+	9) Tous les plots images rectifies en x y au lieu de kx ky!
+	10) remet propre les writes.
 
------------------------------------------------------------------
+	-----------------------------------------------------------------
 
 	version 0.3.4 (fftw+hdf5) 0.2.6 (fftw) et 0.1.15 (ffts)
 

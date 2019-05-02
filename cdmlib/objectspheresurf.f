@@ -97,7 +97,7 @@ c     test si l'objet est sur une couche ou plusieurs
       zmin=zg-rayon
       nminc=numerocouche(zmin,neps,nepsmax,zcouche)
       nmaxc=numerocouche(zmax,neps,nepsmax,zcouche)
-      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,xg,yg,zg,zcouche
+c      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,xg,yg,zg,zcouche
       if (nmaxc-nminc.ge.2) then
 c     shift the layers
          do k=nminc,nmaxc-1           
@@ -129,7 +129,7 @@ c     $        /aretecube+0.5d0)
 
 
 
-      write(*,*) 'obj2',nminc,nmaxc,zg
+c      write(*,*) 'obj2',nminc,nmaxc,zg
       if (na.eq.-1) then
          do i=1,nnnr 
             do j=1,nnnr              

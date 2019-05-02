@@ -165,7 +165,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     // cdm.in file
     double wavelength;
     wavelength = options->getWavelength();
-    QLOG_INFO () << "Wavelength:" << QString::number(wavelength,'g',5);
+    QLOG_DEBUG () << "Wavelength:" << QString::number(wavelength,'g',5);
     char beam[64];
     
     if (options->getBeam() == "Circular plane wave") strcpy (beam,"pwavecircular");
@@ -177,7 +177,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     if (options->getBeam() == "Speckle") strcpy (beam,"speckle");
     if (options->getBeam() == "Arbitrary wave (file)") strcpy (beam,"arbitrary");
     
-    QLOG_INFO () << "Beam:" << options->getBeam();
+    QLOG_DEBUG () << "Beam:" << options->getBeam();
     char namefileinc[64];
     for(int i = 0; i < 64; i++)
      namefileinc[i] = ' ';
@@ -954,7 +954,7 @@ RunWidget::displayResults()
    int nmatim = min(options->getNxm(),options->getNym())*(2*n1m-min(options->getNxm(),options->getNym()));
    int nbs = nmatim*options->getNzm()*options->getNzm();
    int nside = options->getNside();
-   QLOG_INFO () << " RESULTS1 !!!";
+   QLOG_DEBUG () << " RESULTS1 !!!";
    // Scalar results
    QFrame *hsep0 = new QFrame(this);
    QFrame *hsep00 = new QFrame(this);
@@ -972,7 +972,7 @@ RunWidget::displayResults()
    QLabel *lambda10n = new QLabel(QString::number(run->getLambda10n()),this);
    QLabel *lambdaLabel = new QLabel("<html><body><sup>&lambda;</sup>&frasl;<sub>(10|n|)</sub> [m]:</body></html>",this);
    outputlayout->addRow(lambdaLabel, lambda10n);
-   QLOG_INFO () << " RESULTS1 !!!";
+   QLOG_DEBUG () << " RESULTS1 !!!";
    if (options->getDipolepsilon() == false ) {
      QLabel *k0 = new QLabel(QString::number(run->getK0()),this);
      QLabel *kappa0Label = 
@@ -1091,7 +1091,7 @@ RunWidget::displayResults()
 	QLabel(QString::number(run->getOpticalTorqueModulus()),this);
       outputlayout->addRow("Optical torque modulus [N/m]:", opticaltorquedensity);
    }
-   QLOG_INFO () << " RESULTS2 !!!";
+   QLOG_DEBUG () << " RESULTS2 !!!";
    ////////////////////////////////////////////////////////////////////////////////////
    // Dipole epsilon buttons
    QPushButton *dipoles3DButton = new QPushButton("Plot epsilon/dipoles",this);
@@ -1137,7 +1137,7 @@ RunWidget::displayResults()
    QPushButton *plotzforceButton = new QPushButton("Plot Z",this);
    connect(plotzforceButton, SIGNAL(clicked()), this, SLOT(plotzforce()));
    // CHECK DELTA OVER Xc,Yc,Zc, XcWF, YcWF, ZcWF
-   QLOG_INFO () << " RESULTS3 !!!" << run->getObjectSubunits();
+   QLOG_DEBUG () << " RESULTS3 !!!" << run->getObjectSubunits();
    for (int i = 0 ; i < run->getObjectSubunits() ; i++) {
      if ( fabs(run->getXc()[i]) < DELTA ) run->getXc()[i] = 0;
      if ( fabs(run->getYc()[i]) < DELTA ) run->getYc()[i] = 0;
@@ -1148,14 +1148,14 @@ RunWidget::displayResults()
      if ( fabs(run->getYcWF()[i]) < DELTA ) run->getYcWF()[i] = 0;
      if ( fabs(run->getZcWF()[i]) < DELTA ) run->getZcWF()[i] = 0;
    }
-   QLOG_INFO () << " RESULTS4 !!!";
+   QLOG_DEBUG () << " RESULTS4 !!!";
    // Plot X list
    double refx;
    QList<double> xlist;
    QList<double> xwflist;
    refx = run->getXc()[0];
    xlist.append(refx);
-   QLOG_INFO () << " RESULTS5 !!!";
+   QLOG_DEBUG () << " RESULTS5 !!!";
    for (int i = 0 ; i < run->getObjectSubunits() ; i++) {
        bool exists = false;
        if ( run->getXc()[i] != refx) {

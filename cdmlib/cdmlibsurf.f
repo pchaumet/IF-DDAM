@@ -248,7 +248,6 @@ c     variable pour avoir l'image a travers la lentille
      $     ,group_idff,group_iddip
       integer :: dim(4)
   
-      write(*,*) 'zg',zgaus,zgmulti
       
       call dfftw_init_threads(iret)
       if (iret.eq.0) then
@@ -352,9 +351,10 @@ c     arret de suite si pas assez de place pour propa
          i=min(nxm,nym)*(2*max(nxm,nym)-min(nxm,nym)+1)/2
          tmp=dble(i)/(aint(dsqrt(dble(nxm*nym+nym*nym))+1.d0)
      $        *dble(ninterp))
-         write(*,*) 'Rigorous: number of Green function',i
-         write(*,*) 'Level',ninter,'number of Green function'
-     $        ,(aint(dsqrt(dble(nxm*nym+nym*nym))+1.d0))*dble(ninterp)
+         write(*,*) '************* Green function ***************'
+         write(*,*) 'Rigorous: Number of Green function',i
+         write(*,*) 'Level',ninterp,'Number of Green function'
+     $        ,(aint(dsqrt(dble(nxm*nym+nym*nym))+1.d0))*ninterp
          if (tmp.le.1.d0) then
             infostr='Not enough space: decrease ninterp'
             nstop=-1
@@ -417,7 +417,7 @@ c     calculation size parameter initialization
       rayon = rayonmulti(1)
       eps = epsmulti(1)
       epsani = epsanimulti(1,:,:)
-      write(*,*) 'Relative permittivity of the object',epsmulti(1)
+c      write(*,*) 'Relative permittivity of the object',epsmulti(1)
 c     pas assez discrétisé
       if (nmax.lt.8) then
          nstop=1
@@ -441,6 +441,7 @@ c     arret pour tolerance dans la méthode itérative
          nstop = 1;
          return
       endif
+      write(*,*) '************* Object ***************'
       do k=1, numberobjet
          write (*,*) 'Material object',k,':',materiaumulti(k)
       enddo
@@ -617,17 +618,20 @@ c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
             call interpdielec(lambda,materiau,epr,epi,infostr,nstop)
             if (nstop.eq.1) return
             epsmulti(k)=(epr*uncomp+icomp*epi)
-            write(99,*) 'Relative permittivity',eps
-            write(99,*) 'Relative permittivity',eps,materiau(1:2),lambda
+            write(99,*) 'Object relative permittivity',eps
+            write(99,*) 'Object relative permittivity',eps,materiau(1:2)
+     $           ,lambda
          else
             if (trope(1:3).eq.'iso') then
-               write(*,*) 'Relative permittivity',eps
-               write(99,*) 'Relative permittivity',eps
+               write(*,*) 'Object relative permittivity',eps
+               write(99,*) 'Object relative permittivity',eps
             else 
                do i=1,3
                   do j=1,3
-                     write(*,*) 'Relative permittivity',epsani(i,j),i,j
-                     write(99,*) 'Relative permittivity',epsani(i,j),i,j
+                     write(*,*) 'Object relative permittivity',epsani(i
+     $                    ,j),i,j
+                     write(99,*) 'Object relative permittivity',epsani(i
+     $                    ,j),i,j
                   enddo
                enddo
             endif
@@ -635,7 +639,7 @@ c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
       enddo
       eps = epsmulti(1)
       materiau = materiaumulti(1)
-
+      write(*,*) '*********** Multilayer ****************'
       do k=0,neps+1
          materiau = materiaucouche(k)
          if (materiau(1:2).ne.'xx') then
@@ -2802,7 +2806,9 @@ c     compute the scattering cross section
          if (object(1:6).eq.'sphere') then
             tmp=dsqrt(dreal(epscouche(0)))
             CALL CALLBHMIE(tmp,eps,rayon,lambda,MIECEXT ,MIECABS,MIECSCA
-     $        ,GSCA)
+     $           ,GSCA)
+            write(*,*) 'rr',tmp,eps,rayon,lambda,MIECEXT ,MIECABS
+     $           ,MIECSCA,GSCA
             write(*,*) 'Comparison with Mie s series'
             write(*,*) 'Cext error in %',(Cext-MIECEXT)/MIECEXT*100.d0
             write(*,*) 'Csca error in %',(Csca-MIECSCA)/MIECSCA*100.d0
@@ -2881,7 +2887,13 @@ c************************************************************
          write(*,*) '*************************************************'      
          write(*,*) '********** COMPUTE Csca g AND POYNTING ***********'
          write(*,*) '*************************************************'
+         if (nsection.eq.0) then
+            tmp=dsqrt(dreal(epscouche(0)))
+            CALL CALLBHMIE(tmp,eps,rayon,lambda,MIECEXT ,MIECABS,MIECSCA
+     $           ,GSCA)
+         endif
 
+            
          rloin=1.d0
          if (nquickdiffracte.eq.0) then
             write(*,*) 'Slow method with discretization:',ntheta,nphi,pi
@@ -3040,8 +3052,8 @@ c     compute the diffracted field with FFT
      $           ,phi,nfft2d,Ediffkzpos,Ediffkzneg,gasym,Cscai,w0
      $           ,nepsmax ,neps ,dcouche,zcouche ,epscouche,ncote)
             
-            write(*,*) 'Csca',Cscai,nstop,'NA',numaper,'deltakx'
-     $           ,deltakx,'imaxk0',imaxk0,ncote,beam,object
+c            write(*,*) 'Csca',Cscai,nstop,'NA',numaper,'deltakx'
+c     $           ,deltakx,'imaxk0',imaxk0,ncote,beam,object
 
             if (beam(1:11).ne.'pwavelinear'.and.beam(1:13).ne
      $           .'pwavecircular'.or.ncote.ne.0.or.nhomo.ne.0) then
@@ -3165,7 +3177,7 @@ c     put the field in memory with the right angles
                datasetname='phi for Poynting'
                call hdf5write1d(group_idff,datasetname,phifield,dim)
             endif
-            write(*,*) 'imaxk000',imaxk0,ncote,deltakx,indicen,indice0
+c            write(*,*) 'imaxk000',imaxk0,ncote,deltakx,indicen,indice0
 c     mise en memoire de kx et ky
             if (nmatf.eq.0) then
                do i=-imaxk0,imaxk0
@@ -3513,14 +3525,14 @@ c     Numeriquement le dirac est egal à 0 partout et 1/dk||² sur le pixel kref
             deltax=aretecube      
          endif
          
-         write(*,*) 'energy',imaxk0,ncote,nfft2dtmp,nfft2d ,nepsmax,neps
-     $        ,k0,deltax,tmp,E0
+c         write(*,*) 'energy',imaxk0,ncote,nfft2dtmp,nfft2d ,nepsmax,neps
+c     $        ,k0,deltax,tmp,E0
 c     Toutes les ondes Ondes gaussiennes:
          if (beam(1:11).eq.'gwavelinear' .or. beam(1:13).eq
      $        .'gwavecircular' .or. beam(1:7).eq.'speckle' .or.
      $        beam(1:8).eq.'gwaveiso') then
 
-            write(*,*) 'gauss'
+            write(*,*) 'wave based on FFT (Gauss, speckle)'
             
             call champtotalgauss(imaxk0,ncote,nfft2dtmp,nfft2d
      $           ,nepsmax,neps,epscouche,k0,deltax,tmp
@@ -3528,16 +3540,11 @@ c     Toutes les ondes Ondes gaussiennes:
      $           ,Efourierincyneg ,Efourierinczneg,Efourierincxpos
      $           ,Efourierincypos,Efourierinczpos,fluxreftot
      $           ,fluxtratot)
-            
-            write(*,*) 'flux',fluxreftot,fluxtratot,fluxreftot
-     $           +fluxtratot,fluxinc,ncote
-            
+
             efficacite=(fluxreftot+fluxtratot)/fluxinc
             efficaciteref=fluxreftot/fluxinc
             efficacitetrans=fluxtratot/fluxinc
             
-
-
          elseif (beam(1:11).eq.'pwavelinear') then
             call champtotallineaire(imaxk0,ncote,nfft2dtmp,nfft2d
      $           ,nepsmax,neps,epscouche,k0,deltax,tmp ,Ediffkzpos
@@ -3546,13 +3553,10 @@ c     Toutes les ondes Ondes gaussiennes:
      $           ,Efourierincypos,Efourierinczpos ,fluxreftot
      $           ,fluxtratot ,fluxinc,nstop ,infostr)
             
-            write(*,*) 'flux',fluxreftot,fluxtratot,fluxinc,ncote
-            
             efficacite=(fluxreftot+fluxtratot)/fluxinc
             efficaciteref=fluxreftot/fluxinc
             efficacitetrans=fluxtratot/fluxinc
-            write(*,*) 'eff',efficacite,efficaciteref
-     $           ,efficacitetrans
+
          elseif (beam(1:13).eq.'pwavecircular') then
             write(*,*) 'circulaire'
             call champtotalcirc(imaxk0,ncote,nfft2dtmp,nfft2d ,nepsmax
@@ -3562,13 +3566,9 @@ c     Toutes les ondes Ondes gaussiennes:
      $           ,Efourierincypos,Efourierinczpos ,fluxreftot
      $           ,fluxtratot ,fluxinc,nstop ,infostr)
 
-            write(*,*) 'flux',fluxreftot,fluxtratot,fluxinc,ncote
-            
             efficacite=(fluxreftot+fluxtratot)/fluxinc
             efficaciteref=fluxreftot/fluxinc
             efficacitetrans=fluxtratot/fluxinc
-            write(*,*) 'eff',efficacite,efficaciteref
-     $           ,efficacitetrans
 
          elseif (beam(1:15).eq.'wavelinearmulti') then
             call champtotallineairemulti(imaxk0,ncote,nfft2dtmp ,nfft2d
@@ -3578,7 +3578,6 @@ c     Toutes les ondes Ondes gaussiennes:
      $           ,Efourierincxpos ,Efourierincypos ,Efourierinczpos
      $           ,fluxreftot ,fluxtratot,fluxinc ,nstop ,infostr)
 
-            write(*,*) 'flux',fluxreftot,fluxtratot,fluxinc,ncote
             
             efficacite=(fluxreftot+fluxtratot)/fluxinc
             efficaciteref=fluxreftot/fluxinc
@@ -3592,9 +3591,16 @@ c     gamma)
             infostr='Wave not done'
             return
          endif
-         write(*,*) 'Absorptivity   : ',efficacite
-         write(*,*) 'Reflextivity   : ',efficaciteref
-         write(*,*) 'Transmittivity : ',efficacitetrans
+
+         write(*,*) 'Incident flux   :',fluxinc
+         write(*,*) 'Reflected flux  :',fluxreftot
+         write(*,*) 'Trasnmitted flux:',fluxtratot
+         write(*,*) 'Total flux      :',fluxreftot +fluxtratot
+
+         
+         write(*,*) 'Absorptivity    :',1.d0-efficacite
+         write(*,*) 'Reflextivity    :',efficaciteref
+         write(*,*) 'Transmittivity  :',efficacitetrans
 
          write(*,*) '************** END ENERGY CONSERVATION **********'
          write(*,*) ' '
@@ -3608,7 +3614,7 @@ c     gamma)
          write(*,*) '*************************************************'
 
          write(*,*) 'Microscopy with NA=',numaper             
-         write(*,*) 'ncote',ncote,imaxk0
+         write(*,*) 'nside',ncote
 
          if (nprochefft.ge.1.and.ntypemic.ne.0) then
             write(*,*)
@@ -3739,14 +3745,14 @@ c     passe le champ diffracte lointain en amplitude e(k||)
          deltakx=2.d0*pi/(dble(nfft2d)*deltax)
          if (nstop.eq.1) return
 
-         write(*,*) 'NA',numaper
-         write(*,*) 'focal point reflexion',zlensr
-         write(*,*) 'focal point transmission',zlenst
-         write(*,*) 'number of point in NA',2*imaxk0+1
-         write(*,*) 'delta k',deltakx,'m-1'
+         write(*,*) 'NA                       :',numaper
+         write(*,*) 'Focal point reflexion    :',zlensr,'m'
+         write(*,*) 'Focal point transmission :',zlenst,'m'
+         write(*,*) 'Number of point in NA    :',2*imaxk0+1
+         write(*,*) 'Delta k                  :',deltakx,'m-1'
 
          if (zlenst.ne.0.d0.and.ncote.ge.0) then
-            write(*,*) 'change focal point', zlenst
+            write(*,*) 'Change focal point in transmission', zlenst
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,kx,ky,kz,ctmp,indice)   
 !$OMP DO SCHEDULE(DYNAMIC) COLLAPSE(2)          
             do i=-imaxk0,imaxk0
@@ -3776,7 +3782,7 @@ c     passe le champ diffracte lointain en amplitude e(k||)
 !$OMP END PARALLEL     
          endif
          if (zlensr.ne.0.d0.and.ncote.le.0) then
-            write(*,*) 'Change fcal point',zlensr
+            write(*,*) 'Change focal point in reflexion',zlensr
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,kx,ky,kz,ctmp,indice)   
 !$OMP DO SCHEDULE(DYNAMIC) COLLAPSE(2)          
             do i=-imaxk0,imaxk0
@@ -3846,7 +3852,7 @@ c     enddo
      $              ,Efourierzneg,Eimagexneg,Eimageyneg,Eimagezneg
      $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax,plan2b)
             else
-               write(*,*) 'magnification',gross
+               write(*,*) 'Magnification',gross
                sidemic=-1.d0
                call passagefourierimagegross(Efourierincxneg
      $              ,Efourierincyneg,Efourierinczneg,Eimageincxneg
@@ -3859,7 +3865,7 @@ c     enddo
      $              ,indice0,sidemic,plan2f,plan2b)
             endif
 
-            write(*,*) 'Number of point in NA',imaxk0*2+1
+c            write(*,*) 'Number of point in NA',imaxk0*2+1
             if (nmatf.eq.0) then
                do j=-imaxk0,imaxk0
                   do i=-imaxk0,imaxk0

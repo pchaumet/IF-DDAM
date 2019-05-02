@@ -35,7 +35,8 @@ class CdmMain : public QMainWindow
  public slots:
  
   void showAppWarning(QString);
-  void openDocWindow();
+  void openFDocWindow();
+  void openEDocWindow();
   void openOptionsWindow();
   void openOptionsWidget();
   void saveOptionsWidget();

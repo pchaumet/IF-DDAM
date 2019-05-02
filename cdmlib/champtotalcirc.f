@@ -28,7 +28,7 @@ c     Ici on travaille avec e(k||)
       double complex epscouche(0:nepsmax+1),zcouche(0:nepsmax),E0,icomp
      $     ,const,Arx,Ary,Arz,Atx,Aty,Atz
       character(64) infostr
-      write(*,*) 'circ'
+
 c     initialisation
       pi=dacos(-1.d0)
       icomp=(0.d0,1.d0)
@@ -40,7 +40,15 @@ c     initialisation
    
       x=0.d0
       y=0.d0
-      write(*,*) 'imax',imax,nfft2d,deltakx,E0,indice0,NA,k0
+
+      write(*,*) 'plane wave circular'
+      write(*,*) 'point in NA',imax*2+1
+      write(*,*) 'size FFT',nfft2d
+      write(*,*) 'delta k',deltakx,'m-1'
+      
+      
+
+      
 c     calcul le kx et ky correspondant au theta et phi
       kxinc=k0*dsin(theta*pi/180.d0)*dcos(phi*pi/180.d0)*indice0
       kyinc=k0*dsin(theta*pi/180.d0)*dsin(phi*pi/180.d0)*indice0
@@ -52,7 +60,7 @@ c     calcul du kx et ky le plus proche
       fluxtrans=0.d0
       fluxref=0.d0
       fluxinc=0.d0
-
+      write(*,*) 'Position of specular',imini,jmini
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,kx,ky,kp2,kz)   
 !$OMP DO SCHEDULE(STATIC) REDUCTION(+:fluxinc) COLLAPSE(2)
       do i=-imax,imax
@@ -208,6 +216,5 @@ c     $                 ,Egausyref(indice),Egauszref(indice),i,j
       fluxinc=fluxinc*tmp
       fluxref=fluxref*tmp
       fluxtrans=fluxtrans*tmp
-      write(*,*) 'nnn',fluxref,fluxtrans
       return
       end

@@ -56,7 +56,8 @@ CdmMain::CdmMain( QString _appDirPath, QMainWindow* parent, Qt::WindowFlags fl)
   menuFile->addAction("Open File", this, SLOT(openFileWindow()) );
   menuFile->addAction("Save File", this, SLOT(saveFileWindow()) );
   menuFile->addAction("Exit", this, SLOT(close()) );
-  menuHelp->addAction("Documentation",this,SLOT(openDocWindow()));
+  menuHelp->addAction("Documentation-FR",this,SLOT(openFDocWindow()));
+  menuHelp->addAction("Documentation-EN",this,SLOT(openEDocWindow()));
   menuCalculation->addAction("New", this, SLOT(openOptionsWidget()));
   menuCalculation->addAction("Load", this, SLOT(openOptionsWindow()));
   menuCalculation->addAction("Save", this, SLOT(saveOptionsWidget()));
@@ -150,12 +151,21 @@ void CdmMain::printPlots() {
     runwidget->printPlots();
   }
 }
-void CdmMain::openDocWindow()
+void CdmMain::openFDocWindow()
 {
   //assistant->showDocumentation("index.html");
-  QLOG_INFO() << "Open doc at " << "file:///"+QDir::currentPath()+"/../doc/cmd-0.2.7-FR.pdf";
-  QDesktopServices::openUrl(QUrl("file:///"+ QDir::currentPath()+"/../doc/cmd-0.2.7-FR.pdf"));
+  QLOG_INFO() << "Open doc at " << "file:///"+QDir::currentPath()+"/../doc/userguide-FR.pdf";
+  QDesktopServices::openUrl(QUrl("file:///"+ QDir::currentPath()+"/../doc/userguide-FR.pdf"));
 }
+
+void CdmMain::openEDocWindow()
+{
+  //assistant->showDocumentation("index.html");
+  QLOG_INFO() << "Open doc at " << "file:///"+QDir::currentPath()+"/../doc/userguide-EN.pdf";
+  QDesktopServices::openUrl(QUrl("file:///"+ QDir::currentPath()+"/../doc/userguide-EN.pdf"));
+}
+
+
 void CdmMain::openWidget(Options *options) {
     // check if tab is already there
     for (int i = 0; i < tab->count(); i++) { 
@@ -252,7 +262,7 @@ int main(int argc, char *argv[])
   QLOG_INFO() << "Qt User Data location : " 
               <<  QDir::currentPath();
   CdmMain* cdm = new CdmMain(app.applicationDirPath(),NULL,NULL);
-  cdm->setWindowTitle("discrete dipole approximation with a multilayer");
+  cdm->setWindowTitle("Discrete Dipole Dpproximation with a multilayer");
   cdm->show();
   foreach (const QString &path, app.libraryPaths())
   QLOG_DEBUG() << path;

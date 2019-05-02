@@ -43,7 +43,12 @@ c     initialisation
       fluxinc=0.d0
       x=0.d0
       y=0.d0
+      write(*,*) 'multi plane wave'
+      write(*,*) 'point in NA',imax*2+1
+      write(*,*) 'size FFT',nfft2d
+      write(*,*) 'delta k',deltakx,'m-1'
 
+      
 c     Dans le domaine de fourier: je somme le flux de toutes les ondes
 c     incidentes
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,kx,ky,kp2,kz,im)   
@@ -128,10 +133,10 @@ c     calcul du kx et ky le plus proche
      $                       /deltaky
                         Egausztra(indice)=Egausztra(indice)+Atz/deltakx
      $                       /deltaky
-                        write(*,*) 'centre',Egausxtra(indice),Atx
-     $                       /deltakx/deltaky,Egausytra(indice),Aty
-     $                       /deltakx/deltaky,Egausztra(indice),Atz
-     $                       /deltakx/deltaky,Atx,Aty,Atz
+c                        write(*,*) 'centre',Egausxtra(indice),Atx
+c     $                       /deltakx/deltaky,Egausytra(indice),Aty
+c     $                       /deltakx/deltaky,Egausztra(indice),Atz
+c     $                       /deltakx/deltaky,Atx,Aty,Atz
                      endif
                   enddo
 c     write(*,*) 'champ00',kz/k0,Egausxtra(indice)
@@ -234,6 +239,6 @@ c     $                 ,Egausyref(indice),Egauszref(indice),i,j
       fluxinc=fluxinc*tmp
       fluxref=fluxref*tmp
       fluxtrans=fluxtrans*tmp
-      write(*,*) 'nnn',fluxref,fluxtrans,tmp
+
       return
       end

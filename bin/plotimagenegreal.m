@@ -81,8 +81,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 
 case 4
 
@@ -107,8 +107,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 
 case 5
 
@@ -133,7 +133,7 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 
 end;

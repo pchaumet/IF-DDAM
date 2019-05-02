@@ -83,8 +83,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 title('Modulus','Interpreter','latex','Fontsize',18)
 
 subplot(1,2,2)
@@ -96,8 +96,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 title('Phase Angle','Interpreter','latex','Fontsize',18)
 
 case 4
@@ -125,8 +125,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 title('Modulus','Interpreter','latex','Fontsize',18)
 
 subplot(1,2,2)
@@ -138,8 +138,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
   
 title('Phase Angle','Interpreter','latex','Fontsize',18)
 
@@ -169,8 +169,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 
 title('Modulus','Interpreter','latex','Fontsize',18)
 
@@ -183,8 +183,8 @@ shading interp
 axis equal
 axis image
 colorbar
-xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
-ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+xlabel('$x$','Interpreter','latex','Fontsize',18)
+ylabel('$y$','Interpreter','latex','Fontsize',18)
 
 title('Phase Angle','Interpreter','latex','Fontsize',18)
 

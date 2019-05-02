@@ -40,7 +40,7 @@ c     initialisation
    
       x=0.d0
       y=0.d0
-      write(*,*) 'linear  field'
+      write(*,*) 'plane wave linear'
       write(*,*) 'point in NA',imax*2+1
       write(*,*) 'size FFT',nfft2d
       write(*,*) 'delta k',deltakx,'m-1'
@@ -76,7 +76,7 @@ c     calcul du kx et ky le plus proche
       enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL       
-      write(*,*) 'Position of specular',imini,jmini
+
      
 c     calcul du champ total
       if (ncote.eq.0.or.ncote.eq.1) then
@@ -145,9 +145,7 @@ c     $                 ,Egausytra(indice),Egausztra(indice),i,j,indice
 !$OMP ENDDO 
 !$OMP END PARALLEL 
       endif
-      write(*,*) 'ncote',ncote
       if (ncote.eq.0.or.ncote.eq.-1) then
-         write(*,*) 'ncote',ncote
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)
 !$OMP DO SCHEDULE(STATIC)
          do i=1,nfft2d*nfft2d
@@ -210,9 +208,5 @@ c     $                 ,Egausyref(indice),Egauszref(indice),i,j
       fluxinc=fluxinc*tmp
       fluxref=fluxref*tmp
       fluxtrans=fluxtrans*tmp
-      write(*,*) 'flux ref : ',fluxref
-      write(*,*) 'flux tra : ',fluxtrans
-      write(*,*) 'flux inc : ',fluxinc
-      write(*,*) 'flux tot/fluxinc : ',(fluxref+fluxtrans)/fluxinc
       return
       end

@@ -91,18 +91,18 @@ c     Info string
          endif
       enddo
 
-      write(*,*) NA  
-      write(*,*) k0
-      write(*,*) deltakx
-      write(*,*) indicen
-      write(*,*) NA*k0*indicen/deltakx
+      write(*,*) 'NA         :',NA  
+      write(*,*) 'Wavenumebr :',k0
+      write(*,*) 'step size k:',deltakx
+      write(*,*) 'index      :',indicen
+c      write(*,*) NA*k0*indicen/deltakx
       if (ncote.eq.0) then 
 c         NA=1.d0    
          imax=max(nint(NA*k0*indicen/deltakx)+1,nint(NA*k0*indice0
      $        /deltakx)+1)
       elseif (ncote.eq.1) then
          imax=nint(k0*indicen/deltakx)+1
-         write(*,*) 'imax',imax,NA,k0,deltakx,indicen
+         write(*,*) 'Number of point in NA',2*imax+1 !,NA,k0,deltakx,indicen
       elseif (ncote.eq.-1) then
          imax=nint(k0*indice0/deltakx)+1
       endif
