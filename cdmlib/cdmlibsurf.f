@@ -48,7 +48,8 @@ c     return scalar results
      $     Eimageincxneg,Eimageincyneg,Eimageinczneg,
      $     Efourierxneg,Efourieryneg,Efourierzneg,
      $     Efourierincxneg,Efourierincyneg,Efourierinczneg,masque,
-     $     kxy,xy,numaper,numaperinc,gross,zlensr,zlenst,ntypemic,
+     $     kxy,xy,numaperref,numapertra,numaperinc
+     $     ,gross,zlensr,zlenst,ntypemic,
 c     passe certains arguments pour le dimensionnement
      $     n1m,nmatim,nplanm,nbs,
 c     fonction de green de la surface
@@ -217,8 +218,8 @@ c     faisceau gaussien
       
 c     variable pour avoir l'image a travers la lentille
       integer nlentille,nobjet,nfft2d2,nmasque
-      double precision kx,ky,kz,kp2,deltakx,deltaky,numaper,numaperinc
-     $     ,deltax,signe,zlenst,zlensr
+      double precision kx,ky,kz,kp2,deltakx,deltaky,numaperinc ,deltax
+     $     ,signe,zlenst,zlensr,numaperref,numapertra
       double precision kxy(nfft2d),xy(nfft2d),gross
       double complex Eimagexpos(nfft2d*nfft2d),Eimageypos(nfft2d*nfft2d)
      $     ,Eimagezpos(nfft2d*nfft2d),Eimageincxpos(nfft2d*nfft2d)
@@ -297,7 +298,8 @@ c     convergee.
       write(*,*) 'Quick Lens       : ',nquicklens,'FFT used'
       write(*,*) 'Pos. focal refl. : ',zlensr,'nm'
       write(*,*) 'Pos. focal tran. : ',zlenst,'nm'
-      write(*,*) 'NA objective     : ',numaper
+      write(*,*) 'NA reflexion     : ',numaperref
+      write(*,*) 'NA transmission  : ',numapertra
       write(*,*) 'NA Condenser     : ',numaperinc
       write(*,*) 'Side computation : ',ncote,':0 both side'
 c      write(*,*) 'Optical force    : ',nforce ,'Density',nforced
@@ -694,7 +696,7 @@ c     epsilon of the layers
             return
          endif
          indicem=indicen
-         numaper=numaper/indicen
+         numapertra=numapertra/indicen
       endif
 
       if (ncote.eq.0.or.ncote.eq.-1) then     
@@ -710,6 +712,7 @@ c     epsilon of the layers
          endif
          indicem=indice0
          numaperinc=numaperinc/indice0
+         numaperref=numaperref/indice0
       endif
       
       if (ncote.eq.0) then
@@ -725,9 +728,14 @@ c     change ouverture numerique
             nstop=1
             return
          endif
-         if (numaper.le.0.d0.or.numaper.gt.1.d0) then
+         if (numaperref.le.0.d0.or.numaperref.gt.1.d0) then
             nstop=1
-            infostr='problem with numerical aperture!'
+            infostr='problem with numerical aperture in reflexion!'
+            return
+         endif
+         if (numapertra.le.0.d0.or.numapertra.gt.1.d0) then
+            nstop=1
+            infostr='problem with numerical aperture in transmission!'
             return
          endif
          if (numaperinc.le.0.d0.or.numaperinc.gt.1.d0) then
@@ -1121,9 +1129,9 @@ c     calcul le imaxk0 et le deltakx et deltax pour energy, microscopy etc...
                imaxk0=max(nint(k0*indicen/deltakx)+1,nint(k0*indice0
      $              /deltakx)+1)
             elseif (ncote.eq.1) then
-               imaxk0=nint(numaper*k0*indicen/deltakx)+1
+               imaxk0=nint(numapertra*k0*indicen/deltakx)+1
             elseif (ncote.eq.-1) then
-               imaxk0=nint(numaper*k0*indice0/deltakx)+1
+               imaxk0=nint(numaperref*k0*indice0/deltakx)+1
             endif
             
             if (imaxk0.le.20) then
@@ -1139,14 +1147,14 @@ c     calcul le imaxk0 et le deltakx et deltax pour energy, microscopy etc...
             
          else
             deltakx=2.d0*pi/(dble(nfft2d)*aretecube)
-            deltaky=deltax
+            deltaky=deltakx
             if (ncote.eq.0) then 
                imaxk0=max(nint(k0*indicen/deltakx)+1,nint(k0*indice0
      $              /deltakx)+1)
             elseif (ncote.eq.1) then
-               imaxk0=nint(numaper*k0*indicen/deltakx)+1
+               imaxk0=nint(numapertra*k0*indicen/deltakx)+1
             elseif (ncote.eq.-1) then
-               imaxk0=nint(numaper*k0*indice0/deltakx)+1
+               imaxk0=nint(numaperref*k0*indice0/deltakx)+1
             endif
             write(*,*) 'Delta k',deltakx,'m-1'
             write(*,*) 'Number of point in NA',2*imaxk0+1
@@ -1246,7 +1254,8 @@ c     cré le fichier de data pour connaitre les options pour matlab
       if (trope.eq.'ani') write(900,*) 1
       write(900,*) nfft2d
       write(900,*) k0
-      write(900,*) numaper
+      write(900,*) numaperref
+      write(900,*) numapertra
       write(900,*) nprochefft
       write(900,*) nobjet
       write(900,*) ncote
@@ -1307,8 +1316,10 @@ c     cré le fichier de data pour connaitre les options pour matlab
          call hdf5write1d_int(group_idopt,datasetname,nfft2d,dim)
          datasetname='k0'
          call hdf5write1d(group_idopt,datasetname,k0,dim)
-         datasetname='numaper'
-         call hdf5write1d(group_idopt,datasetname,numaper,dim)
+         datasetname='numaper reflexion'
+         call hdf5write1d(group_idopt,datasetname,numaperref,dim)
+         datasetname='numaper transmission'
+         call hdf5write1d(group_idopt,datasetname,numapertra,dim)
          datasetname='nprochefft'
          call hdf5write1d_int(group_idopt,datasetname,nprochefft,dim)
          datasetname='nobjet'
@@ -1638,7 +1649,7 @@ c     $        ,nmax,nfft2d,nfft2d
      $        ,ndipole ,nmax ,nfft2d,nfft2d,Efourierincxneg
      $        ,Efourierincyneg ,Efourierinczneg,Efourierincxpos
      $        ,Efourierincypos,Efourierinczpos,fluxinc ,fluxref
-     $        ,fluxtrans,irra ,numaper ,masque,nmasque,nstop ,infostr
+     $        ,fluxtrans,irra,numaperref,masque,nmasque,nstop,infostr
      $        ,plan2b)
          write(*,*) infostr
          if (nstop.eq.1) return
@@ -1697,12 +1708,12 @@ c     tmp=1.d0
          xgaus=xgaus*1.d-9
          ygaus=ygaus*1.d-9
          zgaus=zgaus*1.d-9
-         call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0,numaper
-     $        ,IR,xs,ys,zs,xgaus ,ygaus,zgaus,psi,FF0,aretecube,nx,ny,nz
-     $        ,nxm,nym,nzm ,ndipole ,nmax ,nfft2d,nfft2d,Efourierincxneg
-     $        ,Efourierincyneg ,Efourierinczneg,Efourierincxpos
-     $        ,Efourierincypos ,Efourierinczpos,fluxinc ,fluxref
-     $        ,fluxtrans,irra ,nstop ,infostr,plan2b)
+         call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0
+     $        ,numaperref,IR,xs,ys,zs,xgaus ,ygaus,zgaus,psi,FF0
+     $        ,aretecube,nx,ny,nz,nxm,nym,nzm ,ndipole ,nmax ,nfft2d
+     $        ,nfft2d,Efourierincxneg,Efourierincyneg ,Efourierinczneg
+     $        ,Efourierincxpos,Efourierincypos ,Efourierinczpos,fluxinc
+     $        ,fluxref,fluxtrans,irra ,nstop ,infostr,plan2b)
          if (nstop.eq.1) return
          
       elseif  (beam(1:9).eq.'arbitrary') then
@@ -2264,7 +2275,7 @@ c            write(*,*) 'grosse boite',fluxinc ,fluxref ,fluxtrans,irra
 c            write(*,*) 'grosse boite',fluxinc ,fluxref ,fluxtrans,irra
          elseif  (beam(1:7).eq.'speckle') then
             call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0
-     $           ,numaper,IR,xswf,yswf,zswf,xgaus ,ygaus,zgaus,psi,xr
+     $           ,numaperref,IR,xswf,yswf,zswf,xgaus ,ygaus,zgaus,psi,xr
      $           ,aretecube,nxm,nym,nzm,nxm,nym,nzm,subunit,nmax,nfft2d
      $           ,nfft2d,Eimagexneg ,Eimageyneg ,Eimagezneg,Eimagexpos
      $           ,Eimageypos ,Eimagezpos,fluxinc ,fluxref ,fluxtrans
@@ -2932,7 +2943,7 @@ c******************************************************************
          call diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym,nzm
      $        ,nfft2dtmp,nfft2d,k0,xs,ys,zs,aretecube,Efourierxpos
      $        ,Efourierypos,Efourierzpos,FF,imaxk0,deltakx,deltaky
-     $        ,Ediffkzpos,Ediffkzneg,rloin,rloin,tmp,nepsmax ,neps
+     $        ,Ediffkzpos,Ediffkzneg,rloin,rloin,tmp,tmp,nepsmax ,neps
      $        ,dcouche,zcouche,epscouche,ncote ,nstop ,infostr,plan2f)
 
          write(*,*) '******* END DIFFRACTED FIELD WITH FFT ***********'
@@ -3658,9 +3669,14 @@ c     gamma)
          write(*,*) '*************************************************'      
          write(*,*) '************* COMPUTE MICROSCOPY ****************'
          write(*,*) '*************************************************'
-
-         write(*,*) 'Microscopy with NA=',numaper             
-         write(*,*) 'nside',ncote
+         if (ncote.eq.0.or.ncote.eq.-1) then
+            write(*,*) 'Microscopy half angle in reflexion   :'
+     $           ,dasin(numaperref)*180.d0/pi
+         endif
+         if (ncote.eq.0.or.ncote.eq.1) then
+            write(*,*) 'Microscopy half angle in transmission:'
+     $           ,dasin(numapertra)*180.d0/pi
+         endif
 
          if (nprochefft.ge.1.and.ntypemic.ne.0) then
             write(*,*)
@@ -3708,9 +3724,10 @@ c     gamma)
      $           ,Eimageyneg ,Eimagezneg, Eimageincxneg,Eimageincyneg
      $           ,Eimageinczneg, Efourierxneg ,Efourieryneg,Efourierzneg
      $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
-     $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaper ,numaperinc
-     $           ,gross,zlensr,zlenst ,ntypemic , planf ,planb ,plan2f
-     $           ,plan2b ,nmatf,file_id ,group_idmic  ,nstop ,infostr)
+     $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref,numapertra
+     $           ,numaperinc ,gross,zlensr,zlenst ,ntypemic , planf
+     $           ,planb ,plan2f ,plan2b ,nmatf,file_id ,group_idmic
+     $           ,nstop ,infostr)
             
          elseif (ntypemic.eq.2) then
             npolainc=0
@@ -3728,9 +3745,10 @@ c     gamma)
      $           ,Eimageyneg ,Eimagezneg, Eimageincxneg,Eimageincyneg
      $           ,Eimageinczneg, Efourierxneg ,Efourieryneg,Efourierzneg
      $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
-     $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaper ,numaperinc
-     $           ,gross,zlensr,zlenst,ntypemic,planf,planb,plan2f,plan2b
-     $           ,nmatf,file_id ,group_idmic  ,nstop ,infostr)
+     $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref,numapertra
+     $           ,numaperinc ,gross,zlensr,zlenst,ntypemic,planf,planb
+     $           ,plan2f,plan2b ,nmatf,file_id ,group_idmic  ,nstop
+     $           ,infostr)
          else
             write(*,*) 'holographic microscopy'
             
@@ -3745,8 +3763,8 @@ c     reduit l'ouverture numérique a numaper
                   jj=imaxk0+j+1
                   kx=dble(i)*deltakx
                   ky=dble(j)*deltaky
-                  if (indice0*indice0*k0*k0*numaper*numaper-kx*kx-ky
-     $                 *ky.le.0.d0) then
+                  if (indice0*indice0*k0*k0*numaperref*numaperref-kx*kx
+     $                 -ky*ky.le.0.d0) then
                      indice=i+nfft2d2+1+nfft2d*(j+nfft2d2)
                      Efourierincxneg(indice)=0.d0
                      Efourierincyneg(indice)=0.d0
@@ -3766,8 +3784,8 @@ c     reduit l'ouverture numérique a numaper
                   jj=imaxk0+j+1
                   kx=dble(i)*deltakx
                   ky=dble(j)*deltaky
-                  if (indicen*indicen*k0*k0*numaper*numaper-kx*kx-ky
-     $                 *ky.le.0.d0) then
+                  if (indicen*indicen*k0*k0*numapertra*numapertra-kx*kx
+     $                 -ky*ky.le.0.d0) then
                      indice=i+nfft2d2+1+nfft2d*(j+nfft2d2)
                      Efourierincxpos(indice)=0.d0
                      Efourierincypos(indice)=0.d0
@@ -3783,15 +3801,15 @@ c     reduit l'ouverture numérique a numaper
          
 c     passe le champ diffracte lointain en amplitude e(k||)
 
-         call diffractefft2dtoepos(Ediffkzpos,Ediffkzneg
-     $        ,Efourierxpos,Efourierypos,Efourierzpos,Efourierxneg
-     $        ,Efourieryneg,Efourierzneg,epscouche,nepsmax,neps
-     $        ,numaper,k0,deltax,imaxk0,nfft2dtmp,nfft2d,ncote
-     $        ,nstop ,infostr)
+         call diffractefft2dtoepos(Ediffkzpos,Ediffkzneg ,Efourierxpos
+     $        ,Efourierypos,Efourierzpos,Efourierxneg ,Efourieryneg
+     $        ,Efourierzneg,epscouche,nepsmax,neps ,numaperref
+     $        ,numapertra,k0,deltax,imaxk0,nfft2dtmp,nfft2d,ncote ,nstop
+     $        ,infostr)
          deltakx=2.d0*pi/(dble(nfft2d)*deltax)
          if (nstop.eq.1) return
 
-         write(*,*) 'NA                       :',numaper
+         write(*,*) 'NA                       :',numaperref,numapertra
          write(*,*) 'Focal point reflexion    :',zlensr,'m'
          write(*,*) 'Focal point transmission :',zlenst,'m'
          write(*,*) 'Number of point in NA    :',2*imaxk0+1
@@ -3807,8 +3825,8 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                   jj=imaxk0+j+1
                   kx=dble(i)*deltakx
                   ky=dble(j)*deltaky
-                  if (indicen*indicen*k0*k0*numaper*numaper*0.9999d0-kx
-     $                 *kx-ky*ky.gt.0.d0) then                  
+                  if (indicen*indicen*k0*k0*numapertra*numapertra
+     $                 *0.9999d0-kx*kx-ky*ky.gt.0.d0) then
                      kz=dsqrt(indicen*indicen*k0*k0-kx*kx-ky*ky) 
                      ctmp=cdexp(icomp*kz*zlenst)
                      indice=i+nfft2d2+1+nfft2d*(j+nfft2d2)
@@ -3837,8 +3855,8 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                   jj=imaxk0+j+1
                   kx=dble(i)*deltakx
                   ky=dble(j)*deltaky
-                  if (indice0*indice0*k0*k0*numaper*numaper*0.9999d0-kx
-     $                 *kx-ky*ky.gt.0.d0) then                  
+                  if (indice0*indice0*k0*k0*numaperref*numaperref
+     $                 *0.9999d0-kx*kx-ky*ky.gt.0.d0) then
                      kz=dsqrt(indice0*indice0*k0*k0-kx*kx-ky*ky) 
                      ctmp=cdexp(-icomp*kz*zlensr)
                      indice=i+nfft2d2+1+nfft2d*(j+nfft2d2)

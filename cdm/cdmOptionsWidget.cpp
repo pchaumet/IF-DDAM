@@ -257,9 +257,12 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
 	SLOT(microscopyFFTCheckBoxStateChanged(int)));
  
 
-  na = new QLineEdit(QString::number(options->getNA()));
-  na->setFixedWidth(60);
-  naLabel = new QLabel("Numerical aperture [0,1] (objective lens):");
+  nar = new QLineEdit(QString::number(options->getNAR()));
+  nar->setFixedWidth(60);
+  narLabel = new QLabel("Numerical aperture (reflexion)");
+  nat = new QLineEdit(QString::number(options->getNAT()));
+  nat->setFixedWidth(60);
+  natLabel = new QLabel("Numerical aperture (tranmission):");
 
 
   nainc = new QLineEdit(QString::number(options->getNAinc()));
@@ -296,19 +299,20 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   studymicroscopylayout->addWidget(emptymicroscopyFFTLabel,1,0,Qt::AlignLeft);
   studymicroscopylayout->addWidget(microscopyFFTLabel,1,1,Qt::AlignLeft);
   studymicroscopylayout->addWidget(microscopyFFT,1,2,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(naLabel,2,1,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(na,2,2,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(grossLabel,3,1,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(gross,3,2,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(nsideLabel,4,1,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(nside,4,2,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(naincLabel,5,1,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(nainc,5,2,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(zlensrLabel,6,1,Qt::AlignLeft);
-  studymicroscopylayout->addWidget(zlensr,6,2,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(grossLabel,2,1,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(gross,2,2,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(nsideLabel,3,1,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(nside,3,2,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(narLabel,4,1,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(nar,4,2,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(zlensrLabel,5,1,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(zlensr,5,2,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(natLabel,6,1,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(nat,6,2,Qt::AlignLeft);
   studymicroscopylayout->addWidget(zlenstLabel,7,1,Qt::AlignLeft);
   studymicroscopylayout->addWidget(zlenst,7,2,Qt::AlignLeft);
-
+  studymicroscopylayout->addWidget(naincLabel,8,1,Qt::AlignLeft);
+  studymicroscopylayout->addWidget(nainc,8,2,Qt::AlignLeft);
   
   
   QGridLayout *studynearfieldlayout = new QGridLayout();
@@ -778,8 +782,10 @@ if (state == Qt::Checked) {
    microscopyFFT->setChecked(true);
    microscopyFFTLabel->show();
    microscopyFFT->show();
-   naLabel->show();
-   na->show();
+   narLabel->show();
+   nar->show();
+   natLabel->show();
+   nat->show();
    grossLabel->show();
    gross->show();
    zlensrLabel->show();
@@ -799,8 +805,10 @@ if (state == Qt::Checked) {
    microscopyFFTLabel->hide();
    microscopyFFT->setChecked(false);
    microscopyFFT->hide();
-   naLabel->hide();
-   na->hide();
+   narLabel->hide();
+   nar->hide();
+   natLabel->hide();
+   nat->hide();
    grossLabel->hide();
    gross->hide();
    zlensrLabel->hide();
@@ -1118,7 +1126,8 @@ void
 OptionsWidget::updateMicroscopy() {
   microscopy->setChecked(options->getMicroscopy());
   microscopyFFT->setChecked(options->getMicroscopyFFT());
-  na->setText(QString::number(options->getNA()));  
+  nar->setText(QString::number(options->getNAR()));
+  nat->setText(QString::number(options->getNAT()));  
   gross->setText(QString::number(options->getGross()));
   zlensr->setText(QString::number(options->getZlensr()));
   zlenst->setText(QString::number(options->getZlenst()));
@@ -1229,7 +1238,7 @@ OptionsWidget::updateOptions() {
   options->setOpticaltorque(opticaltorque->isChecked());
   options->setOpticaltorquedensity(opticaltorquedensity->isChecked());
   options->setNproche(rangeofstudy->currentIndex());
-  QLOG_DEBUG() << "NPROCHE " << options->getNproche();
+  QLOG_INFO() << "NPROCHE 2" << options->getNproche();
 
   if ( options->getNread() == true )
    options->setFilereread(this->getFilereread());
@@ -1257,7 +1266,8 @@ OptionsWidget::updateOptions() {
   }
   options->setNtheta(ntheta->text().toInt());
   options->setNphi(nphi->text().toInt());
-  options->setNA(na->text().toDouble());
+  options->setNAR(nar->text().toDouble());
+  options->setNAT(nat->text().toDouble());
   options->setNAinc(nainc->text().toDouble());
   options->setGross(gross->text().toDouble());
   options->setZlensr(zlensr->text().toDouble());
@@ -1274,7 +1284,8 @@ OptionsWidget::updateOptions() {
        options->getCrosssection() == false &&
        options->getCrosssectionpoynting() == false)
     options->setFarfield(false);
-  QLOG_DEBUG() << "OptionsWidget::updateOptions> " << QString::number(options->getNA());
+  QLOG_DEBUG() << "OptionsWidget::updateOptions> " << QString::number(options->getNAR());
+  QLOG_DEBUG() << "OptionsWidget::updateOptions> " << QString::number(options->getNAT());
   QLOG_DEBUG() << "OptionsWidget::updateOptions> " << QString::number(options->getGross());
   QLOG_DEBUG() << "OptionsWidget::updateOptions> " << QString::number(options->getZlensr());
   QLOG_DEBUG() << "OptionsWidget::updateOptions> " << QString::number(options->getZlenst());

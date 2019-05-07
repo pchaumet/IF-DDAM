@@ -133,7 +133,7 @@ RunWidget::execute() {
    stopFlag = (int*) malloc(sizeof(int));
    future = new QFuture<void>;
    watcher = new QFutureWatcher<void>;
-   progressdlg = new QProgressDialog("Calculation progress", "Cancel", 0, 0, this,Qt::Widget);
+   progressdlg = new QProgressDialog("Computation in progress", "Cancel", 0, 0, this,Qt::Widget);
    progressdlg->setWindowModality(Qt::WindowModal);
    connect(progressdlg, SIGNAL(canceled()),this, SLOT(cancel_thread()));
    connect(watcher, SIGNAL(finished()),this, SLOT(displayFinishedBox()));
@@ -299,6 +299,9 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
        if ( options->getNproche() == 1 )
           options->setNproche(2);
     }
+    if ( options->getNearfield() == 0) {
+      options->setNproche(0);
+    }
     nprocheCheck = options->getNproche();    
     int microscopyCheck;
     microscopyCheck = options->getMicroscopy();
@@ -327,6 +330,8 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     nzmp = options->getNzmp();
     ntheta = options->getNtheta();
     nphi = options->getNphi();
+
+    
     
   if (options->getObject() == "cuboid (meshsize)" || options->getObject() == "random spheres (meshsize)" || options->getObject() == "inhomogeneous cuboid (meshsize)") {
       if (options->getNproche() !=2) {
@@ -392,8 +397,10 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     meshsize = options->getMeshsize();
     int nfft2d;
     nfft2d = options->getnfft2d();
-    double numaper;
-    numaper = options->getNA();
+    double numaperref;
+    numaperref = options->getNAR();
+    double numapertra;
+    numapertra = options->getNAT();
     double numaperinc;
     numaperinc = options->getNAinc();  
     double gross;
@@ -877,7 +884,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
            (dcmplx*)eimagezneg, (dcmplx*)eimageincxneg, (dcmplx*)eimageincyneg, (dcmplx*)eimageinczneg, 
 	   (dcmplx*)efourierxneg, (dcmplx*)efourieryneg, (dcmplx*)efourierzneg,
 	   (dcmplx*)efourierincxneg, (dcmplx*)efourierincyneg, (dcmplx*)efourierinczneg, (dcmplx*)masque, 
-	   kxy, xy, &numaper,  &numaperinc, &gross, &zlensr, &zlenst, &ntypemic,
+	   kxy, xy, &numaperref, &numapertra,  &numaperinc, &gross, &zlensr, &zlenst, &ntypemic,
 //****************************************************
 //     tableaux utilises que dans cdmlib
 //****************************************************
@@ -2536,7 +2543,7 @@ RunWidget::plotAxislist(QString field, double *X, double *Y, double *Z,
      ytitle = "y(m)";
    }
 
-   QLOG_DEBUG() << "RunWidget::plotAxislist> NPROCHE " << options->getNproche();
+   QLOG_INFO() << "RunWidget::plotAxislist> NPROCHE " << options->getNproche();
        for (int i = 0 ; i < run->getObjectSubunits() ; i++) {
          if ( QString::number(Z[i],'g',8) == QString::number(refaxis,'g',8) ) {
            if (pos == 0) {

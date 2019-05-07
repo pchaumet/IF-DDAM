@@ -248,20 +248,18 @@ c     deplacement des couches.
 
       nminc=numerocouche(z1,neps,nepsmax,zcouche)
       nmaxc=numerocouche(z2,neps,nepsmax,zcouche)
-      write(*,*) 'zcouche',zcouche,nminc,nmaxc
       if (nmaxc-nminc.ge.1) then
 c     shift the layers
          do k=nminc,nmaxc-1           
-            do i=1,nnnr
-               z=-side/2.d0+aretecube*(dble(i)-0.5d0)+zg
+            do i=1,nz
+               z=-(z2-z1)/2.d0+aretecube*(dble(i)-0.5d0)+zg
                if (zcouche(k).ge.z.and.zcouche(k).lt.z+aretecube) then
                   zcouche(k)=z+aretecube/2.d0
                endif              
             enddo
          enddo
       endif
-      write(*,*) 'zcouche',zcouche
-         
+
       if (na.eq.-1) then
 
          do i=1,nz

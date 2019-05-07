@@ -141,7 +141,8 @@ class Options
    int  getNtheta();
    int  getNphi();
    int  getnfft2d();
-   double getNA();
+   double getNAR();
+   double getNAT();
    double getNAinc();
    double getGross();
    double getZlensr();
@@ -263,7 +264,8 @@ class Options
    void setNzmp(int _nzmp);
    void setNtheta(int _ntheta);
    void setNphi(int _nphi);
-   void setNA(double _na);
+   void setNAR(double _nar);
+   void setNAT(double _nat);  
    void setNAinc(double _nainc);
    void setGross(double _gross);
    void setZlensr(double _zlensr);
@@ -395,7 +397,7 @@ class Options
     int    nxmp, nymp, nzmp;
     int    ntheta, nphi;
     int    nfft2d;
-    double na,nainc,gross,zlensr,zlenst,meshsize;
+    double nar,nat,nainc,gross,zlensr,zlenst,meshsize;
     int    ntypemic,nside;
     
     QVector<QColor> *colors;

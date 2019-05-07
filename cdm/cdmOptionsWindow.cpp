@@ -373,7 +373,8 @@ OptionsWindow::tofile(){
     opt << "   ntheta:" << options->getNtheta() << endl;
     opt << "   nphi:" << options->getNphi() << endl;
     opt << "  microscopy checked:" << options->getMicroscopy() << endl;
-    opt << "   numerical aperture:" << options->getNA() << endl;
+    opt << "   numerical aperture:" << options->getNAR() << endl;
+    opt << "   numerical aperture:" << options->getNAT() << endl;
     opt << "   magnification:" << options->getGross() << endl;
     opt << "side [0=Side kz<0, 1=Both side (NA=1), 2=Side kz<0]:" << options->getNside() << endl;
   }

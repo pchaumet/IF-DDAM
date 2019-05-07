@@ -1,4 +1,17 @@
-	--------------------------------------------------------------	
+	--------------------------------------------------------------
+	version 0.3.8
+
+	1) passe deux ouvertures numeriques dans l'interface graphique
+	2) corrige bug deltaky=delta(k)x
+	3) bug dans objet para
+	4) bug dans objet ellipsoide
+	5) bug dans objet cylindre
+	6) Computation in progress comme message
+	7) rajoute si near field pas coche alors forcement nproche=0 dans
+	cdmRunwidget.cpp 
+
+
+	-------------------------------------------------------------
 	version 0.3.7
 
 	1) recalcule les angles des le début si options mic et/ou energie
@@ -6,11 +19,8 @@
 
 
 	pb lateral
-		
-	pb numaper qd deux coté en meme temps
 
-
-	--------------------------------------------------------------	
+	--------------------------------------------------------------
 	version 0.3.6
 
 	1) erreur de taille des tableaux thetam, phim, ssm, ppm, EOm

@@ -60,7 +60,7 @@ int cdmlibsurf_( // input file cdm.in
         dcmplx *efourierxneg, dcmplx *efourieryneg, dcmplx *efourierzneg,
 	dcmplx *efourierincxneg, dcmplx *efourierincyneg, dcmplx *efourierinczneg,
 	dcmplx *masque,
-        double *kxy, double *xy, double *numaper, double *numaperinc, double *gross,
+        double *kxy, double *xy, double *numaperref, double *numapertra, double *numaperinc, double *gross,
 	double *zlensr, double *zlenst, int *ntypemic,
 //****************************************************
 //     tableaux utilises que dans cdmlib

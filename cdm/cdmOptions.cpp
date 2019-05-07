@@ -121,7 +121,8 @@ void Options::initOptions(){
   nxm = nym = nzm = 10;
   ntheta = 36;
   nphi = 72;
-  na = 0.9;
+  nar = 0.9;
+  nat = 0.9;
   nainc= 0.9;
   ntypemic= 0;
   nxmp = nymp = nzmp = 0;
@@ -322,7 +323,8 @@ void Options::initDb() {
              "nzmp integer, "
 	     "ntheta integer, "
 	     "nphi integer, "
-             "na double, "
+             "nar double, "
+	     "nat double, "
 	     "nainc double, "
              "gross double, "
              "zlensr double, "
@@ -332,7 +334,7 @@ void Options::initDb() {
 	     "meshsize double, "
 	     "nfft2d integer, "
 	     "advancedinterface integer) ");
-  query.exec("insert into run_tbl values ('new','GPBICG1','RR',0,0,'',0,'ifdda.h5',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,36,72,1,0.9,-1,0,0,0,0,25,128,0)");
+  query.exec("insert into run_tbl values ('new','GPBICG1','RR',0,0,'',0,'ifdda.h5',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,36,72,0.9,0.9,0.9,-1,0,0,0,0,25,128,0)");
   QLOG_DEBUG () << query.lastError().text();
 }
 void 
@@ -503,7 +505,8 @@ for (int i = 0 ; i < this->getWaveMultiNumber(); i++) {
         QString::number(this->getNzmp()) +  ", " +  
         QString::number(this->getNtheta()) +  ", " +
         QString::number(this->getNphi()) +  ", " +
-        QString::number(this->getNA()) +  ", " +
+        QString::number(this->getNAR()) +  ", " +
+        QString::number(this->getNAT()) +  ", " +
         QString::number(this->getNAinc()) +  ", " + 
         QString::number(this->getGross()) +  ", " +
         QString::number(this->getZlensr()) +  ", " +
@@ -656,7 +659,7 @@ Options::loadDb(QString name){
   query.exec("select methode,polarizability,nread,filereread,nmatlab,fileh5,dipolepsilon,farfield,nearfield,force,"
 	     "localfield,macroscopicfield,nenergie,crosssection,crosssectionpoynting,quickdiffract,nrig,microscopy,"
 	     "microscopyFFT,opticalforce,opticalforcedensity,opticaltorque,opticaltorquedensity,nproche,ninterp," 
-	     "nxx,nyy,nzz,nxmp,nymp,nzmp,ntheta,nphi,na,nainc,gross,zlensr,zlenst,ntypemic,nside,meshsize,nfft2d,advancedinterface from run_tbl where parent='" + name + "'");
+	     "nxx,nyy,nzz,nxmp,nymp,nzmp,ntheta,nphi,nar,nat,nainc,gross,zlensr,zlenst,ntypemic,nside,meshsize,nfft2d,advancedinterface from run_tbl where parent='" + name + "'");
  
   QLOG_DEBUG () << "SELECT RUN_TBL" << query.lastError().text();
 
@@ -694,16 +697,17 @@ Options::loadDb(QString name){
     this->setNzmp(query.value(30).toInt());
     this->setNtheta(query.value(31).toInt());
     this->setNphi(query.value(32).toInt());
-    this->setNA(query.value(33).toDouble());
-    this->setNAinc(query.value(34).toDouble());
-    this->setGross(query.value(35).toDouble());
-    this->setZlensr(query.value(36).toDouble());
-    this->setZlenst(query.value(37).toDouble());
-    this->setNtypemic(query.value(38).toDouble());
-    this->setNside(query.value(39).toInt());
-    this->setMeshsize(query.value(40).toDouble());
-    this->setnfft2d(query.value(41).toInt());
-    this->setAdvancedinterface(query.value(42).toInt());
+    this->setNAR(query.value(33).toDouble());
+    this->setNAT(query.value(34).toDouble());
+    this->setNAinc(query.value(35).toDouble());
+    this->setGross(query.value(36).toDouble());
+    this->setZlensr(query.value(37).toDouble());
+    this->setZlenst(query.value(38).toDouble());
+    this->setNtypemic(query.value(39).toDouble());
+    this->setNside(query.value(40).toInt());
+    this->setMeshsize(query.value(41).toDouble());
+    this->setnfft2d(query.value(42).toInt());
+    this->setAdvancedinterface(query.value(43).toInt());
   }
 }
 void 
@@ -1142,8 +1146,12 @@ Options::setNphi( int _nphi){
   nphi = _nphi;
 }
 void 
-Options::setNA( double _na){
-  na = _na;
+Options::setNAR( double _nar){
+  nar = _nar;
+}
+void 
+Options::setNAT( double _nat){
+  nat = _nat;
 }
 void 
 Options::setNAinc( double _nainc){
@@ -1586,8 +1594,12 @@ Options::getnfft2d(){
   return nfft2d;
 }
 double  
-Options::getNA(){
-  return na;
+Options::getNAR(){
+  return nar;
+}
+double  
+Options::getNAT(){
+  return nat;
 }
 double  
 Options::getNAinc(){

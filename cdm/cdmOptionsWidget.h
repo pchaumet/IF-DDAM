@@ -116,7 +116,7 @@ class OptionsWidget : public QWidget
     QLabel          *emptylocalfieldLabel, *emptymacroscopicfieldLabel, *emptyrangeofstudyLabel;
     QLabel          *emptyopticalforceLabel, *emptyopticalforcedensityLabel;
     QLabel          *emptyopticaltorqueLabel, *emptyopticaltorquedensityLabel;
-    QLabel          *emptymicroscopyLabel, *emptynaLabel, *emptygrossLabel, *emptymicroscopyFFTLabel;
+    QLabel          *emptymicroscopyLabel, *emptynarLabel,  *emptynatLabel, *emptygrossLabel, *emptymicroscopyFFTLabel;
     QLabel          *emptyzlensrLabel, *emptyzlenstLabel;
     QLabel          *emptynaincLabel;
     QLabel          *wavelengthLabel;
@@ -194,8 +194,9 @@ class OptionsWidget : public QWidget
     QLabel          *rangeofstudyLabel;
     QComboBox       *rangeofstudy;
     QCheckBox       *dipolepsilon, *farfield, *force, *nearfield ;
-    QLabel          *nthetaLabel, *nphiLabel, *naLabel, *naincLabel, *grossLabel, *zlensrLabel, *zlenstLabel, *nsideLabel;
-    QLineEdit       *nxm, *nym, *nzm, *ntheta, *nphi, *na, *gross, *zlensr, *zlenst, *nainc, *meshsize;
+    QLabel          *nthetaLabel, *nphiLabel, *grossLabel, *zlensrLabel, *zlenstLabel, *nsideLabel;
+    QLabel          *narLabel,  *natLabel, *naincLabel;
+    QLineEdit       *nxm, *nym, *nzm, *ntheta, *nphi, *nar, *nat, *gross, *zlensr, *zlenst, *nainc, *meshsize;
     QLineEdit       *nxmp, *nymp, *nzmp, *nxx, *nyy, *nzz;
     QDialog         *cfgWindow;
     QLineEdit       *nameLineEdit, *descriptionLineEdit;

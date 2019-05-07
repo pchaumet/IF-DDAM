@@ -1,13 +1,13 @@
       subroutine diffractefft2dtoepos(Ediffkzpos,Ediffkzneg,Efourierxpos
      $     ,Efourierypos,Efourierzpos,Efourierxneg,Efourieryneg
-     $     ,Efourierzneg,epscouche,nepsmax,neps,NA,k0,aretecube,imax
-     $     ,nfft2d,nfft2dmax,ncote,nstop,infostr)
+     $     ,Efourierzneg,epscouche,nepsmax,neps,numaperref ,numapertra
+     $     ,k0,aretecube,imax ,nfft2d,nfft2dmax,ncote,nstop,infostr)
       implicit none
       integer i,j,ii,jj,nfft2dmax,nfft2d,nfft2d2,imax,ncote,indice
      $     ,nepsmax,neps,nstop
       double complex epscouche(0:nepsmax+1)
-      double precision NA,k0,deltakx,deltaky,pi,kx,ky,kz,indice0,indicen
-     $     ,aretecube
+      double precision numaperref ,numapertra,k0,deltakx,deltaky,pi,kx
+     $     ,ky,kz,indice0,indicen,aretecube
       double complex Ediffkzpos(nfft2dmax,nfft2dmax,3)
      $     ,Ediffkzneg(nfft2dmax,nfft2dmax,3),Efourierxpos(nfft2dmax
      $     *nfft2dmax),Efourierypos(nfft2dmax*nfft2dmax)
@@ -68,8 +68,8 @@ c     Info string
                jj=imax+j+1
                kx=dble(i)*deltakx
                ky=dble(j)*deltaky
-               if (indicen*indicen*k0*k0*NA*NA*0.9999d0-kx*kx-ky
-     $              *ky.gt.0.d0) then
+               if (indicen*indicen*k0*k0*numapertra*numapertra*0.9999d0
+     $              -kx*kx-ky*ky.gt.0.d0) then
                   
                   kz=dsqrt(indicen*indicen*k0*k0-kx*kx-ky*ky) 
                  
@@ -95,8 +95,8 @@ c     Info string
                jj=imax+j+1
                kx=dble(i)*deltakx
                ky=dble(j)*deltaky
-               if (indice0*indice0*k0*k0*NA*NA*0.9999d0-kx*kx-ky
-     $              *ky.gt.0.d0) then
+               if (indice0*indice0*k0*k0*numaperref*numaperref*0.9999d0
+     $              -kx*kx-ky*ky.gt.0.d0) then
                   kz=dsqrt(indice0*indice0*k0*k0-kx*kx-ky*ky) 
                   indice=i+nfft2d2+1+nfft2d*(j+nfft2d2)
                   ctmp=-2.d0*pi*icomp*kz

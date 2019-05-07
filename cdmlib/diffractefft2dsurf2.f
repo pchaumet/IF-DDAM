@@ -1,13 +1,13 @@
       subroutine diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym,nzm
      $     ,nfft2d,nfft2dmax,k0,xs,ys,zs,aretecube,Eloinx,Eloiny,Eloinz
-     $     ,FF,imax,deltakx,deltaky,Ediffkzpos,Ediffkzneg,r,zz,NA
-     $     ,nepsmax ,neps,dcouche,zcouche ,epscouche,ncote,nstop
-     $     ,infostr,planf)
+     $     ,FF,imax,deltakx,deltaky,Ediffkzpos,Ediffkzneg,r,zz
+     $     ,numaperref,numapertra,nepsmax ,neps,dcouche,zcouche
+     $     ,epscouche ,ncote,nstop ,infostr,planf)
 c On calcule le champ diffracté E(r) avec |r|=1
       implicit none
       integer nx,ny,nz,nxm,nym,nzm,nfft2dmax,nfft2d,ncote,nstop
       double precision xs(nxm*nym*nzm),ys(nxm*nym*nzm),zs(nxm*nym*nzm)
-     $     ,aretecube,k0,r,zz,za,NA
+     $     ,aretecube,k0,r,zz,za,numaperref,numapertra
       double complex FF(3*nxm*nym*nzm),Ediffkzpos(nfft2dmax,nfft2dmax,3)
      $     ,Ediffkzneg(nfft2dmax,nfft2dmax,3)
 
@@ -74,7 +74,7 @@ c     Info string
             return
          endif
           if (dimag(epscouche(0)).gt.0.d0) then
-            infostr='absorbing layer to computate far field'
+            infostr='absorbing layer to compute far field'
             nstop=-1
             return
          endif
@@ -90,13 +90,6 @@ c     Info string
             tabfft2(i)=nfft2d2+i
          endif
       enddo
-
-      write(*,*) 'NA         :',NA  
-      write(*,*) 'Wavenumebr :',k0
-      write(*,*) 'step size k:',deltakx
-      write(*,*) 'index      :',indicen
-c      write(*,*) NA*k0*indicen/deltakx
-
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j)   
 !$OMP DO SCHEDULE(STATIC)  COLLAPSE(2) 
@@ -154,8 +147,8 @@ c      write(*,*) NA*k0*indicen/deltakx
                   jj=imax+j+1
                   kx=dble(i)*deltakx
                   ky=dble(j)*deltaky
-                  if (indicen*indicen*k0*k0*NA*NA*0.9999d0-kx*kx-ky
-     $                 *ky.gt.0.d0) then
+                  if (indicen*indicen*k0*k0*numapertra*numapertra
+     $                 *0.9999d0-kx*kx-ky*ky.gt.0.d0) then
                      
                      kz=dsqrt(indicen*indicen*k0*k0-kx*kx-ky*ky) 
                      indice=tabfft2(i+nfft2d2+1)+nfft2d*(tabfft2(j
@@ -196,8 +189,8 @@ c      write(*,*) NA*k0*indicen/deltakx
                   jj=imax+j+1
                   kx=dble(i)*deltakx
                   ky=dble(j)*deltaky
-                  if (indice0*indice0*k0*k0*NA*NA*0.9999d0-kx*kx-ky
-     $                 *ky.gt.0.d0) then
+                  if (indice0*indice0*k0*k0*numaperref*numaperref
+     $                 *0.9999d0-kx*kx-ky*ky.gt.0.d0) then
                      
                      kz=-dsqrt(indice0*indice0*k0*k0-kx*kx-ky*ky) 
                      indice=tabfft2(i+nfft2d2+1)+nfft2d*(tabfft2(j

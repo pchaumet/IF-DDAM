@@ -10,9 +10,10 @@
      $     Efourierinczpos, Eimagexneg ,Eimageyneg ,Eimagezneg,
      $     Eimageincxneg,Eimageincyneg ,Eimageinczneg, Efourierxneg
      $     ,Efourieryneg,Efourierzneg, Efourierincxneg ,Efourierincyneg
-     $     ,Efourierinczneg,Ediffkzpos,Ediffkzneg, kxy ,xy,numaper
-     $     ,numaperinc,gross,zlensr,zlenst ,ntypemic , planf ,planb
-     $     ,plan2f ,plan2b ,nmatf,file_id ,group_idmic,nstop ,infostr)
+     $     ,Efourierinczneg,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref
+     $     ,numapertra,numaperinc,gross,zlensr,zlenst ,ntypemic , planf
+     $     ,planb ,plan2f ,plan2b ,nmatf,file_id ,group_idmic,nstop
+     $     ,infostr)
       use HDF5
       implicit none
       integer nbsphere,ndipole,nx,ny,nz,nx2,ny2 ,nxm,nym,nzm,nplanm
@@ -32,8 +33,8 @@
       integer, dimension(nxm*nym*nzm) :: Tabdip
       character(12) methodeit
       double precision tol,tol1,tolinit,aretecube,eps0,k0,P0,irra,pi
-     $     ,numaper,numaperinc,numaperk,kxinc,kyinc,I0,deltax,deltakx
-     $     ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
+     $     ,numaperref,numapertra,numaperinc,numaperk,kxinc,kyinc,I0
+     $     ,deltax,deltakx ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
       integer i,j,ii,jj,k,kk,idelta,jdelta,ideltam,nrig,npolainc
      $     ,nquicklens,npol,imaxk0
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
@@ -87,7 +88,7 @@ c     initialise
       indice0=dsqrt(dreal(epscouche(0)))
       indicen=dsqrt(dreal(epscouche(neps+1)))
 
-      if (numaperinc.ge.1.d0.or.numaper.le.0.d0) then
+      if (numaperinc.ge.1.d0) then
          infostr='NA inc strictly between 0 and 1'
          nstop=1
          return
@@ -448,8 +449,8 @@ c     passe le champ diffracte lointain en amplitude e(k||)
             call diffractefft2dtoeposfour(Ediffkzpos,Ediffkzneg
      $           ,Efourierxpos,Efourierypos,Efourierzpos ,Efourierxneg
      $           ,Efourieryneg,Efourierzneg ,epscouche,nepsmax,neps
-     $           ,numaper,k0,deltax ,deltakx,imaxk0 ,nfft2dtmp,nfft2d
-     $           ,ncote ,nstop ,infostr)
+     $           ,numaperref,numapertra,k0,deltax ,deltakx,imaxk0
+     $           ,nfft2dtmp,nfft2d ,ncote ,nstop ,infostr)
             if (nstop.eq.1) return
             tmp=indice0*k0
             call deltakroutine(kxinc,kyinc,deltakx,deltaky,tmp,ikxinc
@@ -485,7 +486,7 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                      else
                         indicey=nfft2d+j+1
                      endif
-                     if (indice0*indice0*k0*k0*numaper*numaper
+                     if (indice0*indice0*k0*k0*numaperref*numaperref
      $                    *0.9999d0 -kx*kx-ky*ky.gt.0.d0) then
                         indice=indicex+nfft2d*(indicey-1)
                         if (i.eq.ikxinc.and.j.eq.jkyinc) then
@@ -521,7 +522,7 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                         jj=imaxk0+j+1
                         kx=dble(i)*deltakx
                         ky=dble(j)*deltaky
-                        if (indice0*indice0*k0*k0*numaper*numaper
+                        if (indice0*indice0*k0*k0*numaperref*numaperref
      $                       *0.9999d0-kx*kx-ky*ky.gt.0.d0) then 
                            kz=dsqrt(indice0*indice0*k0*k0-kx*kx-ky*ky) 
                            ctmp=cdexp(-icomp*kz*zlensr)
@@ -598,7 +599,7 @@ c     ajoute onde plane
                      else
                         indicey=nfft2d+j+1
                      endif
-                     if (indicen*indicen*k0*k0*numaper*numaper
+                     if (indicen*indicen*k0*k0*numapertra*numapertra
      $                    *0.9999d0-kx*kx-ky*ky.gt.0.d0) then
                         
                         indice=indicex+nfft2d*(indicey-1)
@@ -636,7 +637,7 @@ c     ajoute onde plane
                         jj=imaxk0+j+1
                         kx=dble(i)*deltakx
                         ky=dble(j)*deltaky
-                        if (indicen*indicen*k0*k0*numaper*numaper
+                        if (indicen*indicen*k0*k0*numapertra*numapertra
      $                       *0.9999d0-kx*kx-ky*ky.gt.0.d0) then 
                            kz=dsqrt(indicen*indicen*k0*k0-kx*kx-ky*ky) 
                            ctmp=cdexp(icomp*kz*zlenst)
