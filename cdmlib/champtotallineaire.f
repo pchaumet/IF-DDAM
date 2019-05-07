@@ -16,7 +16,7 @@ c     Ici on travaille avec e(k||)
       integer i,j,ii,jj,nfft2d,nfft2d2,nfft2dmax,ncote ,imax,indice
      $     ,nstop
       double precision kx,ky,kz,kp2,fluxref,fluxtrans,tmp,deltakx
-     $     ,deltaky,aretecube,k0,NA,kxinc,kyinc,fluxinc,x,y
+     $     ,deltaky,aretecube,k0,NA,kxinc,kyinc,fluxinc,x,y,z
       double complex Ediffkzpos(nfft2dmax,nfft2dmax,3)
      $     ,Ediffkzneg(nfft2dmax,nfft2dmax,3),Egausxref(nfft2dmax
      $     *nfft2dmax),Egausyref(nfft2dmax *nfft2dmax)
@@ -52,12 +52,10 @@ c     calcul du kx et ky le plus proche
       imini=nint(kxinc/deltakx)
       jmini=nint(kyinc/deltaky)
 
-     
-      
       fluxtrans=0.d0
       fluxref=0.d0
       fluxinc=0.d0
-      write(*,*) 'Position of specular',imini,jmini
+
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,kx,ky,kp2,kz)   
 !$OMP DO SCHEDULE(STATIC) REDUCTION(+:fluxinc) COLLAPSE(2)
       do i=-imax,imax
@@ -110,9 +108,12 @@ c     calcul du champ total
                   Egausxtra(indice)=Ediffkzpos(ii,jj,1)/const
                   Egausytra(indice)=Ediffkzpos(ii,jj,2)/const
                   Egausztra(indice)=Ediffkzpos(ii,jj,3)/const
+c                  write(*,*) 'champ tra',Egausxtra(indice),
+c     $                 Egausytra(indice),Egausztra(indice)
 c                  write(*,*) 'centre',Egausxtra(indice)
 c     $                 ,Egausytra(indice) ,Egausztra(indice),i,j,kx,ky
                   if (i.eq.imini.and.j.eq.jmini) then
+c                     write(*,*) 'iminiii',imini,jmini
                      call  champlineairemicro(epscouche,zcouche,neps
      $                    ,nepsmax,x,y,k0,E0,ss,pp,theta,phi,infostr
      $                    ,nstop,Arx,Ary,Arz,Atx,Aty,Atz)
@@ -122,8 +123,8 @@ c     $                 ,Egausytra(indice) ,Egausztra(indice),i,j,kx,ky
      $                    /deltaky
                      Egausztra(indice)=Egausztra(indice)+Atz/deltakx
      $                    /deltaky
-c                     write(*,*) 'centreij',Aty/deltakx /deltaky,Atz
-c     $                    /deltakx /deltaky,Atx ,Aty,Atz
+c                     write(*,*) 'rr',Atx,Aty,Atz,kz
+c                     write(*,*) 'centreij',i,j,Atx ,Aty,Atz,kz,indicen
                   endif
 c                  write(*,*) 'champ00',kz/k0,Egausxtra(indice)
 c     $                 ,Egausytra(indice),Egausztra(indice),i,j,indice
@@ -178,16 +179,17 @@ c     $                 ,Egausytra(indice),Egausztra(indice),i,j,indice
                   Egauszref(indice)=Ediffkzneg(ii,jj,3)/const
 
                   if (i.eq.imini.and.j.eq.jmini) then
+c                     write(*,*) 'mini',imini,jmini
                      call  champlineairemicro(epscouche,zcouche,neps
-     $                    ,nepsmax,x,y,k0,E0,ss,pp,theta,phi
-     $                    ,infostr ,nstop,Arx,Ary,Arz,Atx,Aty,Atz)
+     $                    ,nepsmax,x,y,k0,E0,ss,pp,theta,phi,infostr
+     $                    ,nstop,Arx,Ary,Arz,Atx,Aty,Atz)
                      Egausxref(indice)=Egausxref(indice)+Arx/deltakx
      $                    /deltaky
                      Egausyref(indice)=Egausyref(indice)+Ary/deltakx
      $                    /deltaky
                      Egauszref(indice)=Egauszref(indice)+Arz/deltakx
      $                    /deltaky
-                   
+c                     write(*,*) 'rr',Arx,Ary,Arz,kz
                   endif
 c                  write(*,*) 'champtt',Egausxref(indice),indice,i,j
                   fluxref=fluxref+(cdabs(Egausxref(indice))**2
@@ -202,8 +204,9 @@ c     $                 ,Egausyref(indice),Egauszref(indice),i,j
 !$OMP ENDDO 
 !$OMP END PARALLEL
       endif
-  
-   
+
+c      write(*,*) 'E0',E0
+
       tmp=4.d0*pi*pi*deltaky*deltakx/(k0*8.d0*pi*1.d-7*299792458.d0)
       fluxinc=fluxinc*tmp
       fluxref=fluxref*tmp

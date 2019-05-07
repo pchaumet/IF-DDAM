@@ -50,9 +50,9 @@ c     variables for the incident field and local field
      $     ,torquexmulti(numberobjetmax),torqueymulti(numberobjetmax)
      $     ,torquezmulti(numberobjetmax)
       integer nbinc
-      double precision ss,pp,theta,phi,I0,phim(20)
-     $     ,thetam(20),ssm(20),ppm(20)
-      double complex Eloc(3),Em(3),E0,uncomp,icomp,zzero,E0m(20)
+      double precision ss,pp,theta,phi,I0,phim(10)
+     $     ,thetam(10),ssm(10),ppm(10)
+      double complex Eloc(3),Em(3),E0,uncomp,icomp,zzero,E0m(10)
       double complex, dimension(nxm*nym*nzm) :: macroscopicfieldx
       double complex, dimension(nxm*nym*nzm) :: macroscopicfieldy
       double complex, dimension(nxm*nym*nzm) :: macroscopicfieldz

@@ -56,7 +56,7 @@ c     calcul du kx et ky le plus proche
      
       imini=nint(kxinc/deltakx)
       jmini=nint(kyinc/deltaky)
-
+      
       fluxtrans=0.d0
       fluxref=0.d0
       fluxinc=0.d0
@@ -123,8 +123,8 @@ c     $                 /const ,Ediffkzpos(ii,jj,3)/const
 
                   if (i.eq.imini.and.j.eq.jmini) then
                      call  champcircmicro(epscouche,zcouche,neps
-     $                    ,nepsmax,x,y,k0,E0,ss,theta,phi ,infostr
-     $                    ,nstop,Arx,Ary,Arz,Atx,Aty,Atz)
+     $                    ,nepsmax,x,y,k0,E0,ss,theta,phi,infostr ,nstop
+     $                    ,Arx,Ary,Arz,Atx,Aty,Atz)
                      Egausxtra(indice)=Egausxtra(indice)+Atx/deltakx
      $                    /deltaky
                      Egausytra(indice)=Egausytra(indice)+Aty/deltakx
@@ -186,8 +186,8 @@ c     $                 ,Egausytra(indice),Egausztra(indice),i,j,indice
 
                   if (i.eq.imini.and.j.eq.jmini) then
                      call  champcircmicro(epscouche,zcouche,neps
-     $                    ,nepsmax,x,y,k0,E0,ss,theta,phi ,infostr
-     $                    ,nstop,Arx,Ary,Arz,Atx,Aty,Atz)
+     $                    ,nepsmax,x,y,k0,E0,ss,theta,phi,infostr ,nstop
+     $                    ,Arx,Ary,Arz,Atx,Aty,Atz)
                      Egausxref(indice)=Egausxref(indice)+Arx/deltakx
      $                    /deltaky
                      Egausyref(indice)=Egausyref(indice)+Ary/deltakx

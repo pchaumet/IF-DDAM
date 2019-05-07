@@ -96,28 +96,7 @@ c     Info string
       write(*,*) 'step size k:',deltakx
       write(*,*) 'index      :',indicen
 c      write(*,*) NA*k0*indicen/deltakx
-      if (ncote.eq.0) then 
-c         NA=1.d0    
-         imax=max(nint(NA*k0*indicen/deltakx)+1,nint(NA*k0*indice0
-     $        /deltakx)+1)
-      elseif (ncote.eq.1) then
-         imax=nint(k0*indicen/deltakx)+1
-         write(*,*) 'Number of point in NA',2*imax+1 !,NA,k0,deltakx,indicen
-      elseif (ncote.eq.-1) then
-         imax=nint(k0*indice0/deltakx)+1
-      endif
 
-      if (2*imax+1.gt.nfft2d) then
-         infostr='Size of FFT too small to compute the diffracted field'
-         nstop=-1
-         return
-      endif
-      if (2*imax+1.lt.7) then
-         write(99,*) '2*imax+1',imax,2*imax+1,nfft2d
-         infostr='In FFT diffract nfft2d too small'
-         nstop = 1
-      return
-      endif
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j)   
 !$OMP DO SCHEDULE(STATIC)  COLLAPSE(2) 

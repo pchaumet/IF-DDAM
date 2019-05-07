@@ -5,16 +5,16 @@
       implicit none
       integer nstop,neps,nepsmax,i,nba
       
-      double precision disz(0:nepsmax),x,y,phit,thetat,phim(20)
-     $     ,thetam(20),ssm(20),ppm(20),ss,pp,k0
-      double complex eps(0:nepsmax+1),E0,E0m(20),Arx,Ary,Arz,Atx,Aty,Atz
+      double precision disz(0:nepsmax),x,y,phit,thetat,phim(10)
+     $     ,thetam(10),ssm(10),ppm(10),ss,pp,k0
+      double complex eps(0:nepsmax+1),E0,E0m(10),Arx,Ary,Arz,Atx,Aty,Atz
      $     ,Arxm,Arym,Arzm,Atxm,Atym,Atzm
       
 
       character(64) infostr
 
 
-      if (nba.gt.20) then
+      if (nba.gt.10) then
          nstop=1
          infostr='too many angle of incidence'
          return

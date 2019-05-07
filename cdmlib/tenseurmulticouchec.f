@@ -1652,7 +1652,8 @@ c     calcul des fonctions de Bessel a l'ordre 0,1,2
       zi=zi*a
       call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR)     
       if (IERR.ne.0.or.NZ.ne.0) then
-         write(*,*) 'probleme dans la fonction de bessel',NZ,IERR
+         write(*,*) 'probleme dans la fonction de bessel1',NZ,IERR,a,zr
+     $        ,zi
          stop
       endif
       JB0=cyr(1)+icomp*cyi(1)
@@ -4140,7 +4141,8 @@ c     calcul des fonctions de Bessel a l'ordre 0,1,2
       zi=zi*a
       call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR)     
       if (IERR.ne.0.or.NZ.ne.0) then
-         write(*,*) 'probleme dans la fonction de bessel',NZ,IERR
+         write(*,*) 'probleme dans la fonction de bessel2',NZ,IERR,a,zr
+     $        ,zi
          stop
       endif
       JB0=cyr(1)+icomp*cyi(1)
@@ -5165,9 +5167,10 @@ c     calcul de k complex avec theta
 c     calcul des fonctions de Bessel a l'ordre 0,1,2
       zr=zr*a
       zi=zi*a
-      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR)     
+      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR) 
       if (IERR.ne.0.or.NZ.ne.0) then
-         write(*,*) 'probleme dans la fonction de bessel',NZ,IERR
+         write(*,*) 'probleme dans la fonction de bessel3',NZ,IERR,a,zr
+     $        ,zi,cyr,cyi
          stop
       endif
       JB0=cyr(1)+icomp*cyi(1)

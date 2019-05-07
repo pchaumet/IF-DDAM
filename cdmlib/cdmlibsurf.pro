@@ -160,7 +160,8 @@ SOURCES		+= aleatoire.f \
                 hdf5write1d.f \
                 hdf5write2d.f \
                 writehdf5mic.f \
-                writehdf5farfield.f
+                writehdf5farfield.f \
+		anglecalculmic.f
                 
 INCLUDEPATH 	+= .
 

@@ -380,8 +380,15 @@ c     arret de suite si pas assez de place pour propa
          nstop=-1
          return
       endif
-      if (nlentille.eq.1) nenergie=1
+
+      if (nenergie.eq.1.and.ncote.ne.0) then
+         ncote=0 
+         write(*,*) 'Due to the computation of the energy the'
+         write(*,*) 'code compute the diffracted field for both side'
+      endif
       
+      if (nlentille.eq.1) nenergie=1
+
 c      if (nenergie.eq.1.and.nquickdiffracte.eq.1) then
 c         ndiffracte=1
 c      endif
@@ -1100,6 +1107,93 @@ c     epsilon
          return
       endif
       
+
+c     calcul le imaxk0 et le deltakx et deltax pour energy, microscopy etc...
+      if (nenergie+nlentille.ge.1) then
+         if (nquickdiffracte.eq.0) then
+            write(*,*) 'Computation of delta k and delta x'
+            write(*,*) 'for the diffracted field with slow method'
+            write(*,*) 'Initial step size delta k : ',2.d0*pi
+     $           /(dble(nfft2d)*aretecube),'m-1'
+            k=0
+ 222        deltakx=2.d0*pi/(dble(nfft2d)*aretecube)/dble(2**k)
+            if (ncote.eq.0) then 
+               imaxk0=max(nint(k0*indicen/deltakx)+1,nint(k0*indice0
+     $              /deltakx)+1)
+            elseif (ncote.eq.1) then
+               imaxk0=nint(numaper*k0*indicen/deltakx)+1
+            elseif (ncote.eq.-1) then
+               imaxk0=nint(numaper*k0*indice0/deltakx)+1
+            endif
+            
+            if (imaxk0.le.20) then
+               k=k+1
+               write(*,*) 'Change delta k :',k,dble(nfft2d*(2**k))
+     $              ,nfft2d,imaxk0
+               goto 222
+            endif
+            write(*,*) 'Final delta k',deltakx,'m-1'
+            write(*,*) 'Number of point in NA',2*imaxk0+1
+            deltaky=deltakx
+            deltax=2.d0*pi/dble(nfft2d)/deltakx
+            
+         else
+            deltakx=2.d0*pi/(dble(nfft2d)*aretecube)
+            deltaky=deltax
+            if (ncote.eq.0) then 
+               imaxk0=max(nint(k0*indicen/deltakx)+1,nint(k0*indice0
+     $              /deltakx)+1)
+            elseif (ncote.eq.1) then
+               imaxk0=nint(numaper*k0*indicen/deltakx)+1
+            elseif (ncote.eq.-1) then
+               imaxk0=nint(numaper*k0*indice0/deltakx)+1
+            endif
+            write(*,*) 'Delta k',deltakx,'m-1'
+            write(*,*) 'Number of point in NA',2*imaxk0+1
+            if (2*imaxk0+1.gt.nfft2d) then
+               infostr
+     $       ='Size of FFT too small to compute the diffracted field'
+               nstop=-1
+               return
+            endif
+            if (2*imaxk0+1.lt.7) then
+               write(99,*) '2*imax+1',imaxk0,2*imaxk0+1,nfft2d
+               infostr='In FFT diffract nfft2d too small'
+               nstop = 1
+               return
+            endif
+         endif
+      endif
+
+c     Changement angle si microscopy
+      if (nlentille.eq.1) then
+         if (beam(1:11).eq.'pwavelinear' .or. beam(1:13).eq
+     $        .'pwavecircular') then
+            write(*,*) 'Angle of incidence asked:', theta,phi
+            call anglecalculmic(theta,phi,indice0,k0,deltakx,deltaky)
+            write(*,*) 'Angle of incidence taken:', theta,phi
+
+            write(*,*) 'If the new values are too far from the previous'
+            write(*,*) 'increase the size of the FFT'
+         elseif (beam(1:15).eq.'wavelinearmulti') then
+            do i=1,nbinc
+               write(*,*) 'Numero of the incidence :',i,'/',nbinc
+               write(*,*) 'Angle of incidence asked:', thetam(i),phim(i)
+               call anglecalculmic(thetam(i),phim(i),indice0,k0,deltakx
+     $              ,deltaky)
+               write(*,*) 'Angle of incidence taken:', thetam(i),phim(i)
+             
+            enddo
+            write(*,*) 'If the new values are too far from the previous'
+            write(*,*) 'increase the size of the FFT'
+         endif
+      
+      endif
+
+
+
+
+
       write(99,*) 'number of subunit for the object',nbsphere
       write(99,*) 'number of subunit for the mesh ',ndipole
       write(99,*) 'mesh size',aretecube
@@ -2841,38 +2935,6 @@ c******************************************************************
      $        ,Ediffkzpos,Ediffkzneg,rloin,rloin,tmp,nepsmax ,neps
      $        ,dcouche,zcouche,epscouche,ncote ,nstop ,infostr,plan2f)
 
-c         do i=-imaxk0,imaxk0               
-c            if (i.ge.0) then
-c               indicex=i+1
-c            else
-c               indicex=nfft2d+i+1
-c            endif
-c            kx=deltakx*dble(i)
-c            kxy(i+nfft2d2+1)=kx/k0
-c            xy(i+nfft2d2+1)=deltax*dble(i)
-c            do j=-imaxk0,imaxk0              
-c               if (j.ge.0) then
-c                  indicey=j+1
-c               else
-c                  indicey=nfft2d+j+1
-c               endif
-c               ky=deltaky*dble(j)
-c               ii=imaxk0+i+1
-c               jj=imaxk0+j+1
-c$$$  
-c$$$  if (ncote.eq.1.or.ncote.eq.0) then
-c$$$  c     calcul champ dessus
-c$$$  
-c$$$  
-c$$$  if (k0*k0*indicen*indicen-kx*kx-ky*ky.gt.0.d0) then  
-c$$$  
-c$$$  write(*,*) 'field1', Ediffkzpos(ii,jj,1)
-c$$$  $                    ,Ediffkzpos(ii,jj,2),Ediffkzpos(ii,jj,3),i,j
-c$$$  endif
-c$$$  endif
-c            enddo
-c     enddo
-         
          write(*,*) '******* END DIFFRACTED FIELD WITH FFT ***********'
          write(*,*) ' '
       endif
@@ -3092,7 +3154,7 @@ c     put the field in memory with the right angles
                   
                   kx=k0*indicem*dsin(thetas)*dcos(phis)
                   ky=k0*indicem*dsin(thetas)*dsin(phis)
-                                  do i=-imaxk0,imaxk0
+                  do i=-imaxk0,imaxk0
                      if (kx.ge.i*deltakx) i2=i
                   enddo
                   do j=-imaxk0,imaxk0
@@ -3300,30 +3362,6 @@ c     initialization table
 !$OMP ENDDO 
 !$OMP END PARALLEL  
 
-c     intialization delta k
-         write(*,*) 'Step size delta k : ',2.d0*pi/(dble(nfft2d)
-     $        *aretecube),'m-1'
-         k=0
- 222     deltakx=2.d0*pi/(dble(nfft2d)*aretecube)/dble(2**k)
-         if (ncote.eq.0) then 
-            imaxk0=max(nint(numaper*k0*indicen/deltakx)+1,nint(numaper
-     $           *k0*indice0/deltakx)+1)
-         elseif (ncote.eq.1) then
-            imaxk0=nint(numaper*k0*indicen/deltakx)+1
-         elseif (ncote.eq.-1) then
-            imaxk0=nint(numaper*k0*indice0/deltakx)+1
-         endif
-
-         if (imaxk0.le.20) then
-            k=k+1
-            write(*,*) 'change delta k :',k,dble(nfft2d*(2**k))
-     $           ,nfft2d,imaxk0
-            goto 222
-         endif
-         write(*,*) 'Final delta k',deltakx,'m-1'
-         write(*,*) 'Number of point in NA',2*imaxk0+1
-         deltaky=deltakx
-         deltax=2.d0*pi/dble(nfft2d)/deltakx
          write(*,*) 'compute far field'
 c     compute the diffracted field
          do i=-imaxk0,imaxk0               
@@ -3500,11 +3538,15 @@ c     **********************************************************
 c     calcul du champ total diffracte ainsi que du champ image
 c     **********************************************************            
       if (nenergie.eq.1) then
-
-         write(*,*) '*************************************************'      
-         write(*,*) '********** COMPUTE ENERGY CONSERVATION **********'
-         write(*,*) '*************************************************'
-
+         if (ncote.eq.0) then
+            write(*,*) '**********************************************'      
+            write(*,*) '******* COMPUTE ENERGY CONSERVATION **********'
+            write(*,*) '**********************************************'
+         else
+            write(*,*) '***********************************************'      
+            write(*,*) '**** COMPUTE DIFFRACTED FIELD WITH INCIDENT ***'
+            write(*,*) '***********************************************'
+         endif
 
          
 c     on calcule e(k||) tel que E(r||,z)=Int ( e(k||) *exp(ik||.r||
@@ -3591,20 +3633,24 @@ c     gamma)
             infostr='Wave not done'
             return
          endif
-
-         write(*,*) 'Incident flux   :',fluxinc
-         write(*,*) 'Reflected flux  :',fluxreftot
-         write(*,*) 'Trasnmitted flux:',fluxtratot
-         write(*,*) 'Total flux      :',fluxreftot +fluxtratot
-
-         
-         write(*,*) 'Absorptivity    :',1.d0-efficacite
-         write(*,*) 'Reflextivity    :',efficaciteref
-         write(*,*) 'Transmittivity  :',efficacitetrans
-
-         write(*,*) '************** END ENERGY CONSERVATION **********'
-         write(*,*) ' '
-
+         if (ncote.eq.0) then
+            write(*,*) 'Incident flux   :',fluxinc
+            write(*,*) 'Reflected flux  :',fluxreftot
+            write(*,*) 'Transmitted flux:',fluxtratot
+            write(*,*) 'Total flux      :',fluxreftot +fluxtratot
+            
+            write(*,*) 'Conservation of energy:',efficacite
+            write(*,*) 'Absorptivity          :',1.d0-efficacite
+            write(*,*) 'Reflextivity          :',efficaciteref
+            write(*,*) 'Transmittivity        :',efficacitetrans
+      
+            write(*,*) '************ END ENERGY CONSERVATION ********'
+            write(*,*) ' '
+         else
+            write(*,*) '**********************************************'      
+            write(*,*) '***** END DIFFRACTED FIELD WITH INCIDENT *****'
+            write(*,*) '**********************************************'
+         endif
       endif
       
       if (nlentille.eq.1) then

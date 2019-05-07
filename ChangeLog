@@ -1,3 +1,29 @@
+	--------------------------------------------------------------	
+	version 0.3.7
+
+	1) recalcule les angles des le début si options mic et/ou energie
+	pour fitter avec le maillage de fourier.
+
+
+	pb lateral
+		
+	pb numaper qd deux coté en meme temps
+
+
+	--------------------------------------------------------------	
+	version 0.3.6
+
+	1) erreur de taille des tableaux thetam, phim, ssm, ppm, EOm
+	2) Si kz <0 et energie pas demandee alors ne calcule pas l'énergie
+	et si on demande l'énergie passe forcemment ncote=0 pour calculer
+	les deux cotés.
+	3) Change les angles pour fiter avec le maillage dans option
+	énergie et microsocopie.
+	4) correction dans multiplane wave sur le kxinc, kyinc pour la
+	réflexion
+
+
+	--------------------------------------------------------------
 	version 0.3.5 (fftw+hdf5) 0.2.8 (fftw) et 0.1.17 (ffts)
 
 

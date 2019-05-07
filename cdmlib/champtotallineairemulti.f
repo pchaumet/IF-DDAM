@@ -25,9 +25,9 @@ c     Ici on travaille avec e(k||)
      $     ,Egausztra(nfft2dmax*nfft2dmax)
       integer nepsmax,neps,imini,jmini,nba
       double precision indice0,indicen,pi
-      double precision phim(20) ,thetam(20),ssm(20),ppm(20)
+      double precision phim(10) ,thetam(10),ssm(10),ppm(10)
       double complex epscouche(0:nepsmax+1),zcouche(0:nepsmax),icomp
-     $     ,const,Arx,Ary,Arz,Atx,Aty,Atz,E0m(20)
+     $     ,const,Arx,Ary,Arz,Atx,Aty,Atz,E0m(10)
       character(64) infostr
 
 c     initialisation
@@ -44,10 +44,12 @@ c     initialisation
       x=0.d0
       y=0.d0
       write(*,*) 'multi plane wave'
-      write(*,*) 'point in NA',imax*2+1
-      write(*,*) 'size FFT',nfft2d
-      write(*,*) 'delta k',deltakx,'m-1'
+      write(*,*) 'point in NA     :',imax*2+1
+      write(*,*) 'size FFT        :',nfft2d
+      write(*,*) 'delta k         :',deltakx,'m-1'
 
+
+      
       
 c     Dans le domaine de fourier: je somme le flux de toutes les ondes
 c     incidentes
@@ -64,12 +66,16 @@ c     incidentes
      $              /180.d0)*indice0
                kyinc=k0*dsin(thetam(im)*pi/180.d0)*dsin(phim(im)*pi
      $              /180.d0)*indice0
+
 c     calcul du kx et ky le plus proche
                imini=nint(kxinc/deltakx)
                jmini=nint(kyinc/deltaky)
+
                if (indice0*indice0*k0*k0*NA*NA-kp2.gt.0.d0) then
                   kz=dsqrt(indice0*indice0*k0*k0-kp2)               
                   if (i.eq.imini.and.j.eq.jmini) then
+c                     write(*,*) 'kkk',imini,jmini,kxinc,kyinc,deltakx
+c     $                    ,deltaky,thetam(im)
                      fluxinc=fluxinc+(cdabs(E0m(im)/deltakx/deltaky)
      $                    **2.d0)*kz
                   endif
@@ -118,11 +124,12 @@ c     calcul le kx et ky correspondant au theta et phi
      $                    *pi/180.d0)*indice0
                      kyinc=k0*dsin(thetam(im)*pi/180.d0)*dsin(phim(im)
      $                    *pi/180.d0)*indice0
-c     calcul du kx et ky le plus proche
                      imini=nint(kxinc/deltakx)
                      jmini=nint(kyinc/deltaky)
+c     calcul du kx et ky le plus proche
                      if (i.eq.imini.and.j.eq.jmini) then
-                        write(*,*) 'iminiii'
+c                        write(*,*) 'iminiii',imini,jmini,kxinc,kyinc
+c     $                       ,deltakx,deltaky,thetam(im)
                         call  champlineairemicro(epscouche,zcouche ,neps
      $                       ,nepsmax,x,y,k0,E0m(im),ssm(im),ppm(im)
      $                       ,thetam(im),phim(im),infostr,nstop,Arx,Ary
@@ -133,6 +140,7 @@ c     calcul du kx et ky le plus proche
      $                       /deltaky
                         Egausztra(indice)=Egausztra(indice)+Atz/deltakx
      $                       /deltaky
+c                        write(*,*) 'rr',Atx,Aty,Atz,kz
 c                        write(*,*) 'centre',Egausxtra(indice),Atx
 c     $                       /deltakx/deltaky,Egausytra(indice),Aty
 c     $                       /deltakx/deltaky,Egausztra(indice),Atz
@@ -198,19 +206,22 @@ c     $                 ,Egausytra(indice),Egausztra(indice),i,j,indice
                   do im=1,nba
 c     calcul le kx et ky correspondant au theta et phi
                      kxinc=k0*dsin(thetam(im)*pi/180.d0)*dcos(phim(im)
-     $                    *pi/180.d0)
+     $                    *pi/180.d0)*indice0
                      kyinc=k0*dsin(thetam(im)*pi/180.d0)*dsin(phim(im)
-     $                    *pi/180.d0)
-c     calcul du kx et ky le plus proche
+     $                    *pi/180.d0)*indice0
                      imini=nint(kxinc/deltakx)
                      jmini=nint(kyinc/deltaky)
+c     calcul du kx et ky le plus proche
 c                     write(*,*) 'imini',imini,jmini,kxinc/deltakx
 c     $                    ,dasin(dble(imini)*deltakx/k0)*180.d0/pi
                      if (i.eq.imini.and.j.eq.jmini) then
+c                        write(*,*) 'mini',imini,jmini,kxinc,kyinc
+c     $                       ,deltakx,deltaky,thetam(im)
                         call  champlineairemicro(epscouche,zcouche ,neps
      $                       ,nepsmax,x,y,k0,E0m(im),ssm(im),ppm(im)
      $                       ,thetam(im),phim(im),infostr,nstop,Arx,Ary
      $                       ,Arz,Atx,Aty,Atz)
+c                        write(*,*) 'rr',Arx,Ary,Arz,kz
                         Egausxref(indice)=Egausxref(indice)+Arx/deltakx
      $                       /deltaky
                         Egausyref(indice)=Egausyref(indice)+Ary/deltakx
@@ -233,7 +244,7 @@ c     $                 ,Egausyref(indice),Egauszref(indice),i,j
 !$OMP END PARALLEL         
       endif
       
-      
+
       tmp=4.d0*pi*pi*deltaky*deltakx/(k0*8.d0*pi*1.d-7*299792458.d0)
 
       fluxinc=fluxinc*tmp
