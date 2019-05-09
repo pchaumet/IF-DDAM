@@ -129,6 +129,7 @@ class Run
    QString  getName();
    int      getObjectSubunits();
    int      getMeshSubunits();
+   int      getNmaxpp();
    double   getMeshSize();
    double   getLambda10n();
    double   getK0();
@@ -160,6 +161,7 @@ class Run
    void setName(QString _runname);
    void setObjectSubunits(int _objectsubunits);
    void setMeshSubunits(int _meshsubunits);
+   void setNmaxpp(int _nmaxpp);
    void setMeshSize(double _meshsize);
    void setLambda10n(double _lambda10n);
    void setK0(double _k0);
@@ -235,6 +237,7 @@ class Run
 
     int    objectsubunits;
     int    meshsubunits;
+    int nmaxpp;
     double meshsize;
     double lambda10n;
     double k0;

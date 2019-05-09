@@ -29,7 +29,7 @@ c     return scalar results
      $     Cext,Cabs,Csca,Cscai,gasym,irra, E0,
      $     forcet, forcem,
      $     couplet, couplem,
-     $     nxm, nym, nzm, nxmp, nymp, nzmp,
+     $     nxm, nym, nzm, nxmp, nymp, nzmp, nmaxpp,
      $     incidentfield, localfield, macroscopicfield,
      $     xs, ys, zs, xswf, yswf, zswf,
      $     ntheta, nphi, thetafield,phifield,poyntingfield,
@@ -85,7 +85,7 @@ c     variables for the object
      $     ,numberobjet,is,ng
       parameter (numberobjetmax=20)
       integer nx,ny,nz,nx2,ny2,nxy2,nz2,nxm,nym,nzm,nxmp,nymp,nzmp
-     $     ,ntotal,nxm2,nym2,nzm2,nxym2
+     $     ,ntotal,nxm2,nym2,nzm2,nxym2,nxmpp,nympp,nzmpp,nmaxpp
       integer subunit,nsubunit,comparaison
 c     definition of the size for the code
       INTEGER nmax, ntotalm
@@ -1351,8 +1351,6 @@ c     circulant matrix with a doble size.
       nxy2=nx2*ny2
       ntotal=8*nx*ny*nz      
 
-      nxm2=nxm*2
-      nym2=nym*2
 
 c     if the computation asked is rigourous then compute the Green
 c     function and its FFT
@@ -2092,19 +2090,17 @@ c     compte the size and edge of the box
          write(*,*) 'meshsize = ',aretecube
 c     compute new position of computation, dipole and incident field at
 c     the new grid
-         write(*,*) 'nx =',nx
-         write(*,*) 'ny =',ny
-         write(*,*) 'nz =',nz
-         kkm=(nxm-nx)/2
-         jjm=(nym-ny)/2
-         iim=(nzm-nz)/2
-         write(*,*) 'Lateral x',kkm
-         write(*,*) 'Lateral y',jjm
-         write(*,*) 'Lateral z',iim
-
+       
+         nxmpp=nx+2*nxmp
+         nympp=ny+2*nymp
+         nzmpp=nz+2*nzmp
+         nmaxpp=nxmpp*nympp*nzmpp
+         write(*,*) 'nx =',nx,'additional',nxmp,'total',nxmpp
+         write(*,*) 'ny =',ny,'additional',nymp,'total',nympp
+         write(*,*) 'nz =',nz,'additional',nzmp,'total',nzmpp
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)
-         do i=1,3*nmax
+         do i=1,3*nmaxpp
             xi(i)=0.d0
             xr(i)=0.d0
          enddo
@@ -2118,7 +2114,7 @@ c     initialize
          subunit=0
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)
-         do i=1,nmax            
+         do i=1,nmaxpp            
             polarisa(i,1,1)=1.d0
             polarisa(i,2,2)=1.d0
             polarisa(i,3,3)=1.d0
@@ -2133,8 +2129,8 @@ c     initialize
 !$OMP END PARALLEL
 
 c     verification que aucun z n'est sur l'interface
-         do i=1,nzm
-            z=zmin+dble(i-iim-1)*aretecube
+         do i=1,nzmpp
+            z=zmin+dble(i-nzmp-1)*aretecube
             do l=0,neps
                call comparaisonreel(z,zcouche(l),test)
                if (test.eq.0) then
@@ -2146,35 +2142,35 @@ c     verification que aucun z n'est sur l'interface
 
 c     write xyz wf for hdf5
          if (nmatf.eq.2) then
-            do i=1,nzm
-               zswf(i)=zmin+dble(i-iim-1)*aretecube
+            do i=1,nzmpp
+               zswf(i)=zmin+dble(i-nzmp-1)*aretecube
             enddo
-            do j=1,nym
-               yswf(j)=ymin+dble(j-jjm-1)*aretecube
+            do j=1,nympp
+               yswf(j)=ymin+dble(j-nymp-1)*aretecube
             enddo
-            do k=1,nxm
-               xswf(k)=xmin+dble(k-kkm-1)*aretecube
+            do k=1,nxmpp
+               xswf(k)=xmin+dble(k-nxmp-1)*aretecube
             enddo
-            dim(1)=nzm
+            dim(1)=nzmpp
             dim(2)=nmax
             datasetname='zwf'
             call hdf5write1d(group_idnf,datasetname,zswf,dim)
-            dim(1)=nym
+            dim(1)=nympp
             datasetname='ywf'
             call hdf5write1d(group_idnf,datasetname,yswf,dim)
-            dim(1)=nxm
+            dim(1)=nxmpp
             datasetname='xwf'
             call hdf5write1d(group_idnf,datasetname,xswf,dim)
             
          endif
 c     create the new vector position and memorize teh local field
-         do i=1,nzm
-            do j=1,nym
-               do k=1,nxm
+         do i=1,nzmpp
+            do j=1,nympp
+               do k=1,nxmpp
                   cntwf = cntwf + 1
-                  x=xmin+dble(k-kkm-1)*aretecube
-                  y=ymin+dble(j-jjm-1)*aretecube
-                  z=zmin+dble(i-iim-1)*aretecube
+                  x=xmin+dble(k-nxmp-1)*aretecube
+                  y=ymin+dble(j-nymp-1)*aretecube
+                  z=zmin+dble(i-nzmp-1)*aretecube
                   
                   zswf(cntwf) = z
                   yswf(cntwf) = y
@@ -2253,14 +2249,15 @@ c     Far field discretization
          close(67)
          close(68)
          close(69)
-
+         write(*,*) 'sub',subunit,nmaxpp
+         
 c     compute the incident field in the larger box in the case of the
 c     gaussian beam as all the points are computed in one shot.
-         
+
          if  (beam(1:11).eq.'gwavelinear') then
             call gaussiansurf(epscouche,zcouche,neps,nepsmax,k0,w0,
      $           xgaus,ygaus,zgaus,theta,phi,psi,E0,xswf,yswf,zswf,xr
-     $           ,aretecube,nxm,nym,nzm,subunit,nmax,nfft2d,nfft2d
+     $           ,aretecube,nxmpp,nympp,nzmpp,subunit,nmax,nfft2d,nfft2d
      $           ,Eimagexneg,Eimageyneg ,Eimagezneg,Eimagexpos
      $           ,Eimageypos,Eimagezpos,fluxinc ,fluxref ,fluxtrans,irra
      $           ,nstop,infostr,plan2b)
@@ -2268,18 +2265,18 @@ c            write(*,*) 'grosse boite',fluxinc ,fluxref ,fluxtrans,irra
          elseif  (beam(1:13).eq.'gwavecircular') then
             call gaussiansurfcirc(epscouche,zcouche,neps,nepsmax,k0,w0
      $           ,xgaus ,ygaus,zgaus,theta,phi,ss,E0,xswf,yswf,zswf,xr
-     $           ,aretecube ,nxm,nym,nzm,subunit,nmax,nfft2d,nfft2d
-     $           ,Eimagexneg ,Eimageyneg ,Eimagezneg,Eimagexpos
+     $           ,aretecube ,nxmpp,nympp,nzmpp,subunit,nmax,nfft2d
+     $           ,nfft2d ,Eimagexneg ,Eimageyneg ,Eimagezneg,Eimagexpos
      $           ,Eimageypos ,Eimagezpos ,fluxinc ,fluxref ,fluxtrans
      $           ,irra,nstop ,infostr,plan2b)
 c            write(*,*) 'grosse boite',fluxinc ,fluxref ,fluxtrans,irra
          elseif  (beam(1:7).eq.'speckle') then
             call specklesurf(epscouche,zcouche,neps,nepsmax,k0,E0
      $           ,numaperref,IR,xswf,yswf,zswf,xgaus ,ygaus,zgaus,psi,xr
-     $           ,aretecube,nxm,nym,nzm,nxm,nym,nzm,subunit,nmax,nfft2d
-     $           ,nfft2d,Eimagexneg ,Eimageyneg ,Eimagezneg,Eimagexpos
-     $           ,Eimageypos ,Eimagezpos,fluxinc ,fluxref ,fluxtrans
-     $           ,irra,nstop ,infostr,plan2b)
+     $           ,aretecube,nxmpp,nympp,nzmpp,nxm,nym,nzm,subunit,nmax
+     $           ,nfft2d ,nfft2d,Eimagexneg ,Eimageyneg ,Eimagezneg
+     $           ,Eimagexpos ,Eimageypos ,Eimagezpos,fluxinc ,fluxref
+     $           ,fluxtrans ,irra,nstop ,infostr,plan2b)
          endif
          
          
@@ -2347,6 +2344,9 @@ c     close Intensity of the incident field wide field
          close(139)
          write(*,*) 'Initialize plan for FFT for large field region'
 
+         nxm2=nxmpp*2
+         nym2=nympp*2
+         
          call dfftw_plan_dft_2d(planbn, nxm2,nym2,b11,b11,FFTW_BACKWARD
      $        ,FFTW_ESTIMATE)
          call dfftw_plan_dft_2d(planfn, nxm2,nym2,b11,b11,FFTW_FORWARD
@@ -2369,50 +2369,51 @@ c     $           ,nepsmax,dcouche,zcouche,epscouche,subunit,nmax ,n1m
 c     $           ,nzm,nbs,nmat,nmatim,Tabzn
             call fonctiongreensurfcomp(hcc,tolinit,epsabs,xswf,yswf,zswf
      $           ,aretecube,k0,neps,nepsmax,dcouche,zcouche,epscouche
-     $           ,subunit,nmax,n1m,nzm,nzm,nbs,nmat,nmatim,nplanm,Tabzn
-     $           ,a ,matind ,matindplan,matindice,matrange,nt)
+     $           ,subunit,nmax,n1m,nzm,nzmpp,nbs,nmat,nmatim,nplanm
+     $           ,Tabzn ,a ,matind ,matindplan,matindice,matrange,nt)
 
 c     compte FFT of the Green function
-            call fonctiongreensurffft(nxm,nym,nzm,nxm2,nym2,nxm,nym,n1m
-     $           ,nzm,nplanm,nmatim,nbs,ntotalm,aretecube,a,matind
-     $           ,matindplan,matindice,matrange,b11,b12,b13,b22,b23
-     $           ,b31,b32,b33,a11,a12,a13,a22,a23,a31,a32,a33,planbn)
+            call fonctiongreensurffft(nxmpp,nympp,nzmpp,nxm2,nym2,nxm
+     $           ,nym,n1m,nzm,nplanm,nmatim,nbs,ntotalm,aretecube,a
+     $           ,matind,matindplan,matindice,matrange,b11,b12,b13,b22
+     $           ,b23,b31,b32,b33,a11,a12,a13,a22,a23,a31,a32,a33
+     $           ,planbn)
          else
             
 c     write(*,*) 'fonction interp2',hcc,tolinit,epsabs,nxm,nym
 c     $           ,nzm,aretecube,k0,neps,nepsmax,dcouche,zcouche
 c     $           ,epscouche,subunit,nmax,n1m,nzm,nzm,nbs,nmat,nmatim
-            call  fonctiongreensurfcompinterp(hcc,tolinit,epsabs,nxm,nym
-     $           ,nzm,zswf,aretecube,k0,neps,nepsmax,dcouche,zcouche
-     $           ,epscouche,subunit,nmax,n1m,nzm,nzm,nbs,nmat,nmatim
-     $           ,nplanm,Tabzn,a,matind,matindplan,matindice,matrange
-     $           ,ninter ,ninterp,nt)
+            call  fonctiongreensurfcompinterp(hcc,tolinit,epsabs,nxmpp
+     $           ,nympp,nzmpp,zswf,aretecube,k0,neps,nepsmax,dcouche
+     $           ,zcouche,epscouche,subunit,nmax,n1m,nzm,nzmpp,nbs,nmat
+     $           ,nmatim,nplanm,Tabzn,a,matind,matindplan,matindice
+     $           ,matrange,ninter ,ninterp,nt)
 
-            call fonctiongreensurfinterpfft(nxm,nym,nzm,nxm2,nym2,nxm
-     $           ,nym,n1m,nzm,nplanm,nmatim,nbs,ntotalm,ninter,ninterp
-     $           ,aretecube,a,matind,matindplan,matindice,matrange,b11
-     $           ,b12,b13,b22,b23,b31,b32,b33,a11,a12,a13,a22,a23 ,a31
-     $           ,a32,a33,planbn)
+            call fonctiongreensurfinterpfft(nxmpp,nympp,nzmpp,nxm2,nym2
+     $           ,nxm,nym,n1m,nzm,nplanm,nmatim,nbs,ntotalm,ninter
+     $           ,ninterp,aretecube,a,matind,matindplan,matindice
+     $           ,matrange,b11,b12,b13,b22,b23,b31,b32,b33,a11,a12,a13
+     $           ,a22,a23 ,a31,a32,a33,planbn)
          endif
 c     produit ici de la matrice avec le vecteur
 c     write(*,*) 'FF fait',FF(1),FF(2),FF(3)
 
-         call produitfftmatvectsurplusboite(xi,xr,subunit,subunit,nxm
-     $        ,nym,nzm ,nxm2,nym2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
-     $        ,matindplan,b31,b32,b33,b11,b12,b13,a11,a12,a13 ,a22,a23
-     $        ,a31 ,a32 ,a33,planbn,planfn)
+         call produitfftmatvectsurplusboite(xi,xr,subunit,subunit,nxmpp
+     $        ,nympp,nzmpp,nxm2,nym2,nxm,nym,nzm,nzmpp,nplanm,ntotalm
+     $        ,nmax ,matindplan,b31,b32,b33,b11,b12,b13,a11,a12,a13 ,a22
+     $        ,a23 ,a31 ,a32 ,a33,planbn,planfn)
         
 c     remet la valeur du champ calculé précédemment dans l'objet quand
 c     on n'est pas en rigoureux.
          if (nrig.ne.0) then
             subunit=0
             l=1
-            do i=1,nzm
-               do j=1,nym
-                  do k=1,nxm
-                     x=xmin+dble(k-kkm-1)*aretecube
-                     y=ymin+dble(j-jjm-1)*aretecube
-                     z=zmin+dble(i-iim-1)*aretecube
+            do i=1,nzmpp
+               do j=1,nympp
+                  do k=1,nxmpp
+                     x=xmin+dble(k-nxmp-1)*aretecube
+                     y=ymin+dble(j-nymp-1)*aretecube
+                     z=zmin+dble(i-nzmp-1)*aretecube
                      subunit=subunit+1              
                      nsubunit=3*(subunit-1)
                      if (comparaison(x,y,z,xs(l),ys(l),zs(l)

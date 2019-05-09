@@ -40,7 +40,7 @@ int cdmlibsurf_( // input file cdm.in
 	double *irra, dcmplx *E0,
         double *opticalforce, double *opticalforcedensity,
         double *opticaltorque, double *opticaltorquedensity,
-        int *nxm, int *nym, int *nzm,  int *nxmp, int *nymp, int *nzmp,
+        int *nxm, int *nym, int *nzm,  int *nxmp, int *nymp, int *nzmp, int *nmaxpp,
         double *incidentfield, double *localfield, double *macroscopicfield,
 	double *xc, double *yc, double *zc, double *xcwf, double *ycwf, double *zcwf,
 	int *ntheta, int *nphi, double *thetafield, double *phifield, double *poyntingfield,

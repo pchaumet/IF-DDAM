@@ -331,9 +331,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     ntheta = options->getNtheta();
     nphi = options->getNphi();
 
-    
-    
-  if (options->getObject() == "cuboid (meshsize)" || options->getObject() == "random spheres (meshsize)" || options->getObject() == "inhomogeneous cuboid (meshsize)") {
+    if (options->getObject() == "cuboid (meshsize)" || options->getObject() == "random spheres (meshsize)" || options->getObject() == "inhomogeneous cuboid (meshsize)") {
       if (options->getNproche() !=2) {
 	nxm = options->getNxx();
 	nym = options->getNyy();
@@ -671,6 +669,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    int meshsubunits;
    double lambda10n;
    double k0;
+   int nmaxpp;
    double toleranceobtained;
    int numberofax1, numberofax2;
    double reflectivity;
@@ -737,7 +736,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
      return;
     }
    else
-     QLOG_INFO() << "Memory used=" << needed_mem << "MB (available memory="
+     QLOG_DEBUG() << "Memory used=" << needed_mem << "MB (available memory="
                  << available_mem << "MB)";
     
    incidentfield = run->getIncidentField();
@@ -868,7 +867,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
            &irra, &E0,
            opticalforce, &opticalforcedensity,
            opticaltorque, &opticaltorquedensity,
-           &nxm, &nym, &nzm, &nxmp, &nymp, &nzmp,
+           &nxm, &nym, &nzm, &nxmp, &nymp, &nzmp, &nmaxpp, 
            incidentfield, localfield, macroscopicfield,
 	   xc, yc, zc, xcwf, ycwf, zcwf, 
            &ntheta, &nphi, thetafield, phifield, poyntingfield, 
@@ -915,6 +914,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    run->setMeshSize(meshsize);
    run->setLambda10n(lambda10n);
    run->setK0(k0);
+   run->setNmaxpp(nmaxpp);
    run->setToleranceObtained(toleranceobtained);
    run->setNumberofAx1(numberofax1);
    run->setNumberofAx2(numberofax2);
@@ -936,7 +936,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    run->setOpticalTorquey(opticaltorque[1]);
    run->setOpticalTorquez(opticaltorque[2]);
    run->setOpticalTorqueModulus(opticaltorquedensity);
-//   QLOG_INFO() << "cdmlibwrapper> Thread finished";
+   QLOG_DEBUG() << "cdmlibwrapper> Thread finished" << run->getK0() << run->getNmaxpp();
 }
 void 
 RunWidget::displayFinishedBox()
@@ -954,13 +954,13 @@ RunWidget::displayResults()
    QLOG_INFO () << " RESULTS !!!";
  
    int nmax = options->getNxm()*options->getNym()*options->getNzm();
-   int nmaxs = (options->getNxm() - 1)*(options->getNym() - 1)*(options->getNzm() - 1);
    // calcul dimension des tenseurs surface
    int nplanm = options->getNzm()*(options->getNzm()+1)/2;
    int n1m = max(options->getNxm(),options->getNym());
    int nmatim = min(options->getNxm(),options->getNym())*(2*n1m-min(options->getNxm(),options->getNym()));
    int nbs = nmatim*options->getNzm()*options->getNzm();
    int nside = options->getNside();
+   int maxpp=run->getNmaxpp();
    QLOG_DEBUG () << " RESULTS1 !!!";
    // Scalar results
    QFrame *hsep0 = new QFrame(this);
@@ -1144,16 +1144,19 @@ RunWidget::displayResults()
    QPushButton *plotzforceButton = new QPushButton("Plot Z",this);
    connect(plotzforceButton, SIGNAL(clicked()), this, SLOT(plotzforce()));
    // CHECK DELTA OVER Xc,Yc,Zc, XcWF, YcWF, ZcWF
-   QLOG_DEBUG () << " RESULTS3 !!!" << run->getObjectSubunits();
+   int nmaxpp=run->getNmaxpp();
+   QLOG_DEBUG () << " RESULTS3 !!!" << run->getObjectSubunits() << nmaxpp;
    for (int i = 0 ; i < run->getObjectSubunits() ; i++) {
      if ( fabs(run->getXc()[i]) < DELTA ) run->getXc()[i] = 0;
      if ( fabs(run->getYc()[i]) < DELTA ) run->getYc()[i] = 0;
      if ( fabs(run->getZc()[i]) < DELTA ) run->getZc()[i] = 0;
    }
-   for (int i = 0 ; i < nmax ; i++) {
+   
+   for (int i = 0 ; i < nmaxpp ; i++) {
      if ( fabs(run->getXcWF()[i]) < DELTA ) run->getXcWF()[i] = 0;
      if ( fabs(run->getYcWF()[i]) < DELTA ) run->getYcWF()[i] = 0;
      if ( fabs(run->getZcWF()[i]) < DELTA ) run->getZcWF()[i] = 0;
+     QLOG_DEBUG () << " ZWF !!!" << run->getZcWF()[i];
    }
    QLOG_DEBUG () << " RESULTS4 !!!";
    // Plot X list
@@ -1180,7 +1183,7 @@ RunWidget::displayResults()
    }
    refx = run->getXcWF()[0];
    xwflist.append(refx);
-   for (int i = 0 ; i < nmax ; i++) {
+   for (int i = 0 ; i < nmaxpp ; i++) {
        bool exists = false;
        if ( run->getXcWF()[i] != refx) {
          for (int j = 0 ; j < xwflist.size() ; j++) {
@@ -1243,7 +1246,7 @@ RunWidget::displayResults()
    }
    refy = run->getYcWF()[0];
    ywflist.append(refy);
-   for (int i = 0 ; i < nmax ; i++) {
+   for (int i = 0 ; i < nmaxpp ; i++) {
        bool exists = false;
        if ( run->getYcWF()[i] != refy) {
          for (int j = 0 ; j < ywflist.size() ; j++) {
@@ -1302,7 +1305,7 @@ RunWidget::displayResults()
    }
    refz = run->getZcWF()[0];
    zwflist.append(refz);
-   for (int i = 0 ; i < nmax ; i++) {
+   for (int i = 0 ; i < nmaxpp ; i++) {
        bool exists = false;
        if ( run->getZcWF()[i] != refz) {
          for (int j = 0 ; j < zwflist.size() ; j++) {
@@ -2543,7 +2546,7 @@ RunWidget::plotAxislist(QString field, double *X, double *Y, double *Z,
      ytitle = "y(m)";
    }
 
-   QLOG_INFO() << "RunWidget::plotAxislist> NPROCHE " << options->getNproche();
+   QLOG_DEBUG() << "RunWidget::plotAxislist> NPROCHE " << options->getNproche();
        for (int i = 0 ; i < run->getObjectSubunits() ; i++) {
          if ( QString::number(Z[i],'g',8) == QString::number(refaxis,'g',8) ) {
            if (pos == 0) {
@@ -2626,7 +2629,8 @@ RunWidget::plotAxislist(QString field, double *X, double *Y, double *Z,
         num_colp->clear();
         cnt = pos = colp = ref_colp = 0;
         int nmax = options->getNxm() * options->getNym() * options->getNzm();
-        for (int i = 0 ; i < nmax ; i++) {
+	int nmaxpp=run->getNmaxpp();
+        for (int i = 0 ; i < nmaxpp ; i++) {
           if (QString::number(ZWF[i],'g',8) == QString::number(refaxis,'g',8)) {
            if (pos == 0) {
              refp = REFCOLWF[i];
@@ -2691,11 +2695,11 @@ RunWidget::plotAxislist(QString field, double *X, double *Y, double *Z,
      }
      num_colp->push_back(colp);
 
-     QLOG_INFO() << "Column number:" << colp;
-     QLOG_INFO() << " Points found:" << cnt;
-     QLOG_INFO() << " Max number of points found in line:" << ref_colp;
-     QLOG_INFO() << " Number of Points found:" << data->size();
-     QLOG_INFO() << " Number of lines:" << num_colp->size();
+     QLOG_DEBUG() << "Column number:" << colp;
+     QLOG_DEBUG() << " Points found:" << cnt;
+     QLOG_DEBUG() << " Max number of points found in line:" << ref_colp;
+     QLOG_DEBUG() << " Number of Points found:" << data->size();
+     QLOG_DEBUG() << " Number of lines:" << num_colp->size();
      int num_col3;
      if (field != "force" && field != "torque") {
       // Insert 0 values to complete matrix where necessary

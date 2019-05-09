@@ -16,7 +16,7 @@ c     variables for the object
 c     parameter (nxm=3,nym=3,nzm=3,nphi=72,ntheta=35)
       parameter (nxm=4,nym=4,nzm=4,nphi=72,ntheta=36)
 c     definition of the size for the code
-      INTEGER nmax, ntotalm
+      INTEGER nmax, ntotalm, nmaxpp
       character(2) polarizability
 c     variables for the positions
       double precision rayon,side,sidex,sidey ,sidez,hauteur
@@ -140,8 +140,8 @@ c     Creation des nouvelles variables
 c     variable pour avoir l'image a travers la lentille
       integer nquicklens,nlentille,nobjet,nfft2d,nfft2d2
       parameter (nfft2d=128)
-      double precision kx,ky,kz,deltakx,deltaky,numaper,deltax,gross
-     $     ,numaperinc,zlensr,zlenst
+      double precision kx,ky,kz,deltakx,deltaky,numaperref,numapertra
+     $     ,deltax,gross,numaperinc,zlensr,zlenst
       double precision kxy(nfft2d),xy(nfft2d)
       double complex Eimagexpos(nfft2d*nfft2d),Eimageypos(nfft2d*nfft2d)
      $     ,Eimagezpos(nfft2d*nfft2d),Eimageincxpos(nfft2d*nfft2d)
@@ -416,7 +416,8 @@ c*******************************************************
       nrig=0 ! 0 calcul rigoureusement le champ, 1 Born renormalise
       ninterp=0 ! niveau d'interpolation si tenseur non rigoureux
       ncote=1 ! 1 calcul des deux cotes le champ diffracté, 0 dessous, 2 dessus
-      numaper= 1.d0 ! ouverture numerique, 1 si on calcul des deux cotes
+      numaperref= 0.9d0! ouverture numerique mic. en reflexion
+      numapertra= 0.9d0! ouverture numerique mic en transmission
 c     nforce=1 ! calcul la force exercee par la lumiere sur l'objet
 c     nforced=1 ! calcul la densite de force dans l'objet
 c     ntorque=1 ! calcul le couple exerce par la lumiere sur l'objet
@@ -497,7 +498,7 @@ c     return scalar results
      $     Cext,Cabs,Csca,Cscai,gasym,irra, E0,
      $     forcet, forcem,
      $     couplet, couplem,
-     $     nxm, nym, nzm, nxmp, nymp, nzmp,
+     $     nxm, nym, nzm, nxmp, nymp, nzmp, nmaxpp,
      $     incidentfield, localfield, macroscopicfield,
      $     xs, ys, zs, xswf, yswf, zswf,
      $     ntheta, nphi, thetafield,phifield,poyntingfield,
@@ -516,7 +517,8 @@ c     return scalar results
      $     Eimageincxneg,Eimageincyneg,Eimageinczneg,
      $     Efourierxneg,Efourieryneg,Efourierzneg,
      $     Efourierincxneg,Efourierincyneg,Efourierinczneg,masque,
-     $     kxy,xy,numaper,numaperinc,gross,zlensr,zlenst,ntypemic,
+     $     kxy,xy,numaperref,numapertra,numaperinc,gross,zlensr,zlenst
+     $     ,ntypemic,
 c     passe certains arguments pour le dimensionnement
      $     n1m,nmatim,nplanm,nbs,
 c     fonction de green de la surface

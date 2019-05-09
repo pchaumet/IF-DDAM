@@ -1,4 +1,13 @@
 	--------------------------------------------------------------
+	version 0.3.9
+
+	1) En champ large fit exactement ce que le user demande.
+	2) mainsurf.f corrige pour aller avec le nouveau cdmlibsurf,
+	notament numaper ref et tra et nxmpp pour le champ large.
+	3) rajoutte dans la doc numaper ref et tra.
+
+
+	--------------------------------------------------------------
 	version 0.3.8
 
 	1) passe deux ouvertures numeriques dans l'interface graphique

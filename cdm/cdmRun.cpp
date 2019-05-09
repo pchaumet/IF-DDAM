@@ -1307,6 +1307,10 @@ Run::setMeshSubunits(int _meshsubunits){
   meshsubunits = _meshsubunits;
 }
 void 
+Run::setNmaxpp(int _nmaxpp){
+  nmaxpp = _nmaxpp;
+}
+void 
 Run::setMeshSize(double _meshsize){
   meshsize = _meshsize;
 }
@@ -1414,6 +1418,10 @@ Run::getObjectSubunits(){
 int
 Run::getMeshSubunits(){
   return meshsubunits;
+}
+int
+Run::getNmaxpp(){
+  return nmaxpp;
 }
 double
 Run::getMeshSize(){
