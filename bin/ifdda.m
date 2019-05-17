@@ -33,7 +33,8 @@ ntheta=h5read(namefileh5,'/Option/ntheta')
 niso=h5read(namefileh5,'/Option/iso')
 nfft=h5read(namefileh5,'/Option/nfft2d')
 k0=h5read(namefileh5,'/Option/k0')
-numaper=h5read(namefileh5,'/Option/numaper')
+numaperref=h5read(namefileh5,'/Option/numaper reflexion')
+numapertra=h5read(namefileh5,'/Option/numaper transmission')
 nprochefft=h5read(namefileh5,'/Option/nprochefft')
 nobjet=h5read(namefileh5,'/Option/nobjet')
 ncote=h5read(namefileh5,'/Option/nside')
@@ -63,14 +64,15 @@ ntheta=inputmatlab(14);         % ntheta
 niso=inputmatlab(15);           % 0 isotrope, 1 anisotrope
 nfft=inputmatlab(16);           % size of the FFT
 k0=inputmatlab(17);             % Wavenumber
-numaper=inputmatlab(18);        % Numerical aperture
-nprochefft=inputmatlab(19);     % =1 if wide field
-nobjet=inputmatlab(20);         % =1 do only the objet
-ncote=inputmatlab(21);          % =0 both side -1 neg et +1 pos
-indice0=inputmatlab(22);        % indice0
-indicen=inputmatlab(23);        % indicen
-ntypemic=inputmatlab(24);       % type microsocopy
-ntypefile=inputmatlab(25);      % mat file or hdf5 file
+numaperref=inputmatlab(18);     % Numerical aperture reflexion
+numapertra=inputmatlab(19);     % Numerical aperture transmission
+nprochefft=inputmatlab(20);     % =1 if wide field
+nobjet=inputmatlab(21);         % =1 do only the objet
+ncote=inputmatlab(22);          % =0 both side -1 neg et +1 pos
+indice0=inputmatlab(23);        % indice0
+indicen=inputmatlab(24);        % indicen
+ntypemic=inputmatlab(25);       % type microsocopy
+ntypefile=inputmatlab(26);      % mat file or hdf5 file
 
 if (ntypefile == 1);
 disp('Data files do not computed')
@@ -133,10 +135,10 @@ xmax=max(xc);
 pasx=(xmax-xmin)/(nx-1);
 ymin=min(yc);
 ymax=max(yc);
-pasy=(xmax-xmin)/(ny-1);
+pasy=(ymax-ymin)/(ny-1);
 zmin=min(zc);
 zmax=max(zc);
-pasz=(xmax-xmin)/(nz-1);
+pasz=(zmax-zmin)/(nz-1);
 x=xmin:pasx:xmax;
 y=ymin:pasy:ymax;
 z=zmin:pasz:zmax;
@@ -350,7 +352,9 @@ set(10,'DefaultTextfontWeight','Bold')
 set(10,'Position',[0 0 1000 600])
 
 
-
+x
+  y
+  z
 
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[400 570 210 20],'String','Plot incident field');
 
@@ -1092,7 +1096,7 @@ axis equal
 axis image
 
 hold on
-rectangle('Position',[-numaper -numaper 2*numaper 2*numaper],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
+rectangle('Position',[-numapertra -numapertra 2*numapertra 2*numapertra],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
 
 caxis([ 0 max(max(fourierm.^2))])
 shading interp
@@ -1107,12 +1111,12 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane scattered field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz>0')
 uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'Position', [460 550 150 30],...
-'Callback',{@plotfourierpos,numaper,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
+'Callback',{@plotfourierpos,numapertra,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
 
 
 
@@ -1136,7 +1140,7 @@ axis equal
 axis image
 
 hold on
-rectangle('Position',[-numaper -numaper 2*numaper 2*numaper],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
+rectangle('Position',[-numapertra -numapertra 2*numapertra 2*numapertra],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
 
 caxis([ 0 max(max(fourierincm.^2))])
 shading interp
@@ -1151,12 +1155,12 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane total field:')
 uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz>0')  
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'Position', [460 550 150 30],...
-'Callback',{@plotfourierincpos,numaper,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
+'Callback',{@plotfourierincpos,numapertra,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
 
 
 
@@ -1365,7 +1369,7 @@ axis equal
 axis image
 
 hold on
-rectangle('Position',[-numaper -numaper 2*numaper 2*numaper],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
+rectangle('Position',[-numaperref -numaperref 2*numaperref 2*numaperref],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
 
 caxis([ 0 max(max(fourierm.^2))])
 shading interp
@@ -1380,12 +1384,12 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane scattered field:')
 uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz<0')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaperref),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'Position', [460 550 150 30],...
-'Callback',{@plotfourierneg,numaper,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
+'Callback',{@plotfourierneg,numaperref,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
 
 
 
@@ -1409,7 +1413,7 @@ axis equal
 axis image
 
 hold on
-rectangle('Position',[-numaper -numaper 2*numaper 2*numaper],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
+rectangle('Position',[-numaperref -numaperref 2*numaperref 2*numaperref],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
 
 caxis([ 0 max(max(fourierincm.^2))])
 shading interp
@@ -1424,12 +1428,12 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[250 535 200 60],'String','Fourier plane total field:')
 uicontrol('Style','text','Fontsize',12,'Fontweight','bold','Position',[350 525 200 18],'String','Numerical aperture:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[600 560 100 20],'String','kz<0')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaper),'Position', [540 525 40 18]);
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numaperref),'Position', [540 525 40 18]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'Position', [460 550 150 30],...
-'Callback',{@plotfourierincneg,numaper,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
+'Callback',{@plotfourierincneg,numaperref,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
 
 
 

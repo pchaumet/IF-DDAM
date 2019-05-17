@@ -1,3 +1,13 @@
+	version 0.3.10
+
+
+	1) si relecture=1 alors ne recalcule pas la fonction de Green,
+	stocke maintenant le champ local et recalcule le dipole. Cela
+	permet d'avoir le champ local pour tracer le champ proche.
+	2) n'écrit pas NEAR FIELD si ne demande pas de champ proche.
+	3) Erreur dans ifdda.m pour calculer y et z.
+
+	
 	--------------------------------------------------------------
 	version 0.3.9
 
@@ -6,6 +16,8 @@
 	notament numaper ref et tra et nxmpp pour le champ large.
 	3) rajoutte dans la doc numaper ref et tra.
 
+	4) correction fichier matlab pour numaper tra et ref.
+	5) correction matlab numaper tra et ref multipliés par indice.
 
 	--------------------------------------------------------------
 	version 0.3.8
@@ -17,7 +29,7 @@
 	5) bug dans objet cylindre
 	6) Computation in progress comme message
 	7) rajoute si near field pas coche alors forcement nproche=0 dans
-	cdmRunwidget.cpp 
+	cdmRunwidget.cpp
 
 
 	-------------------------------------------------------------

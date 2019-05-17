@@ -1254,8 +1254,8 @@ c     cré le fichier de data pour connaitre les options pour matlab
       if (trope.eq.'ani') write(900,*) 1
       write(900,*) nfft2d
       write(900,*) k0
-      write(900,*) numaperref
-      write(900,*) numapertra
+      write(900,*) numaperref*indice0
+      write(900,*) numapertra*indicen
       write(900,*) nprochefft
       write(900,*) nobjet
       write(900,*) ncote
@@ -1317,9 +1317,11 @@ c     cré le fichier de data pour connaitre les options pour matlab
          datasetname='k0'
          call hdf5write1d(group_idopt,datasetname,k0,dim)
          datasetname='numaper reflexion'
-         call hdf5write1d(group_idopt,datasetname,numaperref,dim)
+         tmp=numaperref*indice0
+         call hdf5write1d(group_idopt,datasetname,tmp,dim)
          datasetname='numaper transmission'
-         call hdf5write1d(group_idopt,datasetname,numapertra,dim)
+         tmp=numapertra*indicen
+         call hdf5write1d(group_idopt,datasetname,tmp,dim)
          datasetname='nprochefft'
          call hdf5write1d_int(group_idopt,datasetname,nprochefft,dim)
          datasetname='nobjet'
@@ -1341,94 +1343,8 @@ c     ne fait que l'objet
          infostr='Dipole calculation completed'
          goto 999
       endif
-      
-c     multiplication by a factor 2: Toeplitz matrix transformed in a
-c     circulant matrix with a doble size.
-      nbsphere3=3*nbsphere
-      nx2=2*nx
-      ny2=2*ny
-      nz2=2*nz
-      nxy2=nx2*ny2
-      ntotal=8*nx*ny*nz      
 
-
-c     if the computation asked is rigourous then compute the Green
-c     function and its FFT
-      if (nrig.eq.0.or.nrig.eq.3) then
-
-         write(*,*) '*************************************************'      
-         write(*,*) '****** INITIALIZE PLAN FOR FFT ******************'
-         write(*,*) '*************************************************'
-         call dfftw_plan_dft_2d(planb,nx2,ny2,b11,b11,FFTW_BACKWARD
-     $        ,FFTW_ESTIMATE)
-         call dfftw_plan_dft_2d(planf,nx2,ny2,b11,b11,FFTW_FORWARD
-     $        ,FFTW_ESTIMATE)
-
-         write(*,*) '************* END PLAN **************************'
-         write(*,*) ' '
-
-         hcc=0.3d0
-         epsabs=0.d0
-         nt=1
-c     write(*,*) 'gree surf',hcc,tolinit,epsabs,aretecube,k0,neps
-c     $        ,nepsmax,dcouche,zcouche,epscouche,nbsphere ,nmax,n1m
-c     $        ,nplanm,nz,nbs,nmat,nmatim,nt 
-c     compute Green function (local field)
-         if (nobjet.eq.-1) then
-            write(*,*) '**********************************************'      
-            write(*,*) '**** DO NOT COMPUTE GREEN FUNCTION ***********'
-            write(*,*) '**********************************************'
-            goto 200
-         endif
-         write(*,*) '*************************************************'      
-         write(*,*) '**************** BEGIN GREEN FUNCTION ***********'
-         write(*,*) '*************************************************'
-         write(*,*) 'Interpolation',ninterp
-        
-         if (ninterp.eq.0) then
-
-c     write(*,*) 'fonction interp',hcc,tolinit,epsabs,aretecube,k0
-c     $           ,neps,nepsmax,nbsphere ,nmax ,n1m,nzm,nz,nbs,nmat
-c     $           ,nmatim,nplanm
-            call fonctiongreensurfcomp(hcc,tolinit,epsabs,xswf,yswf,zswf
-     $           ,aretecube,k0,neps,nepsmax,dcouche,zcouche,epscouche
-     $           ,ndipole ,nmax,n1m,nzm,nz,nbs,nmat,nmatim,nplanm,Tabzn
-     $           ,a ,matind ,matindplan,matindice,matrange,nt)
-c     write(*,*) 'xyz',xs(1),ys(1),zs(1)
-c     compte FFT of the Green function
-            call fonctiongreensurffft(nx,ny,nz,nx2,ny2,nxm,nym,n1m,nzm
-     $           ,nplanm,nmatim,nbs,ntotalm,aretecube,a,matind
-     $           ,matindplan,matindice,matrange,b11,b12,b13,b22 ,b23
-     $           ,b31,b32,b33,a11,a12,a13,a22,a23,a31,a32,a33,planb)
-         else
-c            write(*,*) 'fonction interp',hcc,tolinit,epsabs,nx,ny ,nz
-c     $           ,aretecube,k0,neps,nepsmax,dcouche,zcouche ,epscouche
-c     $           ,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim ,nplanm
-
-            call  fonctiongreensurfcompinterp(hcc,tolinit,epsabs,nx,ny
-     $           ,nz,zswf,aretecube,k0,neps,nepsmax,dcouche,zcouche
-     $           ,epscouche,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim
-     $           ,nplanm,Tabzn,a,matind,matindplan,matindice,matrange
-     $           ,ninter ,ninterp,nt)
-
-            call fonctiongreensurfinterpfft(nx,ny,nz,nx2,ny2,nxm,nym,n1m
-     $           ,nzm,nplanm,nmatim,nbs,ntotalm,ninter,ninterp,aretecube
-     $           ,a ,matind ,matindplan ,matindice ,matrange,b11,b12,b13
-     $           ,b22,b23 ,b31 ,b32,b33,a11 ,a12,a13 ,a22,a23,a31 ,a32
-     $           ,a33,planb)
-c     write(*,*) 'a11',a11
-         endif
-
-         write(*,*) '**************** END GREEN FUNCTION *************'
-         write(*,*) ' '
-         
-c     Compute the incident field at each subunit of the object
-         if (nstop == -1) then
-            infostr = 'Calculation cancelled after FFT Green function'
-            return
-         endif
-      endif
- 200  write(*,*) '*************************************************'      
+      write(*,*) '*************************************************'      
       write(*,*) '************** BEGIN INCIDENT FIELD *************'
       write(*,*) '*************************************************'
       write(*,*) 'Beam used  : ',beam
@@ -1827,6 +1743,15 @@ c     close Intensity of the incident field
          return
       endif
 
+c     multiplication by a factor 2: Toeplitz matrix transformed in a
+c     circulant matrix with a doble size.
+      nbsphere3=3*nbsphere
+      nx2=2*nx
+      ny2=2*ny
+      nz2=2*nz
+      nxy2=nx2*ny2
+      ntotal=8*nx*ny*nz      
+
       if (nlecture.eq.1) then
 c         write(*,*) 'relecture',filereread
          call relecturesurf(lambda,beam,object,trope,nnnr,tolinit, side,
@@ -1852,15 +1777,111 @@ c     reread the local field
                return
             else
                do i=1,nbsphere3
-                  read(1000) FF(i)
+                  read(1000) FFloc(i)
                enddo
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
+!$OMP DO SCHEDULE(STATIC)
+            do i=1,nbsphere
+               k=3*(i-1)
+               FF(k+1)=polarisa(i,1,1)*FFloc(k+1)+polarisa(i,1,2)
+     $              *FFloc(k+2)+polarisa(i,1,3)*FFloc(k+3)
+               FF(k+2)=polarisa(i,2,1)*FFloc(k+1)+polarisa(i,2,2)
+     $              *FFloc(k+2)+polarisa(i,2,3)*FFloc(k+3)
+               FF(k+3)=polarisa(i,3,1)*FFloc(k+1)+polarisa(i,3,2)
+     $              *FFloc(k+2)+polarisa(i,3,3)*FFloc(k+3)            
+            enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
+
             endif
             close(1000)
             goto 1000
          endif
       endif
 
-      if (nrig.eq.0) then
+      
+
+      write(*,*) 'nrig',nrig
+c     if the computation asked is rigourous then compute the Green
+c     function and its FFT
+      if (nrig.eq.0.or.nrig.eq.3) then
+
+         write(*,*) '*************************************************'      
+         write(*,*) '****** INITIALIZE PLAN FOR FFT ******************'
+         write(*,*) '*************************************************'
+         call dfftw_plan_dft_2d(planb,nx2,ny2,b11,b11,FFTW_BACKWARD
+     $        ,FFTW_ESTIMATE)
+         call dfftw_plan_dft_2d(planf,nx2,ny2,b11,b11,FFTW_FORWARD
+     $        ,FFTW_ESTIMATE)
+
+         write(*,*) '************* END PLAN **************************'
+         write(*,*) ' '
+
+         hcc=0.3d0
+         epsabs=0.d0
+         nt=1
+         write(*,*) 'nlec',nobjet,nlecture1
+c     write(*,*) 'gree surf',hcc,tolinit,epsabs,aretecube,k0,neps
+c     $        ,nepsmax,dcouche,zcouche,epscouche,nbsphere ,nmax,n1m
+c     $        ,nplanm,nz,nbs,nmat,nmatim,nt 
+c     compute Green function (local field)
+         if (nobjet.eq.-1.or.nlecture1.eq.1) then
+            write(*,*) '**********************************************'      
+            write(*,*) '**** DO NOT COMPUTE GREEN FUNCTION ***********'
+            write(*,*) '**********************************************'
+            goto 200
+         endif
+         write(*,*) '*************************************************'      
+         write(*,*) '**************** BEGIN GREEN FUNCTION ***********'
+         write(*,*) '*************************************************'
+         write(*,*) 'Interpolation',ninterp        
+         if (ninterp.eq.0) then
+
+c     write(*,*) 'fonction interp',hcc,tolinit,epsabs,aretecube,k0
+c     $           ,neps,nepsmax,nbsphere ,nmax ,n1m,nzm,nz,nbs,nmat
+c     $           ,nmatim,nplanm
+            call fonctiongreensurfcomp(hcc,tolinit,epsabs,xswf,yswf,zswf
+     $           ,aretecube,k0,neps,nepsmax,dcouche,zcouche,epscouche
+     $           ,ndipole ,nmax,n1m,nzm,nz,nbs,nmat,nmatim,nplanm,Tabzn
+     $           ,a ,matind ,matindplan,matindice,matrange,nt)
+c     write(*,*) 'xyz',xs(1),ys(1),zs(1)
+c     compte FFT of the Green function
+            call fonctiongreensurffft(nx,ny,nz,nx2,ny2,nxm,nym,n1m,nzm
+     $           ,nplanm,nmatim,nbs,ntotalm,aretecube,a,matind
+     $           ,matindplan,matindice,matrange,b11,b12,b13,b22 ,b23
+     $           ,b31,b32,b33,a11,a12,a13,a22,a23,a31,a32,a33,planb)
+         else
+c            write(*,*) 'fonction interp',hcc,tolinit,epsabs,nx,ny ,nz
+c     $           ,aretecube,k0,neps,nepsmax,dcouche,zcouche ,epscouche
+c     $           ,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim ,nplanm
+
+            call  fonctiongreensurfcompinterp(hcc,tolinit,epsabs,nx,ny
+     $           ,nz,zswf,aretecube,k0,neps,nepsmax,dcouche,zcouche
+     $           ,epscouche,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim
+     $           ,nplanm,Tabzn,a,matind,matindplan,matindice,matrange
+     $           ,ninter ,ninterp,nt)
+
+            call fonctiongreensurfinterpfft(nx,ny,nz,nx2,ny2,nxm,nym,n1m
+     $           ,nzm,nplanm,nmatim,nbs,ntotalm,ninter,ninterp,aretecube
+     $           ,a ,matind ,matindplan ,matindice ,matrange,b11,b12,b13
+     $           ,b22,b23 ,b31 ,b32,b33,a11 ,a12,a13 ,a22,a23,a31 ,a32
+     $           ,a33,planb)
+c     write(*,*) 'a11',a11
+         endif
+
+         write(*,*) '**************** END GREEN FUNCTION *************'
+         write(*,*) ' '
+         
+c     Compute the incident field at each subunit of the object
+         if (nstop == -1) then
+            infostr = 'Calculation cancelled after FFT Green function'
+            return
+         endif
+      endif
+
+      
+ 200  if (nrig.eq.0) then
 
          write(*,*) '*************************************************'      
          write(*,*) '************* SOLVE LINEAR SYSTEM ***************'
@@ -1900,19 +1921,6 @@ c            write(*,*) 'opt'
          if (nstop.eq.1) return
          
          if (nlecture.eq.1.and.nlecture1.eq.0) then
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
-!$OMP DO SCHEDULE(STATIC)
-            do i=1,nbsphere
-               k=3*(i-1)
-               FF(k+1)=polarisa(i,1,1)*FFloc(k+1)+polarisa(i,1,2)
-     $              *FFloc(k+2)+polarisa(i,1,3)*FFloc(k+3)
-               FF(k+2)=polarisa(i,2,1)*FFloc(k+1)+polarisa(i,2,2)
-     $              *FFloc(k+2)+polarisa(i,2,3)*FFloc(k+3)
-               FF(k+3)=polarisa(i,3,1)*FFloc(k+1)+polarisa(i,3,2)
-     $              *FFloc(k+2)+polarisa(i,3,3)*FFloc(k+3)            
-            enddo
-!$OMP ENDDO 
-!$OMP END PARALLEL
             
             file1='.lf'
             long = len( trim(filereread  ) )
@@ -1920,7 +1928,7 @@ c            write(*,*) 'opt'
             filereread1=filereread(1:long)//file1(1:long1)
             open(1000,file=filereread1,status='new',form='unformatted')
             do i=1,nbsphere3
-               write(1000) FF(i)
+               write(1000) FFloc(i)
             enddo
             close(1000)
          endif
@@ -2607,7 +2615,7 @@ c     close Intensity of the macroscopic field wide field
          endif
          write(*,*) '*************** END LARGE NEAR  FIELD ***********'
          write(*,*) ' '
-      else
+      elseif (nlocal+nmacro.ge.1) then
          write(*,*) '*************************************************'      
          write(*,*) '************* COMPUTE NEAR  FIELD ***************'
          write(*,*) '*************************************************'
@@ -2857,7 +2865,8 @@ c     Compute the extinction cross section and absorbing cross section
          Cext=0.d0   
          Cabs=0.d0
          tmp=dsqrt(dreal(epscouche(0)))
-
+         write(*,*) 'dip',FF,nbsphere
+         write(*,*) 'inc',FF0
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,kk)   
 !$OMP DO SCHEDULE(STATIC) REDUCTION(+:Cext,Cabs)  
          do i=1,nbsphere
@@ -3679,7 +3688,7 @@ c     gamma)
      $           ,dasin(numapertra)*180.d0/pi
          endif
 
-         if (nprochefft.ge.1.and.ntypemic.ne.0) then
+         if (ntypemic.ne.0.and.(nprochefft.ge.1.or.nlecture1.eq.1)) then
             write(*,*)
      $           'recompute Green function if large far field used'
             if (ninterp.eq.0) then
