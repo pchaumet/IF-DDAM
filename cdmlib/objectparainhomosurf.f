@@ -105,10 +105,6 @@ c     discretization of the object under study
          return
       endif
       
-      write (*,*) 'na = ',na
-      write (*,*) 'nnnr = ',nnnr
-      write (*,*) 'pola = ',methode
-      
 c     verfie si on est bien multiple de 2 3 5 pour la discretisation,
 c     car ma FFT est basee sur une decomposition en nombre premier de 2
 c     3 5. Si on utilisait FFTW ceci disparaitrait.
@@ -132,7 +128,7 @@ c     test si l'objet est sur une couche ou plusieurs
       zmin=zg-sidez/2.d0
       nminc=numerocouche(zmin,neps,nepsmax,zcouche)
       nmaxc=numerocouche(zmax,neps,nepsmax,zcouche)
-      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
+c      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
       if (nmaxc-nminc.ge.1) then
 c     shift the layers
          do k=nminc,nmaxc-1           
@@ -145,7 +141,7 @@ c     shift the layers
          enddo
       endif
 
-      write(*,*) 'obj2',nminc,nmaxc,zg
+c      write(*,*) 'obj2',nminc,nmaxc,zg
       lx=dble(nx)*aretecube
       ly=dble(ny)*aretecube
       lz=dble(nz)*aretecube
@@ -209,7 +205,7 @@ c     Profil des hauteurs
       moyenne=moyenne/dble(nk)
       ecartype=ecartype/dble(nk)
     
-      write(*,*) 'moyenne',moyenne,ecartype
+c      write(*,*) 'moyenne',moyenne,ecartype
       do i=1,nz
          do j=1,ny
             do k=1,nx

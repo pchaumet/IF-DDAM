@@ -351,11 +351,6 @@ set(10,'DefaultTextfontSize',12)
 set(10,'DefaultTextfontWeight','Bold')
 set(10,'Position',[0 0 1000 600])
 
-
-x
-  y
-  z
-
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[400 570 210 20],'String','Plot incident field');
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...

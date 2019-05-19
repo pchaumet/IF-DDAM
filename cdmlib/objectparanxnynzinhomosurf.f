@@ -39,7 +39,6 @@
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
       
-      write(*,*) 'inhomogenous cuboid',eps
 c     Initialization
       nbsphere=0
       ndipole=0
@@ -95,7 +94,7 @@ c     discretization of the object under study
       open(10,file='xc.mat')
       open(11,file='yc.mat')
       open(12,file='zc.mat')  
-      write(*,*) 'object',sidex,sidey,sidez
+
       if (sidex.eq.0.d0) then
          nstop=1
          infostr='object cuboid: sidex=0!'
@@ -110,9 +109,9 @@ c     discretization of the object under study
          return
       endif
       
-      write (*,*) 'na = ',na
-      write (*,*) 'nnnr = ',nnnr
-      write (*,*) 'pola = ',methode
+c      write (*,*) 'na = ',na
+c      write (*,*) 'nnnr = ',nnnr
+c      write (*,*) 'pola = ',methode
       
 c     verfie si on est bien multiple de 2 3 5 pour la discretisation,
 c     car ma FFT est basee sur une decomposition en nombre premier de 2
@@ -132,7 +131,7 @@ c     test si l'objet est sur une couche ou plusieurs
       zmin=zg-sidez/2.d0
       nminc=numerocouche(zmin,neps,nepsmax,zcouche)
       nmaxc=numerocouche(zmax,neps,nepsmax,zcouche)
-      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
+c      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
       if (nmaxc-nminc.ge.1) then
 c     shift the layers
          do k=nminc,nmaxc-1           
@@ -145,7 +144,7 @@ c     shift the layers
          enddo
       endif
 
-      write(*,*) 'obj2',nminc,nmaxc,zg
+c      write(*,*) 'obj2',nminc,nmaxc,zg
       lx=dble(nx)*aretecube
       ly=dble(ny)*aretecube
       lz=dble(nz)*aretecube
@@ -209,7 +208,6 @@ c     Profil des hauteurs
       moyenne=moyenne/dble(nk)
       ecartype=ecartype/dble(nk)
     
-      write(*,*) 'moyenne',moyenne,ecartype
       do i=1,nz
          do j=1,ny
             do k=1,nx

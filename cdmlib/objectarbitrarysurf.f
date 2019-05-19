@@ -35,7 +35,6 @@ c     Initialization
       epsilon=0.d0
       dddis=1
       inv=1
-      write(*,*) 'coucou arbitraire'
 c     mesh 
       open(20,file='x.mat')
       open(21,file='y.mat')
@@ -54,7 +53,6 @@ c     read the input file
       read(15,*) nx,ny,nz
       read(15,*) aretecube
       aretecube=aretecube*1.d-9
-      write(*,*) 'eeee',nx,ny,nz,aretecube
       ndipole=nx*ny*nz
       if (ndipole.gt.nmax) then
          write(*,*) 'Size of the parameter too small',ndipole
@@ -90,7 +88,8 @@ c               write(*,*) 'xyzn',xs(ii),ys(ii),zs(ii),ii
       zmax=zmax+aretecube/2.d0
       nminc=numerocouche(zmin,neps,nepsmax,zcouche)
       nmaxc=numerocouche(zmax,neps,nepsmax,zcouche)
-      write(*,*) 'ff',zmin,zmax,nminc,nmaxc
+      write(*,*) 'position of the z minimum:',zmin
+      write(*,*) 'position of the z maximum:',zmax
       if (nmaxc-nminc.ge.2) then
          infostr='object inside three differents layers'
          nstop=1
@@ -102,9 +101,11 @@ c     compute the position of down subunit
          zg=aretecube*nint(z/aretecube+0.5d0)-z-aretecube/2.d0
          write(*,*) z,zg
       endif
-      write(*,*)'You choose an arbitrary object that you define'
-      write(*,*)'The code assumes that you define correctly' 
-      write(*,*)'a cubic lattice for your object'
+      write(*,*) '**********************************************'
+      write(*,*) 'You choose an arbitrary object that you define'
+      write(*,*) 'The code assumes that you define correctly' 
+      write(*,*) 'a cubic lattice for your object'
+      write(*,*) '**********************************************'
       nx1=nx
       ny1=ny
       nz1=nz

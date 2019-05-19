@@ -27,7 +27,6 @@
       integer :: dim(4)
       integer error
       
-      write (*,*) 'pola0 = ',methode
 c     Initialization
       nbsphere=0
       ndipole=0 
@@ -78,10 +77,10 @@ c     discretization of the object under study
          infostr='object sphere: radius=0!'
          return
       endif
-      write (*,*) 'na = ',na
-      write (*,*) 'nnnr = ',nnnr
-      write (*,*) 'pola = ',methode
-      write(*,*) 'trop',trope
+c      write (*,*) 'na = ',na
+c      write (*,*) 'nnnr = ',nnnr
+c      write (*,*) 'pola = ',methode
+c      write(*,*) 'trop',trope
 c     verfie si on est bien multiple de 2 3 5 pour la discretisation,
 c     car ma FFT est basee sur une decomposition en nombre premier de 2
 c     3 5. Si on utilisait FFTW ceci disparaitrait.

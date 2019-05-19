@@ -16,7 +16,4 @@ c     F=4 pi eps_0 E^2= 4 pi eps_0 2 I/(eps_0 c)=8 pi I/c
       surf=w0*w0*pi
       Irra=P0/surf
       E0=dsqrt(2.d0*Irra/c/eps0/dreal(cdsqrt(eps)))*(1.d0,0.d0)
-      write(*,*) 'power',P0
-      write(*,*) 'waist',w0,'surf',surf
-      write(*,*) 'Irradiance',Irra
       end

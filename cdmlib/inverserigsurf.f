@@ -23,7 +23,7 @@
      $     *nxm*nym),b33(4*nxm*nym)
       double complex, dimension(nxm*nym*nzm,3,3) :: polarisa
 
-      character(64) infostr
+      character(64) infostr,message
       character(12) methodeit
 c     ********************
       integer i,nlim,nbsphere3,ndim,nou,nstat,steperr,nt
@@ -757,14 +757,12 @@ c     compute the Residue
 
       call cpu_time(t2)
       call date_and_time(date,time,zone,values2)
-      write(*,*) 'CPU time to solve Ax=b in second  : ',t2-t1
-      write(*,*) 'Real time to solve Ax=b in second : ',(values2(5)
-     $     -values(5))*3600.d0+(values2(6)-values(6))*60.d0+(values2(7)
-     $     -values(7))+(values2(8)-values(8))/1000.d0
+      message='to solve Ax=b'
+      call calculatedate(values2,values,t2,t1,message)
 
       write(*,*) 'Method iterative used             : ',methodeit
       write(*,*) 'Tolerance obtained                : ',tol1
       write(*,*) 'Tolerance asked                   : ',tol
       write(*,*) 'Number of product Ax needs        : ',ncompte
-      
+    
       end

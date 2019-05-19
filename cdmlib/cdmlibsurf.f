@@ -114,7 +114,7 @@ c     variables for the material
       character(2) polarizability
       character (64), DIMENSION(numberobjetmax) :: materiaumulti
       character(64) materiau,object,beam,namefileobj,namefileinc
-     $     ,filereread,filereread1
+     $     ,filereread,filereread1,message
       character(3) trope,file1
 c     variables for the incident field and local field
       DOUBLE PRECISION, DIMENSION(nxm*nym*nzm) :: incidentfield,
@@ -235,9 +235,10 @@ c     variable pour avoir l'image a travers la lentille
      $     ,Efourierincyneg(nfft2d*nfft2d),Efourierinczneg(nfft2d
      $     *nfft2d)
       integer iret,omp_get_max_threads
+c     declaration pour FFT
       integer*8 planf,planb,plan2f,plan2b,planfn,planbn
       integer FFTW_FORWARD,FFTW_ESTIMATE,FFTW_BACKWARD
-
+c     declaration pour HDF5
       character(40) :: name
       character(LEN=100) :: h5file
       character(LEN=100) :: datasetname
@@ -248,8 +249,12 @@ c     variable pour avoir l'image a travers la lentille
       integer(hid_t) :: group_idopt,group_idmic,group_idnf,group_idof
      $     ,group_idff,group_iddip
       integer :: dim(4)
-  
-      
+c     declaration calcul temps
+      character(8)  :: date
+      character(10) :: time
+      character(5)  :: zone
+      integer values(8),values2(8)
+
       call dfftw_init_threads(iret)
       if (iret.eq.0) then
          write(*,*) 'iret',iret
@@ -292,7 +297,7 @@ c     convergee.
       write(*,*) 'Local field      : ',nlocal,':1 compute local field'
       write(*,*) 'Macroscopic field: ',nmacro,':1 compute mac. field'
       write(*,*) 'Cross section    : ',nsection,'Csca',ndiffracte
-      write(*,*) 'Quick cross section : ',nquickdiffracte,'FFT used'
+      write(*,*) 'Quick cross sec. : ',nquickdiffracte,'FFT used'
       write(*,*) 'Emissivity       : ',nenergie,':1 compute energy'
       write(*,*) 'Lens             : ',nlentille,':1 compute microscopy'
       write(*,*) 'Quick Lens       : ',nquicklens,'FFT used'
@@ -313,26 +318,21 @@ c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
       write(*,*) 'Meshsize         : ',aretecube,'nm'
       write(*,*) 'Number of layer  : ',neps
       write(*,*) 'Write  file      : ',nmatf
-     $     ,'0 ascii file: 1 no file: 2 hdf5 file'
+     $     ,':0 ascii file: 1 no file: 2 hdf5 file'
       write(*,*) 'Use FFTW'
 
       if (nmatf.eq.2) then
          debug=1
          call hdf5create(h5file, file_id)
-         write(*,*) 'h5 file created  ',h5file
-         write(*,*) 'file_id', file_id
+         write(*,*) 'h5 file created :',h5file
+         write(*,*) 'file_id         :', file_id
          call h5gcreate_f(file_id,"Option", group_idopt, error)
-         write(*,*) 'error',error
          call h5gcreate_f(file_id,"Object", group_iddip, error)
-         write(*,*) 'error',error
          call h5gcreate_f(file_id,"Far Field", group_idff, error)
-         write(*,*) 'error',error
          call h5gcreate_f(file_id,"Microscopy", group_idmic, error)
-         write(*,*) 'error',error
 c         call h5gcreate_f(file_id,"Optical Force", group_idof, error)
 c         write(*,*) 'error',error
          call h5gcreate_f(file_id,"Near Field", group_idnf, error)
-         write(*,*) 'error',error
       endif
 
 
@@ -354,9 +354,10 @@ c     arret de suite si pas assez de place pour propa
          tmp=dble(i)/(aint(dsqrt(dble(nxm*nym+nym*nym))+1.d0)
      $        *dble(ninterp))
          write(*,*) '************* Green function ***************'
-         write(*,*) 'Rigorous: Number of Green function',i
-         write(*,*) 'Level',ninterp,'Number of Green function'
-     $        ,(aint(dsqrt(dble(nxm*nym+nym*nym))+1.d0))*ninterp
+         write(*,*) 'Rigorous: Number of Green function :',i
+         write(*,*) 'Interpolation Level                :',ninterp
+         write(*,*) 'Number of Green function           :'
+     $        ,nint((aint(dsqrt(dble(nxm*nym+nym*nym))+1.d0))*ninterp)
          if (tmp.le.1.d0) then
             infostr='Not enough space: decrease ninterp'
             nstop=-1
@@ -773,7 +774,6 @@ c     look  for compute near field with FFT
       if (nquickdiffracte.eq.1.and.nproche.eq.-1) nproche=0
       if (beam(1:5).eq.'gwave'.and.nproche.eq.-1) nproche=0
       nprochefft=0
-      write(*,*) 'nproche',nproche
 
 c     test si wide field demandé
       if (nproche.ge.1) then
@@ -925,7 +925,6 @@ c     Built the object
      $        ,polarisa,neps,nepsmax ,dcouche,zcouche,epscouche,tabzn
      $        ,nmatf,file_id,group_iddip,infostr,nstop)
          write(99,*) 'arbitrary',nbsphere,ndipole,nx,ny,nz
-         write(*,*) 'arbitrary',nbsphere,ndipole,nx,ny,nz
       else
          write(99,*) 'Object unknown'
          write(*,*) 'object',object
@@ -1118,6 +1117,9 @@ c     epsilon
 
 c     calcul le imaxk0 et le deltakx et deltax pour energy, microscopy etc...
       if (nenergie+nlentille.ge.1) then
+         write(*,*) '**************************************************'
+         write(*,*) '*********** INITIALIZE NB OF PT IN NA ************'
+         write(*,*) '**************************************************'
          if (nquickdiffracte.eq.0) then
             write(*,*) 'Computation of delta k and delta x'
             write(*,*) 'for the diffracted field with slow method'
@@ -1171,10 +1173,14 @@ c     calcul le imaxk0 et le deltakx et deltax pour energy, microscopy etc...
                return
             endif
          endif
+         write(*,*) ' *************************************************'
       endif
 
 c     Changement angle si microscopy
       if (nlentille.eq.1) then
+         write(*,*) '**************************************************'
+         write(*,*) '********** INITIALIZE ANGLE OF INCIDENCE *********'
+         write(*,*) '**************************************************'
          if (beam(1:11).eq.'pwavelinear' .or. beam(1:13).eq
      $        .'pwavecircular') then
             write(*,*) 'Angle of incidence asked:', theta,phi
@@ -1195,7 +1201,7 @@ c     Changement angle si microscopy
             write(*,*) 'If the new values are too far from the previous'
             write(*,*) 'increase the size of the FFT'
          endif
-      
+         write(*,*) ' *************************************************'
       endif
 
 
@@ -1367,7 +1373,10 @@ c     ne fait que l'objet
          write(99,*) 'pol2=',ss
 c     compute E0
          call irradiancesurf(P0,w0,E0,irra,epscouche(0))
-         write(*,*) 'power',P0,'waist',w0,'field',E0,'irradiance',irra
+         write(*,*) 'Power     :',P0
+         write(*,*) 'Waist     :',w0
+         write(*,*) 'Field     :',E0
+         write(*,*) 'Irradiance:',irra
          I0=cdabs(E0)**2
 c     write(*,*) 'champ',epscouche,zcouche,neps,nepsmax,k0,E0,ss,pp
 c     $        ,theta,phi
@@ -1388,7 +1397,10 @@ c     $        ,theta,phi
          write(99,*) 'pol=',ss
 c     compute E0
          call irradiancesurf(P0,w0,E0,irra,epscouche(0))
-         write(*,*) 'power',P0,'waist',w0,'field',E0,'irradiance',irra
+         write(*,*) 'Power     :',P0
+         write(*,*) 'Waist     :',w0
+         write(*,*) 'Field     :',E0
+         write(*,*) 'Irradiance:',irra
 
          I0=cdabs(E0)**2
 
@@ -1450,7 +1462,7 @@ c     $        ,nmax,nfft2d,nfft2d
 c     write(*,*) 'champ',FF0
 c     remet tout a l'echelle pour respecter la consigne de la puissance
 c     incidente
-         write(*,*) 'Incident flux',fluxinc,'power',P0
+         write(*,*) 'Power',P0
          tmp=P0/fluxinc
 c     tmp=1.d0
          fluxref=fluxref*tmp
@@ -1802,7 +1814,6 @@ c     reread the local field
 
       
 
-      write(*,*) 'nrig',nrig
 c     if the computation asked is rigourous then compute the Green
 c     function and its FFT
       if (nrig.eq.0.or.nrig.eq.3) then
@@ -1821,7 +1832,6 @@ c     function and its FFT
          hcc=0.3d0
          epsabs=0.d0
          nt=1
-         write(*,*) 'nlec',nobjet,nlecture1
 c     write(*,*) 'gree surf',hcc,tolinit,epsabs,aretecube,k0,neps
 c     $        ,nepsmax,dcouche,zcouche,epscouche,nbsphere ,nmax,n1m
 c     $        ,nplanm,nz,nbs,nmat,nmatim,nt 
@@ -1835,7 +1845,9 @@ c     compute Green function (local field)
          write(*,*) '*************************************************'      
          write(*,*) '**************** BEGIN GREEN FUNCTION ***********'
          write(*,*) '*************************************************'
-         write(*,*) 'Interpolation',ninterp        
+         write(*,*) 'Interpolation',ninterp  
+         call cpu_time(t1)
+         call date_and_time(date,time,zone,values)
          if (ninterp.eq.0) then
 
 c     write(*,*) 'fonction interp',hcc,tolinit,epsabs,aretecube,k0
@@ -1869,7 +1881,10 @@ c     $           ,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim ,nplanm
      $           ,a33,planb)
 c     write(*,*) 'a11',a11
          endif
-
+         call cpu_time(t2)
+         call date_and_time(date,time,zone,values2)
+         message='to cumpute Green function'
+         call calculatedate(values2,values,t2,t1,message)
          write(*,*) '**************** END GREEN FUNCTION *************'
          write(*,*) ' '
          
@@ -2621,7 +2636,7 @@ c     close Intensity of the macroscopic field wide field
          write(*,*) '*************************************************'
          subunit=0
          if (nlocal.eq.1) then
-            write(*,*) 'compute local field',nmatf
+            write(*,*) 'compute local field'
             if (nmatf.eq.0) then
                do i=1,ndipole
                   k=tabdip(i)
@@ -2865,8 +2880,6 @@ c     Compute the extinction cross section and absorbing cross section
          Cext=0.d0   
          Cabs=0.d0
          tmp=dsqrt(dreal(epscouche(0)))
-         write(*,*) 'dip',FF,nbsphere
-         write(*,*) 'inc',FF0
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,kk)   
 !$OMP DO SCHEDULE(STATIC) REDUCTION(+:Cext,Cabs)  
          do i=1,nbsphere
@@ -2922,13 +2935,11 @@ c     compute the scattering cross section
             tmp=dsqrt(dreal(epscouche(0)))
             CALL CALLBHMIE(tmp,eps,rayon,lambda,MIECEXT ,MIECABS,MIECSCA
      $           ,GSCA)
-            write(*,*) 'rr',tmp,eps,rayon,lambda,MIECEXT ,MIECABS
-     $           ,MIECSCA,GSCA
             write(*,*) 'Comparison with Mie s series'
-            write(*,*) 'Cext error in %',(Cext-MIECEXT)/MIECEXT*100.d0
-            write(*,*) 'Csca error in %',(Csca-MIECSCA)/MIECSCA*100.d0
+            write(*,*) 'Cext error in % :',(Cext-MIECEXT)/MIECEXT*100.d0
+            write(*,*) 'Csca error in % :',(Csca-MIECSCA)/MIECSCA*100.d0
             if (Cabs.ne.0.d0) then
-               write(*,*) 'Cabs error in %',(Cabs-MIECABS) / MIECABS
+               write(*,*) 'Cabs error in % :',(Cabs-MIECABS) / MIECABS
      $              *100.d0
             endif
          endif
@@ -3761,7 +3772,8 @@ c     gamma)
      $           ,infostr)
          else
             write(*,*) 'holographic microscopy'
-            
+            call cpu_time(t1)
+            call date_and_time(date,time,zone,values)
          if (nquickdiffracte.eq.1) deltax=aretecube
 c     reduit l'ouverture numérique a numaper
          if (ncote.eq.0.or.ncote.eq.-1) then  
@@ -4144,6 +4156,11 @@ c     sauve le champ dans le plan image.
             endif
          endif
          
+         call cpu_time(t2)
+         call date_and_time(date,time,zone,values2)
+         message='to compute holography'
+         call calculatedate(values2,values,t2,t1,message)
+
 c     sauve les coordonnees cartesiennes:
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)  
