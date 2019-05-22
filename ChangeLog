@@ -3,8 +3,14 @@
 	1) arrange les write
 	2) ajoute routine de calcul du temps en tenant compte du jour+
 	ajout pour function Green et holography.
-	
 
+	3) champ macro et champ local change pour mise en mémoire hdf5 et
+	trace le champ sur l'interface graphique.
+	4) erreur dans produitfftmatvectsurplusboite nzmpp passe en nzm.
+	5) Correction dans le titre
+	6) correction pola LDR dans version anglais.
+
+	
 	--------------------------------------------------------------
 	version 0.3.10
 

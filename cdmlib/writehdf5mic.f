@@ -14,7 +14,7 @@
       integer :: dim(4)
 
      
-      write(*,*) 'name',name,trim(name),'xx',ntest
+      write(*,*) 'h5 name to save microscopy',name,trim(name)
 
       
       if (ntest.eq.0) then
@@ -79,9 +79,6 @@
          datasetname=trim(name)//" field modulus"        
          call hdf5write1d(group_idmic,datasetname,dreal(Ediff(:,1)),dim)
 
-         write(*,*) 'rffr',datasetname,imaxk0,(2*imaxk0+1)**2,nfft2d
-     $        *nfft2d
-      
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,k)   
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)
          do j=-imaxk0,imaxk0

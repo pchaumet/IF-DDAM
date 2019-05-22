@@ -2422,7 +2422,7 @@ c     produit ici de la matrice avec le vecteur
 c     write(*,*) 'FF fait',FF(1),FF(2),FF(3)
 
          call produitfftmatvectsurplusboite(xi,xr,subunit,subunit,nxmpp
-     $        ,nympp,nzmpp,nxm2,nym2,nxm,nym,nzm,nzmpp,nplanm,ntotalm
+     $        ,nympp,nzmpp,nxm2,nym2,nxm,nym,nzm,nzm,nplanm,ntotalm
      $        ,nmax ,matindplan,b31,b32,b33,b11,b12,b13,a11,a12,a13 ,a22
      $        ,a23 ,a31 ,a32 ,a33,planbn,planfn)
         
@@ -2660,50 +2660,6 @@ c     close Intensity of the macroscopic field wide field
                      write(43,*) 0.d0
                   endif
                enddo
-            elseif (nmatf.eq.2) then
-               write(*,*) 'coucou'
-               do i=1,ndipole
-                  k=tabdip(i)
-                  if (k.ne.0) then
-                     ii=3*(k-1)
-                     wrk(i,1)=FFloc(ii+1)
-                     wrk(i,2)=FFloc(ii+2)
-                     wrk(i,3)=FFloc(ii+3)
-                     wrk(i,4)= dsqrt(dreal(FFloc(ii+1) *dconjg(FFloc(ii
-     $                    +1))+FFloc(ii+2) *dconjg(FFloc(ii +2))
-     $                    +FFloc(ii+3) *dconjg(FFloc(ii+3))))
-                 
-                  else
-                     wrk(i,1)=0.d0
-                     wrk(i,2)=0.d0
-                     wrk(i,3)=0.d0
-                     wrk(i,4)=0.d0 
-                  endif
-               enddo
-               dim(1)=ndipole
-               dim(2)=nmax*3
-               datasetname='Local field modulus'
-               call hdf5write1d(group_idnf,datasetname,dreal(wrk(:,4)),
-     $              dim)
-               datasetname='Local field x component real part'
-               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,1))
-     $              ,dim)
-               datasetname='Local field x component imaginary part'
-               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,1))
-     $              ,dim)
-               datasetname='Local field y component real part'
-               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,2))
-     $              ,dim)
-               datasetname='Local field y component imaginary part'
-               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,2))
-     $              ,dim)
-               datasetname='Local field z component real part'
-               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,3))
-     $              ,dim)
-               datasetname='Local field z component imaginary part'
-               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,3))
-     $              ,dim)
-                 
             else
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k,ii)   
 !$OMP DO SCHEDULE(STATIC)
@@ -2722,6 +2678,54 @@ c     close Intensity of the macroscopic field wide field
                enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL                 
+
+               if (nmatf.eq.2) then
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
+!$OMP DO SCHEDULE(STATIC)
+                  do i=1,ndipole
+                     k=tabdip(i)
+                     if (k.ne.0) then
+                        wrk(i,1)=localfieldx(k)
+                        wrk(i,2)=localfieldy(k)
+                        wrk(i,3)=localfieldz(k)
+                        wrk(i,4)= dsqrt(dreal(localfieldx(k)
+     $                       *dconjg(localfieldx(k))+localfieldy(k)
+     $                       *dconjg(localfieldy(k))+localfieldz(k)
+     $                       *dconjg(localfieldz(k))))
+                     else
+                        wrk(i,1)=0.d0
+                        wrk(i,2)=0.d0
+                        wrk(i,3)=0.d0
+                        wrk(i,4)=0.d0 
+                     endif
+                  enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL 
+                  dim(1)=ndipole
+                  dim(2)=nmax*3
+                  datasetname='Local field modulus'
+                  call hdf5write1d(group_idnf,datasetname,dreal(wrk(:,4)
+     $                 ),dim)
+                  datasetname='Local field x component real part'
+                  call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,1)
+     $                 ),dim)
+                  datasetname='Local field x component imaginary part'
+                  call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,1)
+     $                 ),dim)
+                  datasetname='Local field y component real part'
+                  call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,2)
+     $                 ),dim)
+                  datasetname='Local field y component imaginary part'
+                  call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,2)
+     $                 ),dim)
+                  datasetname='Local field z component real part'
+                  call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,3)
+     $                 ),dim)
+                  datasetname='Local field z component imaginary part'
+                  call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,3)
+     $                 ),dim)
+               endif
+
             endif        
 c     close Intensity of the local field
             close(40)
@@ -2768,62 +2772,6 @@ c     write(*,*) 'local',eps0,zs(i),Eloc,Em,'ani',epsani
                      write(47,*) 0.d0
                   endif
                enddo
-            elseif (nmatf.eq.2) then
-               do i=1,ndipole
-                  k=tabdip(i)
-                  if (k.ne.0) then
-                     ii=3*(k-1)
-                     Eloc(1)= FFloc(ii+1)
-                     Eloc(2)= FFloc(ii+2)
-                     Eloc(3)= FFloc(ii+3)
-                     do ii=1,3
-                        do jj=1,3
-                           epsani(ii,jj)=epsilon(k,ii,jj)
-                        enddo
-                     enddo 
-                     eps0=epscouche(numerocouche(zs(k),neps,nepsmax
-     $                    ,zcouche))
-                     call local_macro_surf(Eloc,Em,epsani,eps0
-     $                    ,aretecube,k0,nsens)
-                     wrk(i,1)=Em(1)
-                     wrk(i,2)=Em(2)
-                     wrk(i,3)=Em(3)
-                     wrk(i,4)=dsqrt(dreal(Em(1) *dconjg(Em(1))+Em(2)
-     $                    *dconjg(Em(2))+Em(3) *dconjg(Em(3))))
-                  else
-                     wrk(i,1)=0.d0
-                     wrk(i,2)=0.d0
-                     wrk(i,3)=0.d0
-                     wrk(i,4)=0.d0
-                  endif
-               enddo
-
-               dim(1)=ndipole
-               dim(2)=nmax*3
-               datasetname='Macroscopic field modulus'
-               call hdf5write1d(group_idnf,datasetname,dreal(wrk(:,4))
-     $              ,dim)
-               datasetname='Macroscopic field x component real part'
-               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,1))
-     $              ,dim)
-               datasetname
-     $              ='Macroscopic field x component imaginary part'
-               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,1))
-     $              ,dim)
-               datasetname='Macroscopic field y component real part'
-               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,2))
-     $              ,dim)
-               datasetname
-     $              ='Macroscopic field y component imaginary part'
-               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,2))
-     $              ,dim)
-               datasetname='Macroscopic field z component real part'
-               call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,3))
-     $              ,dim)
-               datasetname
-     $              ='Macroscopic field z component imaginary part'
-               call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,3))
-     $              ,dim)
             else
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k,ii,jj,Eloc,epsani,Em,eps0)   
 !$OMP DO SCHEDULE(STATIC)
@@ -2853,6 +2801,61 @@ c     write(*,*) 'local',eps0,zs(i),Eloc,Em,'ani',epsani
                enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL          
+
+
+               if (nmatf.eq.2) then
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
+!$OMP DO SCHEDULE(STATIC)
+                  do i=1,ndipole
+                     k=tabdip(i)
+                     if (k.ne.0) then
+                        wrk(i,1)=macroscopicfieldx(k)
+                        wrk(i,2)=macroscopicfieldy(k)
+                        wrk(i,3)=macroscopicfieldz(k)
+                        wrk(i,4)=dsqrt(dreal(macroscopicfieldx(k)
+     $                       *dconjg(macroscopicfieldx(k))
+     $                       +macroscopicfieldy(k)
+     $                       *dconjg(macroscopicfieldy(k))
+     $                       +macroscopicfieldz(k)
+     $                       *dconjg(macroscopicfieldz(k))))
+                     else
+                        wrk(i,1)=0.d0
+                        wrk(i,2)=0.d0
+                        wrk(i,3)=0.d0
+                        wrk(i,4)=0.d0
+                     endif
+                  enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL    
+
+                  dim(1)=ndipole
+                  dim(2)=nmax*3
+                  datasetname='Macroscopic field modulus'
+                  call hdf5write1d(group_idnf,datasetname,dreal(wrk(:,4)
+     $                 ),dim)
+                  datasetname='Macroscopic field x component real part'
+                  call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,1)
+     $                 ),dim)
+                  datasetname
+     $                 ='Macroscopic field x component imaginary part'
+                  call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,1)
+     $                 ),dim)
+                  datasetname='Macroscopic field y component real part'
+                  call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,2)
+     $                 ),dim)
+                  datasetname
+     $                 ='Macroscopic field y component imaginary part'
+                  call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,2)
+     $                 ),dim)
+                  datasetname='Macroscopic field z component real part'
+                  call hdf5write1d(group_idnf,datasetname,dreal(Wrk(:,3)
+     $                 ),dim)
+                  datasetname
+     $                 ='Macroscopic field z component imaginary part'
+                  call hdf5write1d(group_idnf,datasetname,dimag(Wrk(:,3)
+     $                 ),dim)
+               endif
+
             endif
 c     close Intensity of the macroscopic field
             close(44)
@@ -3831,7 +3834,8 @@ c     passe le champ diffracte lointain en amplitude e(k||)
          deltakx=2.d0*pi/(dble(nfft2d)*deltax)
          if (nstop.eq.1) return
 
-         write(*,*) 'NA                       :',numaperref,numapertra
+         write(*,*) 'NA                       :',numaperref*indice0
+     $        ,numapertra*indicen
          write(*,*) 'Focal point reflexion    :',zlensr,'m'
          write(*,*) 'Focal point transmission :',zlenst,'m'
          write(*,*) 'Number of point in NA    :',2*imaxk0+1
@@ -4620,4 +4624,3 @@ c     CALL h5gclose_f(group_idof,error)
       infostr='COMPLETED'
       write(*,*) 'end'
       end
-

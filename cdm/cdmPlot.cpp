@@ -249,6 +249,7 @@ PlotRaster::PlotRaster( QWidget *parent , QVector<QwtPoint3D> *_data,
     QwtInterval rangey = QwtInterval(miny,maxy);
     QwtInterval rangez;
     if (minz == maxz) 
+    // if ( (maxz-minz)/maxz<1.0E-12)
        rangez = QwtInterval(minz*0.5,maxz*1.5);
     else
        rangez = QwtInterval(minz,maxz);

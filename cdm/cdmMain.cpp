@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
   QLOG_INFO() << "Qt User Data location : " 
               <<  QDir::currentPath();
   CdmMain* cdm = new CdmMain(app.applicationDirPath(),NULL,NULL);
-  cdm->setWindowTitle("Discrete Dipole Dpproximation with a multilayer");
+  cdm->setWindowTitle("Discrete Dipole Approximation with a multilayer");
   cdm->show();
   foreach (const QString &path, app.libraryPaths())
   QLOG_DEBUG() << path;
