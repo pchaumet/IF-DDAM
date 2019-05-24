@@ -434,7 +434,7 @@ c     pas assez discrétisé
          infostr='Check Nxm Nym and Nzm!'
          return
       endif
-      if (nnnr.lt.2) then
+      if (nnnr.lt.2.and.object(1:9).ne.'arbitrary') then
          nstop=1
          write(*,*) 'There is no discretization!'
          infostr='There is no discretization!'
@@ -1883,7 +1883,7 @@ c     write(*,*) 'a11',a11
          endif
          call cpu_time(t2)
          call date_and_time(date,time,zone,values2)
-         message='to cumpute Green function'
+         message='to compute Green function'
          call calculatedate(values2,values,t2,t1,message)
          write(*,*) '**************** END GREEN FUNCTION *************'
          write(*,*) ' '

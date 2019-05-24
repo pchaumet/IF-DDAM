@@ -40,7 +40,6 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
     layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
     layout->addRow(tr("Polarization TM (1) TE (0):"),polarizationTM);
-    //layout->addRow(tr("polarization (TE with respect to the plane x,y):"),polarizationTE);
    }
    else if (options->getBeam() == "Multiple wave") {
 
