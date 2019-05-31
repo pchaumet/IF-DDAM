@@ -296,8 +296,8 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     int nprocheCheck;
     options->setNproche(options->getNproche());
     if ( options->getObjectNumber() > 1 ) {
-       if ( options->getNproche() == 1 )
-          options->setNproche(2);
+      if ( options->getNproche() == 0 )
+	options->setNproche(1);
     }
     if ( options->getNearfield() == 0) {
       options->setNproche(0);

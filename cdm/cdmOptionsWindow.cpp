@@ -389,8 +389,8 @@ OptionsWindow::tofile(){
   if ( options->getNearfield() ) {
     opt << "  local field checked:" << options->getLocalfield() << endl;
     opt << "  macroscopic field checked:" << options->getMacroscopicfield() << endl;
-    int nproche = options->getNproche() - 1;
-    opt << "  range of study (-1,0,1):" << nproche << endl;
+    int nproche = options->getNproche();
+    opt << "  range of study (-0,1,2):" << nproche << endl;
   }
   opt << "numerical parameters options:" << endl;
   opt << " tolerance:" << options->getTolerance() << endl;

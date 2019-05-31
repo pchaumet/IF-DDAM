@@ -2,10 +2,18 @@
 
 	1) remise à plat de la version avec ffts!!
 	2) correction orthographe cumpute en compute
-	3) cas aribitrary et condition sur nnnr exclu.
+	3) cas arbitrary et condition sur nnnr exclu.
 
-
---------------------------------------------------------------
+	4) objet multiple passe forcement par wide field. changement en
+	objet multiple passe forcement pas cube (0 en 1) et changement de
+	nproche.
+	5) sphere multiple pas symmétrique: normal car pas
+	nombre entier de mesh dans la largeur.
+	6) ajout de trim pour ne pas avoir de caracteres bizarres a la
+	fin.
+	7) ajoute calcul temps total.
+	
+	--------------------------------------------------------------
 	version 0.3.11
 
 	1) arrange les write

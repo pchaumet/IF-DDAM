@@ -95,8 +95,8 @@ c     variables for the positions
      $     ,density,side,sidex,sidey,sidez,hauteur
      $     ,xgmulti(numberobjetmax),ygmulti(numberobjetmax)
      $     ,zgmulti(numberobjetmax),rayonmulti(numberobjetmax),demiaxea
-     $     ,demiaxeb,demiaxec,thetaobj,phiobj,psiobj,t0,t1,t2,lc,hc
-     $     ,sidemic
+     $     ,demiaxeb,demiaxec,thetaobj,phiobj,psiobj,t0,t1,t2,ti,tf,lc
+     $     ,hc ,sidemic
       double precision aretecube
       integer iphi,itheta,nphi,ntheta,nthetamod
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
@@ -253,7 +253,12 @@ c     declaration calcul temps
       character(8)  :: date
       character(10) :: time
       character(5)  :: zone
-      integer values(8),values2(8)
+      integer values(8),values2(8),valuesi(8),valuesf(8)
+      
+      call cpu_time(ti)
+      call date_and_time(date,time,zone,valuesi)
+      message=' for the execution of the code '
+      call calculatedate(valuesf,valuesi,tf,ti,message)
 
       call dfftw_init_threads(iret)
       if (iret.eq.0) then
@@ -285,11 +290,11 @@ c     convergee.
       write(*,*) '******************* INPUT DATA ******************'
       write(*,*) '*************************************************'
       write(*,*) 'Wavelength       :',lambda,'nm'
-      write(*,*) 'Beam             : ',beam
-      write(*,*) 'Object           : ',object
+      write(*,*) 'Beam             : ',trim(beam)
+      write(*,*) 'Object           : ',trim(object)
       write(*,*) 'Isotropy         : ',trope
       write(*,*) 'Discretization   : ',nnnr
-      write(*,*) 'Iterative method : ',methodeit,'tolerance asked'
+      write(*,*) 'Iterative method : ',trim(methodeit),'tolerance asked'
      $     ,tolinit
       write(*,*) 'Born or rigorous : ',nrig,':0 rigourous'
       write(*,*) 'Green s function : ',ninterp,':0 rigourous'
@@ -927,7 +932,7 @@ c     Built the object
          write(99,*) 'arbitrary',nbsphere,ndipole,nx,ny,nz
       else
          write(99,*) 'Object unknown'
-         write(*,*) 'object',object
+         write(*,*) 'object',trim(object)
          infostr='Object unknown'
          nstop=1
          return
@@ -1232,8 +1237,8 @@ c     Changement angle si microscopy
          write(99,*) 'Beam arbitrary'    
       else
          write(99,*) 'Beam unknown'
-         write(*,*) 'beam',beam
-         write(*,*) 'object',object
+         write(*,*) 'beam',trim(beam)
+         write(*,*) 'object',trim(object)
          infostr='Beam unknown'
          nstop=1
          return
@@ -1353,9 +1358,9 @@ c     ne fait que l'objet
       write(*,*) '*************************************************'      
       write(*,*) '************** BEGIN INCIDENT FIELD *************'
       write(*,*) '*************************************************'
-      write(*,*) 'Beam used  : ',beam
+      write(*,*) 'Beam used  : ',trim(beam)
       write(99,*) '******* Compute the incident field *******'
-      write(99,*) 'Beam used',beam
+      write(99,*) 'Beam used',trim(beam)
       write(99,*) 'k0=',k0     
       subunit=0
       write(*,*) 'Initialize plan for FFT'
@@ -1859,6 +1864,7 @@ c     $           ,nmatim,nplanm
      $           ,a ,matind ,matindplan,matindice,matrange,nt)
 c     write(*,*) 'xyz',xs(1),ys(1),zs(1)
 c     compte FFT of the Green function
+            write(*,*) '******* BEGIN FFT of GREEN FUNCTION **********'
             call fonctiongreensurffft(nx,ny,nz,nx2,ny2,nxm,nym,n1m,nzm
      $           ,nplanm,nmatim,nbs,ntotalm,aretecube,a,matind
      $           ,matindplan,matindice,matrange,b11,b12,b13,b22 ,b23
@@ -1873,7 +1879,7 @@ c     $           ,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim ,nplanm
      $           ,epscouche,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim
      $           ,nplanm,Tabzn,a,matind,matindplan,matindice,matrange
      $           ,ninter ,ninterp,nt)
-
+            write(*,*) '******* BEGIN FFT of GREEN FUNCTION **********'
             call fonctiongreensurfinterpfft(nx,ny,nz,nx2,ny2,nxm,nym,n1m
      $           ,nzm,nplanm,nmatim,nbs,ntotalm,ninter,ninterp,aretecube
      $           ,a ,matind ,matindplan ,matindice ,matrange,b11,b12,b13
@@ -4620,6 +4626,10 @@ c     CALL h5gclose_f(group_idof,error)
          infostr = 'Calculation cancelled at the end!'
          return
       endif
+
+      call cpu_time(tf)
+      call date_and_time(date,time,zone,valuesf)
+
       write(*,*) 'COMPLETED'
       infostr='COMPLETED'
       write(*,*) 'end'

@@ -14,7 +14,7 @@
       integer :: dim(4)
 
      
-      write(*,*) 'h5 name to save microscopy',name,trim(name)
+      write(*,*) 'h5 name to save microscopy : ',name,trim(name)
 
       
       if (ntest.eq.0) then
@@ -31,7 +31,6 @@
          dim(1)=nfft2d*nfft2d
          dim(2)=nfft2d*nfft2d
          datasetname=trim(name)//" field modulus"
-         write(*,*) 'rr',datasetname
          call hdf5write1d(group_idmic,datasetname,dreal(Ediff(:,1)),dim)
          datasetname=trim(name)//" field x component real part"
          call hdf5write1d(group_idmic,datasetname,dreal(Ex),dim)
