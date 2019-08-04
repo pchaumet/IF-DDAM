@@ -1,3 +1,17 @@
+	--------------------------------------------------------------
+	version 0.3.13
+
+	1) correctin dans mainsurf sur les pola
+	2) correction dans writehdf5farfield, oubli d'un argument.
+	3) calcul temps final mal placé
+	4) correction bug dans poynting. Il faut que l'indice soit associé
+	au bon espace.
+	5) ajout unite cross section avec integration
+
+
+	verfieir relecture avec les different nrig!!!
+	ajouter comptage incident dans bf et df
+	--------------------------------------------------------------
 	versionb 0.3.12
 
 	1) remise à plat de la version avec ffts!!
@@ -12,7 +26,7 @@
 	6) ajout de trim pour ne pas avoir de caracteres bizarres a la
 	fin.
 	7) ajoute calcul temps total.
-	
+
 	--------------------------------------------------------------
 	version 0.3.11
 

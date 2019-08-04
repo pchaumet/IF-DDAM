@@ -1031,9 +1031,11 @@ RunWidget::displayResults()
       outputlayout->addRow(scatteringLabel, crosssection);
    }
    if (options->getCrosssectionpoynting()) {
-      QLabel *crosssectionpoynting = new 
-	QLabel(QString::number(run->getScatteringCrossectionWithIntegration()),this);
-      outputlayout->addRow("Scattering cross section with integration:", crosssectionpoynting);
+     QLabel *crosssectionpoynting = new 
+      QLabel(QString::number(run->getScatteringCrossectionWithIntegration()),this);
+      QLabel *scatteringpoyntingLabel = 
+	new QLabel("<html><body>Scattering cross section  with integration [m<sup>2</sup>]:</body></html>",this);
+      outputlayout->addRow(scatteringpoyntingLabel, crosssectionpoynting);
       QLabel *assymetricparam = new 
 	QLabel(QString::number(run->getScatteringAssymetricParam()),this);
       outputlayout->addRow("Scattering assymetric parameter:", assymetricparam);

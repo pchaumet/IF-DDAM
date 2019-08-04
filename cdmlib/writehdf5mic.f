@@ -14,7 +14,7 @@
       integer :: dim(4)
 
      
-      write(*,*) 'h5 name to save microscopy : ',name,trim(name)
+      write(*,*) 'h5 name to save microscopy : ',trim(name)
 
       
       if (ntest.eq.0) then

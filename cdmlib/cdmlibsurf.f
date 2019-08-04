@@ -257,8 +257,6 @@ c     declaration calcul temps
       
       call cpu_time(ti)
       call date_and_time(date,time,zone,valuesi)
-      message=' for the execution of the code '
-      call calculatedate(valuesf,valuesi,tf,ti,message)
 
       call dfftw_init_threads(iret)
       if (iret.eq.0) then
@@ -3193,19 +3191,20 @@ c     put the field in memory with the right angles
                      write(51,*) thetas*180.d0/pi
                   endif
                   
-                  kx=k0*indicem*dsin(thetas)*dcos(phis)
-                  ky=k0*indicem*dsin(thetas)*dsin(phis)
-                  do i=-imaxk0,imaxk0
-                     if (kx.ge.i*deltakx) i2=i
-                  enddo
-                  do j=-imaxk0,imaxk0
-                     if (ky.ge.j*deltakx) j2=j
-                  enddo
-                  ii=imaxk0+i2+1
-                  jj=imaxk0+j2+1
-                
-                  test=0
+             
                   if (thetas.le.pi/2.d0) then
+                     kx=k0*indicen*dsin(thetas)*dcos(phis)
+                     ky=k0*indicen*dsin(thetas)*dsin(phis)
+                     do i=-imaxk0,imaxk0
+                        if (kx.ge.i*deltakx) i2=i
+                     enddo
+                     do j=-imaxk0,imaxk0
+                        if (ky.ge.j*deltakx) j2=j
+                     enddo
+                     ii=imaxk0+i2+1
+                     jj=imaxk0+j2+1
+                
+                     test=0
                      Emod11=cdabs(Ediffkzpos(ii,jj,1))**2
      $                    +cdabs(Ediffkzpos(ii,jj,2))**2
      $                    +cdabs(Ediffkzpos(ii,jj,3))**2
@@ -3233,6 +3232,18 @@ c     put the field in memory with the right angles
                      endif
                      
                   else
+                     kx=k0*indice0*dsin(thetas)*dcos(phis)
+                     ky=k0*indice0*dsin(thetas)*dsin(phis)
+                     do i=-imaxk0,imaxk0
+                        if (kx.ge.i*deltakx) i2=i
+                     enddo
+                     do j=-imaxk0,imaxk0
+                        if (ky.ge.j*deltakx) j2=j
+                     enddo
+                     ii=imaxk0+i2+1
+                     jj=imaxk0+j2+1
+                
+                     test=0
                      Emod11=cdabs(Ediffkzneg(ii,jj,1))**2
      $                    +cdabs(Ediffkzneg(ii,jj,2))**2
      $                    +cdabs(Ediffkzneg(ii,jj,3))**2
@@ -3565,7 +3576,7 @@ c!$OMP END PARALLEL
          elseif (nmatf.eq.2) then
             call writehdf5farfield(Ediffkzpos,Ediffkzneg,Eimagexpos
      $           ,Eimageypos,Eimagezpos,Eimageincxpos,kxy,deltakx
-     $           ,deltaky ,imaxk0,nfft2d,indice0,indicen ,ncote,name
+     $           ,deltaky,k0,imaxk0,nfft2d,indice0,indicen ,ncote,name
      $           ,group_idff)
          endif
          write(*,*) '******* END FAR FIELD WITH SLOW METHOD **********'
@@ -3675,10 +3686,10 @@ c     gamma)
             return
          endif
          if (ncote.eq.0) then
-            write(*,*) 'Incident flux   :',fluxinc
-            write(*,*) 'Reflected flux  :',fluxreftot
-            write(*,*) 'Transmitted flux:',fluxtratot
-            write(*,*) 'Total flux      :',fluxreftot +fluxtratot
+            write(*,*) 'Incident flux   :',fluxinc,'W'
+            write(*,*) 'Reflected flux  :',fluxreftot,'W'
+            write(*,*) 'Transmitted flux:',fluxtratot,'W'
+            write(*,*) 'Total flux      :',fluxreftot+fluxtratot,'W'
             
             write(*,*) 'Conservation of energy:',efficacite
             write(*,*) 'Absorptivity          :',1.d0-efficacite
@@ -4629,6 +4640,8 @@ c     CALL h5gclose_f(group_idof,error)
 
       call cpu_time(tf)
       call date_and_time(date,time,zone,valuesf)
+      message=' for the execution of the code '
+      call calculatedate(valuesf,valuesi,tf,ti,message)
 
       write(*,*) 'COMPLETED'
       infostr='COMPLETED'

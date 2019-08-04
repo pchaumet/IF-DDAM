@@ -175,9 +175,9 @@ c********************************************************
 
 c      polarizability='CM'
       polarizability='RR'
-c      methode='GB' pas fait
-c      methode='LA' pas fait
-c      methode='LR' pas fait
+c      polarizability='LA'
+c      polarizability='LR'
+c      polarizability='GB'
 
 
       

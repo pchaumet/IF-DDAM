@@ -106,6 +106,8 @@ c     Info string
 !$OMP ENDDO 
 !$OMP END PARALLEL  
 
+         write(*,*) 'indice',indice0,indicen,imax
+         
       do k=1,nz
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC) 
@@ -171,6 +173,9 @@ c     Info string
      $                    ,1)*Eloinx(indice)+Stenseur(3,2)
      $                    *Eloiny(indice)+Stenseur(3,3)*Eloinz(indice))
      $                    *ctmp1
+                     write(*,*) i,j,kx/k0/indicen,kx/k0/indicen
+     $                    ,Ediffkzpos(ii,jj,1),Ediffkzpos(ii,jj,2)
+     $                    ,Ediffkzpos(ii,jj,3)
                   endif
                enddo               
             enddo
