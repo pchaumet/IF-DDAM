@@ -1,3 +1,10 @@
+	version 0.3.14
+
+	1) oublie de epsilon dans microsurf bf et df dans la liste des
+	argument d'appel dans cdmlib.f
+	2) mauvais argument dand bf et df lors de l'appel de
+	diffract2dsurf2 pour numaper
+
 	--------------------------------------------------------------
 	version 0.3.13
 
@@ -8,9 +15,9 @@
 	au bon espace.
 	5) ajout unite cross section avec integration
 
-
-	verfieir relecture avec les different nrig!!!
-	ajouter comptage incident dans bf et df
+	6) replacer l'ecriture de reread file pour que cela marche pour
+	toutes les approximations.
+	7) ajouter comptage incident dans bf et df
 	--------------------------------------------------------------
 	versionb 0.3.12
 

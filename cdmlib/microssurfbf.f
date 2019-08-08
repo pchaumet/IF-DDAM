@@ -36,7 +36,7 @@
      $     ,numaperref,numapertra,numaperinc,numaperk,kxinc,kyinc,I0
      $     ,deltax,deltakx ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
       integer i,j,ii,jj,k,kk,idelta,jdelta,ideltam,nrig,npolainc
-     $     ,nquicklens,npol,imaxk0
+     $     ,nquicklens,npol,imaxk0,niter,niterii
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
       double precision kxy(nfft2d),xy(nfft2d),gross,kx,ky,normal(3)
      $     ,zlensr,zlenst
@@ -75,7 +75,6 @@
 
       write(*,*) 'Bright field microscope'
 
-      
 c     initialise
       pi=dacos(-1.d0)
       beam='pwavelinear'
@@ -87,13 +86,11 @@ c     initialise
       y=0.d0
       indice0=dsqrt(dreal(epscouche(0)))
       indicen=dsqrt(dreal(epscouche(neps+1)))
-
       if (numaperinc.ge.1.d0) then
          infostr='NA inc strictly between 0 and 1'
          nstop=1
          return
       endif
-
 
 
       deltax=aretecube
@@ -117,6 +114,7 @@ c     initialise
             goto 222
          endif
       endif
+
       deltak=deltakx
       deltaky=deltakx
       ideltam=imaxk0
@@ -166,13 +164,17 @@ c     initalise
 !$OMP END PARALLEL 
       
       npol=1
-      if (npolainc.eq.0) npol=2
+      niter=ii
+      if (npolainc.eq.0) then
+         npol=2
+         niter=2*ii
+      endif
 
 c     calcul puissance
       P0=P0/dble(npol*ii)
       call irradiancesurf(P0,w0,E0,irra,epscouche(0))
       I0=cdabs(E0)**2
-      
+      niterii=0
 
       do ipol=1,npol
          if (npolainc.eq.1) then
@@ -198,7 +200,8 @@ c     sommation
                kxinc=idelta*deltak
                kyinc=jdelta*deltak
                if (kxinc*kxinc+kyinc*kyinc.le.numaperk*numaperk) then
-                  
+                  niterii=niterii+1
+                  write(*,*) '*** incidence',niterii,'/',niter,' *****'
 c     calcul champ incident
                   
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
@@ -219,7 +222,6 @@ c     calcul champ local
                      do i=1,nbsphere3
                         xi(i)=FF0(i)
                      enddo
-                     
                      if (nproche.eq.-1) then
                         call inverserigsurf(xi,xr,nbsphere,ndipole,nx,ny
      $                       ,nz,nx2,ny2,nxm,nym,nzm,nplanm,ntotalm,nmax
@@ -239,7 +241,6 @@ c     calcul champ local
      $                       ,infostr)
                         if (nstop.eq.1) return
                      endif
-
                   elseif (nrig.eq.1) then
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)          
@@ -316,7 +317,6 @@ c     calcul champ local
 !$OMP END PARALLEL          
 
                   endif
-
 c     dipole a partir champ local
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
 !$OMP DO SCHEDULE(STATIC)         
@@ -331,17 +331,16 @@ c     dipole a partir champ local
                   enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL  
-
                   nfft2dtmp=nfft2d
                   if (nquicklens.eq.1) then
-                     tmp=1.d0
                      rloin=1.d0
                      call diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym
      $                    ,nzm,nfft2dtmp,nfft2d,k0,xs,ys,zs,aretecube
      $                    ,Efourierxpos,Efourierypos,Efourierzpos,FF
      $                    ,imaxk0,deltakx,deltaky,Ediffkzpos,Ediffkzneg
-     $                    ,rloin,rloin,tmp,nepsmax ,neps,dcouche,zcouche
-     $                    ,epscouche,ncote ,nstop ,infostr,plan2f)
+     $                    ,rloin,rloin,numaperref,numapertra,nepsmax
+     $                    ,neps,dcouche,zcouche ,epscouche,ncote ,nstop
+     $                    ,infostr,plan2f)
                      if (nstop.eq.1) return
                   else
 c     compute the diffracted field
@@ -366,11 +365,12 @@ c     compute the diffracted field
                            if (ncote.eq.1.or.ncote.eq.0) then
 c     calcul champ dessus
                               
-                              if (k0*k0*indicen*indicen-kx*kx-ky
+                              if (k0*k0*indicen*indicen*numapertra
+     $                             *numapertra*0.9999d0-kx*kx-ky
      $                             *ky.gt.0.d0) then  
                                  z=1.d0
-                                 kz=dsqrt(k0*k0*indicen*indicen-kx*kx-ky
-     $                                *ky)
+                                 kz=dsqrt(k0*k0*indicen*indicen -kx *kx
+     $                                -ky*ky)
 
                                  Emx=0.d0
                                  Emy=0.d0
@@ -415,10 +415,11 @@ c     calcul champ dessus
 
 c     calcul champ dessous
                            if (ncote.eq.-1.or.ncote.eq.0) then
-                              if (k0*k0*indice0*indice0-kx*kx-ky
+                              if (k0*k0*indice0*indice0*numaperref
+     $                             *numaperref*0.9999d0-kx*kx-ky
      $                             *ky.gt.0.d0) then    
                                  z=-1.d0
-                                 kz=-dsqrt(k0*k0*indice0*indice0-kx*kx
+                                 kz=-dsqrt(k0*k0*indice0*indice0 -kx *kx
      $                                -ky*ky)
                                  call  tenseurmulticoucheloinfft(kx,ky
      $                                ,kz,z,zs(1),k0,nepsmax,neps
@@ -462,7 +463,6 @@ c     calcul champ dessous
 
 c     calcul image
 c     passe le champ diffracte lointain en amplitude e(k||)
-
                   call diffractefft2dtoeposfour(Ediffkzpos,Ediffkzneg
      $                 ,Efourierxpos,Efourierypos,Efourierzpos
      $                 ,Efourierxneg ,Efourieryneg,Efourierzneg
@@ -473,7 +473,6 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                   tmp=indice0*k0
                   call deltakroutine(kxinc,kyinc,deltakx,deltaky,tmp
      $                 ,ikxinc,jkyinc)
-                  
                   if (ncote.eq.0.or.ncote.eq.-1) then
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC) 

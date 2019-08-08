@@ -1939,19 +1939,6 @@ c            write(*,*) 'opt'
          endif      
          if (nstop.eq.1) return
          
-         if (nlecture.eq.1.and.nlecture1.eq.0) then
-            
-            file1='.lf'
-            long = len( trim(filereread  ) )
-            long1 = len( trim( file1 ) )
-            filereread1=filereread(1:long)//file1(1:long1)
-            open(1000,file=filereread1,status='new',form='unformatted')
-            do i=1,nbsphere3
-               write(1000) FFloc(i)
-            enddo
-            close(1000)
-         endif
-
          write(99,*) 'methode',methodeit
          write(99,*) 'Tolerance asked for the iterative method',tolinit
          write(99,*) 'Tolerance obtained for the iterative method',tol1
@@ -2063,6 +2050,20 @@ c     Born approximation field
 !$OMP END PARALLEL      
          
       endif
+
+      if (nlecture.eq.1.and.nlecture1.eq.0) then
+         
+         file1='.lf'
+         long = len( trim(filereread  ) )
+         long1 = len( trim( file1 ) )
+         filereread1=filereread(1:long)//file1(1:long1)
+         open(1000,file=filereread1,status='new',form='unformatted')
+         do i=1,nbsphere3
+            write(1000) FFloc(i)
+         enddo
+         close(1000)
+      endif
+      
 c     dipole a partir champ local
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,k)   
 !$OMP DO SCHEDULE(STATIC)         
@@ -3756,8 +3757,8 @@ c     gamma)
      $           ,matindice ,Tabdip,b31 ,b32 ,b33,FF,FF0,FFloc,b11,b12
      $           ,b13,a11,a12,a13 ,a22,a23 ,a31 ,a32 ,a33 ,WRK,epscouche
      $           ,zcouche,neps,nepsmax ,xs,ys,zs,nlar,ldabi,polarisa
-     $           ,methodeit ,nrig,ncote,tolinit ,aretecube ,npolainc
-     $           ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d ,nproche
+     $           ,epsilon ,methodeit ,nrig,ncote,tolinit ,aretecube
+     $           ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d ,nproche
      $           ,Eimagexpos ,Eimageypos ,Eimagezpos, Eimageincxpos
      $           ,Eimageincypos ,Eimageinczpos, Efourierxpos,
      $           Efourierypos ,Efourierzpos, Efourierincxpos
@@ -3777,8 +3778,8 @@ c     gamma)
      $           ,matindice ,Tabdip,b31 ,b32 ,b33,FF,FF0,FFloc,b11,b12
      $           ,b13,a11,a12,a13 ,a22,a23 ,a31 ,a32 ,a33 ,WRK,epscouche
      $           ,zcouche,neps,nepsmax ,xs,ys,zs,nlar,ldabi,polarisa
-     $           ,methodeit ,nrig,ncote,tolinit ,aretecube ,npolainc
-     $           ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d ,nproche
+     $           ,epsilon,methodeit ,nrig,ncote,tolinit ,aretecube
+     $           ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d ,nproche
      $           ,Eimagexpos ,Eimageypos ,Eimagezpos, Eimageincxpos
      $           ,Eimageincypos ,Eimageinczpos, Efourierxpos,
      $           Efourierypos ,Efourierzpos, Efourierincxpos

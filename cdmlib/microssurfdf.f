@@ -36,7 +36,7 @@
      $     ,numaperref,numapertra,numaperinc,numaperk,kxinc,kyinc,I0
      $     ,deltax,deltakx ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
       integer i,j,ii,jj,k,kk,idelta,jdelta,ideltam,nrig,npolainc
-     $     ,nquicklens,npol,imaxk0
+     $     ,nquicklens,npol,imaxk0,niter,niterii
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
       double precision kxy(nfft2d),xy(nfft2d),gross,kx,ky,deltatheta,phi
      $     ,theta,zlensr,zlenst
@@ -157,13 +157,17 @@ c     initalise
 !$OMP END PARALLEL 
       
       npol=1
-      if (npolainc.eq.0) npol=2
+      niter=ideltam*npol
+      if (npolainc.eq.0) then
+         npol=2
+         niter=ideltam*npol
+      endif
 
 c     calcul puissance
       P0=P0/dble(npol*ideltam)
       call irradiancesurf(P0,w0,E0,irra,epscouche(0))
       I0=cdabs(E0)**2
-      
+      niterii=0
 
       do ipol=1,npol
          if (npolainc.eq.1) then
@@ -185,6 +189,8 @@ c     calcul puissance
          
 c     sommation 
          do idelta=0,ideltam-1
+            niterii=niterii+1
+            write(*,*) '*** incidence',niterii,'/',niter,' *****'
             phi=dble(idelta)*2.d0*pi/dble(ideltam)
             theta=dasin(numaperinc)
             kxinc=dcos(phi)*k0*numaperinc
@@ -322,14 +328,13 @@ c     dipole a partir champ local
 
             nfft2dtmp=nfft2d
             if (nquicklens.eq.1) then
-               tmp=1.d0
                rloin=1.d0
                call diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym ,nzm
      $              ,nfft2dtmp,nfft2d,k0,xs,ys,zs,aretecube
      $              ,Efourierxpos,Efourierypos,Efourierzpos,FF ,imaxk0
      $              ,deltakx,deltaky,Ediffkzpos,Ediffkzneg ,rloin,rloin
-     $              ,tmp,nepsmax ,neps,dcouche,zcouche ,epscouche,ncote
-     $              ,nstop ,infostr,plan2f)
+     $              ,numaperref,numapertra,nepsmax ,neps,dcouche,zcouche
+     $              ,epscouche,ncote ,nstop ,infostr,plan2f)
                if (nstop.eq.1) return
             else
 c     compute the diffracted field
@@ -354,11 +359,10 @@ c     compute the diffracted field
                      if (ncote.eq.1.or.ncote.eq.0) then
 c     calcul champ dessus
                         
-                        if (k0*k0*indicen*indicen-kx*kx-ky
-     $                       *ky.gt.0.d0) then  
+                        if (k0*k0*indicen*indicen*numapertra*numapertra
+     $                       *0.9999d0-kx*kx-ky*ky.gt.0.d0) then  
                            z=1.d0
-                           kz=dsqrt(k0*k0*indicen*indicen-kx*kx-ky
-     $                          *ky)
+                           kz=dsqrt(k0*k0*indicen*indicen-kx*kx-ky*ky)
 
                            Emx=0.d0
                            Emy=0.d0
