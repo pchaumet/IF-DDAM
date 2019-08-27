@@ -108,6 +108,16 @@ c     discretization of the object under study
          infostr='object cuboid: sidez=0!'
          return
       endif
+      if (lc.le.0.d0) then
+         infostr='coherence length equal to zero'
+         nstop=1
+         return
+      endif      
+      if (hc.le.0.d0) then
+         infostr='standard deviation equal to zero'
+         nstop=1
+         return
+      endif
       
 c      write (*,*) 'na = ',na
 c      write (*,*) 'nnnr = ',nnnr

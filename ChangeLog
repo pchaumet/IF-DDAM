@@ -4,7 +4,11 @@
 	argument d'appel dans cdmlib.f
 	2) mauvais argument dand bf et df lors de l'appel de
 	diffract2dsurf2 pour numaper
-
+	3) ajoutte arret pour tous les inhomo si lc=hc=0
+	4) dans relecture pour le faisceau met if
+	(.not.(lle(Beamtmp,Beam))) goto 1000 évite problemede relecture
+	pour la troisième fois!!!
+	
 	--------------------------------------------------------------
 	version 0.3.13
 

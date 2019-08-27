@@ -516,7 +516,7 @@ c*************************************************************
          
 
          read(1000) Beamtmp
-         if (Beamtmp(1:15).ne.beam(1:15)) goto 1000
+         if (.not.(lle(Beamtmp,Beam))) goto 1000
 
          
          if (Beam(1:11).eq.'pwavelinear') then

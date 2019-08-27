@@ -35,6 +35,17 @@
       FFTW_FORWARD=-1
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
+
+      if (lc.le.0.d0) then
+         infostr='coherence length equal to zero'
+         nstop=1
+         return
+      endif      
+      if (hc.le.0.d0) then
+         infostr='standard deviation equal to zero'
+         nstop=1
+         return
+      endif
       
       write(*,*) 'inhomogenous sphere',eps,hc,lc,ng,rayon,nnnr
 c     Initialization

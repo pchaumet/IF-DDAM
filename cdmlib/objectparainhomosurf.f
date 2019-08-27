@@ -104,6 +104,16 @@ c     discretization of the object under study
          infostr='object cuboid: sidez=0!'
          return
       endif
+      if (lc.le.0.d0) then
+         infostr='coherence length equal to zero'
+         nstop=1
+         return
+      endif      
+      if (hc.le.0.d0) then
+         infostr='standard deviation equal to zero'
+         nstop=1
+         return
+      endif
       
 c     verfie si on est bien multiple de 2 3 5 pour la discretisation,
 c     car ma FFT est basee sur une decomposition en nombre premier de 2
