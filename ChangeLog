@@ -8,7 +8,8 @@
 	4) dans relecture pour le faisceau met if
 	(.not.(lle(Beamtmp,Beam))) goto 1000 évite problemede relecture
 	pour la troisième fois!!!
-	
+	5) bug openmp dans writehdf5mic
+
 	--------------------------------------------------------------
 	version 0.3.13
 

@@ -59,7 +59,7 @@
 !$OMP ENDDO 
 !$OMP END PARALLEL
          
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,k)   
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,indice,k)   
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)
          do j=-imaxk0,imaxk0
             do i=-imaxk0,imaxk0
@@ -78,7 +78,7 @@
          datasetname=trim(name)//" field modulus"        
          call hdf5write1d(group_idmic,datasetname,dreal(Ediff(:,1)),dim)
 
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,k)   
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,indice,k)   
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)
          do j=-imaxk0,imaxk0
             do i=-imaxk0,imaxk0
