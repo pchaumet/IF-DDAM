@@ -26,7 +26,8 @@ rm bin/*.data
 rm bin/.lf
 rm bin/.data
 rm bin/.bin
-rm bin/*h5
+rm bin/*.h5
+rm cdmlib/*.h5
 rm */*.log
 rm */output
 rm */*.o

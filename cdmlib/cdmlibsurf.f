@@ -351,6 +351,13 @@ c     arret de suite si nnnr trop petit par rapport a n*m
          nstop = 1
          return         
       endif
+
+      if (nxm.eq.0.or.nym.eq.0.or.nzm.eq.0) then
+         infostr='One of the number of subunit is equal to zero'
+         nstop=-1
+         return
+      endif
+      
 c     arret de suite si pas assez de place pour propa
       if (ninterp.ne.0) then
          i=min(nxm,nym)*(2*max(nxm,nym)-min(nxm,nym)+1)/2
