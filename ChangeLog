@@ -6,6 +6,11 @@
 	4) precision dans chap4.
 	5) Reecrit INSTALL
 
+	6) corrige calcul temps reel
+	7) sintmp=0 dans passagefourier quand il vaut zero evite de diviser.
+	8) correcton error dans ifdda image neg
+	9) change numero version en 0.3.15.
+
 	--------------------------------------------------------------
 	version 0.3.14
 

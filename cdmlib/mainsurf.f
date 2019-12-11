@@ -22,7 +22,7 @@ c     variables for the positions
       double precision rayon,side,sidex,sidey ,sidez,hauteur
      $     ,xgmulti(numberobjetmax) ,ygmulti(numberobjetmax)
      $     ,zgmulti(numberobjetmax) ,rayonmulti(numberobjetmax),demiaxea
-     $     ,demiaxeb,demiaxec ,thetaobj,phiobj,psiobj,lc,hc,density
+     $     ,demiaxeb,demiaxec ,thetaobj,phiobj,psiobj,lc,hc,density,psi
       double precision aretecube
       DOUBLE PRECISION, DIMENSION(nxm*nym*nzm) :: xs,ys,zs,xswf,yswf
      $     ,zswf
@@ -206,11 +206,11 @@ c     beam='arbitrary' !pas fait
       elseif (beam(1:11).eq.'gwavelinear') then
          theta=0.d0
          phi=0.d0
-         pp=1.d0
-         ss=0.d0
+         psi=0.d0      
          xgaus=0.d0
          ygaus=0.d0
          zgaus=0.d0
+         pp=psi
       elseif (beam(1:11).eq.'gwavecircular') then
          theta=0.d0
          phi=0.d0        

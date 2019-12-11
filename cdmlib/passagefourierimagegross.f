@@ -64,15 +64,15 @@
                u2=-u(1)*v(3)+u(3)*v(1)
                costmp=u(1)*v(1)+u(2)*v(2)+u(3)*v(3)
                sintmp=dsqrt(u1*u1+u2*u2)
-               u1=u1/sintmp
-               u2=u2/sintmp
-               tmp=dsqrt(u(3)/v(3)*indiceopt)
+
                if (sintmp.eq.0.d0) then
                   Eimx(indice)=Ex(kk)
                   Eimy(indice)=Ey(kk)
                   Eimz(indice)=Ez(kk)
                else
-               
+                  u1=u1/sintmp
+                  u2=u2/sintmp
+                  tmp=dsqrt(u(3)/v(3)*indiceopt)               
                   Eimx(indice)=((u1*u1+(1.d0-u1*u1)*costmp)*Ex(kk)+u1*u2
      $                 *(1.d0-costmp)*Ey(kk)+u2*sintmp*Ez(kk))*tmp
                   Eimy(indice)=(u1*u2*(1.d0-costmp)*Ex(kk)+(u2*u2+(1.d0

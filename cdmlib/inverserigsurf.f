@@ -48,11 +48,8 @@ c     ********************
       call date_and_time(date,time,zone,values)
 
       if (methodeit(1:7).eq.'GPBICG1') then
- 2002    call cpu_time(t0)
-         call cpu_time(t1)
-         call GPBICG(XI,XR,FF0,ldabi,ndim,nlar,nou,WRK,NLOOP,Nlim,TOL
+ 2002    call GPBICG(XI,XR,FF0,ldabi,ndim,nlar,nou,WRK,NLOOP,Nlim,TOL
      $        ,NORM,ALPHA,BETA,GPETA,DZETA,R0RN,NSTAT,STEPERR)
-         call cpu_time(t2)
          if (nstat.lt.0) then
             nstop=1
             infostr='Problem to solve Ax=b'
@@ -72,13 +69,11 @@ c     ********************
          endif
 
          
-         call cpu_time(t1)
          call produitfftmatvectsurm(xi,xr,nbsphere,ndipole,nx,ny,nz
      $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
      $        ,matindplan,Tabdip,b31,b32,b33,FF,b11,b12,b13,a11,a12
      $        ,a13 ,a22,a23,a31,a32,a33,polarisa,planb,planf)
 
-         call cpu_time(t2)
          if (nstop == -1) then
             infostr = 'Calculation cancelled during iterative method'
             return

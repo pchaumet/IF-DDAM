@@ -52,11 +52,11 @@
                u2=-u(1)*v(3)+u(3)*v(1)
                costmp=u(1)*v(1)+u(2)*v(2)+u(3)*v(3)
                sintmp=dsqrt(u1*u1+u2*u2)
-               u1=u1/sintmp
-               u2=u2/sintmp
-               tmp=dsqrt(u(3)/v(3)*k0n/k0)
-               if (sintmp.ne.0.d0) then
 
+               if (sintmp.ne.0.d0) then
+                  u1=u1/sintmp
+                  u2=u2/sintmp
+                  tmp=dsqrt(u(3)/v(3)*k0n/k0)
                   tmpx=Ex(indice)
                   tmpy=Ey(indice)
                   tmpz=Ez(indice)

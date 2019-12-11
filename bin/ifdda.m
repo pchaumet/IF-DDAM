@@ -1297,7 +1297,7 @@ load imagenegy.mat -ascii
 load imagenegz.mat -ascii
 elseif (ntypefile ==2 );
 ximage=h5read(namefileh5,'/Microscopy/x Image');
-imageneg=h5read(namefileh5,'/Microscopy/Image+incident kz<0 field modulus');
+imageneg=h5read(namefileh5,'/Microscopy/Image kz<0 field modulus');
 imagenegx(:,1)=h5read(namefileh5,'/Microscopy/Image kz<0 field x component real part');
 imagenegx(:,2)=h5read(namefileh5,'/Microscopy/Image kz<0 field x component imaginary part');
 imagenegy(:,1)=h5read(namefileh5,'/Microscopy/Image kz<0 field y component real part');
