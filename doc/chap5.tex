@@ -66,20 +66,23 @@ apparaissent:
  pour le code multicouche de vérifier si la discrétisation est bien
  choisie quand une sphère est étudiée.
 
+ Attention la section efficace ne peut être calculée que si il n'y a
+ pas d'interface.
 
 \item {\it Cross section+Poynting}: Cette option calcule la section
   efficace de diffusion à partir de l'intégration du champ lointain
   diffracté par l'objet sur 4$\pi$ stéradians, le facteur asymétrique
   quand la configuration correspond à l'espace homogène, et sinon
-  calcule la puissance rayonnée ($\left< \ve{S} \right> .\ve{n} R^2$
-  avec $\ve{S}$ le vecteur de Poynting, $\ve{n}$ la direction
-  d'observation) par unité d'angle solide qui sera représenté en
-  3D. Les valeurs {\it Ntheta} et {\it Nphi} permettent de donner le
-  nombre de points utilisés pour calculer la section efficace
-  d'extinction et représenter le vecteur de Poynting. Plus l'objet est
-  grand et plus {\it Ntheta} et {\it Nphi} doivent être grand ce qui
-  conduit pour des objets de plusieurs longueurs d'onde à des calculs
-  coûteux en temps.
+  calcule la puissance rayonnée (
+  $\left< {\cal P} \right>=\left< \ve{S} \right> .\ve{n} R^2$ avec
+  $\ve{S}$ le vecteur de Poynting, $\ve{n}$ la direction
+  d'observation) par unité d'angle solide moyennée dans le temps qui
+  sera représenté en 3D. Les valeurs {\it Ntheta} et {\it Nphi}
+  permettent de donner le nombre de points utilisés pour calculer la
+  section efficace d'extinction et représenter le vecteur de
+  Poynting. Plus l'objet est grand et plus {\it Ntheta} et {\it Nphi}
+  doivent être grand ce qui conduit pour des objets de plusieurs
+  longueurs d'onde à des calculs coûteux en temps.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \be C_{\rm sca} & = & \frac{k_0^4}{\|\ve{E}_0\|^2} \int \left\|
     \sum_{j=1}^N \left[ \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.
@@ -87,29 +90,30 @@ apparaissent:
   {\rm d}\Omega \\ g & = & \frac{k_0^3}{C_{\rm sca} \|\ve{E}_0\|^2}
   \int \ve{n}.\ve{k}_0 \left\| \sum_{j=1}^N \left[
       \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.  \ve{p}(\ve{r}_j)) \right] e^{-i
-      k_0 \ve{n}.\ve{r}_j} \right\|^2 {\rm d}\Omega \\ \left< \ve{S}
-  \right> .\ve{n} R^2 & = & \frac{c k_0^4}{8\pi } \left\| \sum_{j=1}^N
-    \left[ \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.  \ve{p}(\ve{r}_j)) \right]
-    e^{-i k_0 \ve{n}.\ve{r}_j} \right\|^2 \ee
+      k_0 \ve{n}.\ve{r}_j} \right\|^2 {\rm d}\Omega \\ \frac{{\rm d}
+    \left< {\cal P} \right>}{{\rm d}\Omega} & = & \frac {1}{2} c
+  \varepsilon_0 n \left\| \ve{E}_{\rm d} (\ve{k}_{\parallel})
+  \right\|^2,  \ee
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  où $ \ve{E}_{\rm d} (\ve{k}_{\parallel})$ est le champ diffracté en
+  champ lointain.
 
-  Une autre solution pour aller plus vite (option {\it quick
-    computation}) et de passer par des FFT pour le calcul du champ
-  diffracté. Dans ce cas il convient bien sûr de discrétiser en ayant
-  en tête que la relation $\Delta x \Delta k=2\pi/N$ relie la maille
-  de la discrétisation avec la taille de la FFT. La valeur de $N$ peut
-  être choisie avec le menu déroulant. Ceci convient pour des objets
-  plus grands que la longueur d'onde. En effet $L=N\Delta x$
-  correspond à la taille de l'objet, soit $\Delta k=2\pi/L$, et si la
-  taille de l'objet est trop petite alors le $\Delta k$ est trop grand
-  est l'intégration est alors imprécise. A noter que, vu que
-  l'intégration se fait sur deux plans parallèle au plan $(x,y)$, ne
-  convient pas si l'incident fait un angle de plus de 70 degrés avec
-  l'axe $z$. La représentation 3D du vecteur de Poynting se fait comme
-  précédemment, i.e. avec {\it Ntheta} et {\it Nphi} à partir d'une
-  interpolation sur les points calculés avec la FFT ce qui conduit
-  parfois à des formes bizarres dans le plan $(x,y)$ si $N$ est trop
-  faible.
+  Une solution pour aller plus vite (option {\it quick computation})
+  et de passer par des FFT pour le calcul du champ diffracté. Dans ce
+  cas il convient bien sûr de discrétiser en ayant en tête que la
+  relation $\Delta x \Delta k=2\pi/N$ relie la maille de la
+  discrétisation avec la taille de la FFT. La valeur de $N$ peut être
+  choisie avec le menu déroulant. Ceci convient pour des objets plus
+  grands que la longueur d'onde. En effet $L=N\Delta x$ correspond à
+  la taille de l'objet, soit $\Delta k=2\pi/L$, et si la taille de
+  l'objet est trop petite alors le $\Delta k$ est trop grand est
+  l'intégration est alors imprécise. A noter que, vu que l'intégration
+  se fait sur deux plans parallèle au plan $(x,y)$, ne convient pas si
+  l'incident fait un angle de plus de 70 degrés avec l'axe $z$. La
+  représentation 3D du vecteur de Poynting se fait comme précédemment,
+  i.e. avec {\it Ntheta} et {\it Nphi} à partir d'une interpolation
+  sur les points calculés avec la FFT ce qui conduit parfois à des
+  formes bizarres dans le plan $(x,y)$ si $N$ est trop faible.
 
 \item {\it Conservation d'énergie}. Cette étude permet de calculer la
   quantité d'énergie absorbée, réfléchie et transmise par l'objet

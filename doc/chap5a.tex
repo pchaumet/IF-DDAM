@@ -52,26 +52,28 @@ When the option far field is selected, three possibilities appear:
       \ve{p}^*(\ve{r}_j) \right] -\frac{2}{3} k_0^3
     \| \ve{p}^*(\ve{r}_j) \|^2 \right] .\ee
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Note that the cross section can only be computed if the background is
-homogeneous. The free space code is more adapted in that case, but it
-permits to check easily if the discretization is well adapted when a
-sphere is studied.
+  Note that the cross section can only be computed if the background
+  is homogeneous. The free space code is more adapted in that case,
+  but it permits to check easily if the discretization is well adapted
+  when a sphere is studied. Notice that the cross section can be
+  computed if there is no interface.
 
 
 
   
 \item {\it Cross section+Poynting}: This option calculates also the
   scattering cross section from the integration of the far field
-  diffracted by the object upon 4$\pi$ stéradians, the asymmetric
+  diffracted by the object upon 4$\pi$ steradians, the asymmetric
   factor when the background is homogeneous, else it computes only the
-  differential cross section, {\it i.e.}  $\left< \ve{S} \right>
-  .\ve{n} R^2$ with $\ve{S}$ the Poynting vector, $\ve{n}$ the
-  direction of observation, which is going to be represented in
-  3D. The values {\it Ntheta} and {\it Nphi} enable us to give the
-  number of points used in order to calculate the scattering cross and
-  to represent the Poynting vector. The larger the object is, the
-  larger {\it Ntheta} and {\it Nphi} must be, which leads to time
-  consuming calculations for objects of several wavelengths.
+  differential cross section, {\it i.e.}
+  $\left< {\cal P} \right>=\left< \ve{S} \right> .\ve{n} R^2$ with
+  $\ve{S}$ the Poynting vector, $\ve{n}$ the direction of observation,
+  which is going to be represented in 3D. The values {\it Ntheta} and
+  {\it Nphi} enable us to give the number of points used in order to
+  calculate the scattering cross and to represent the Poynting
+  vector. The larger the object is, the larger {\it Ntheta} and {\it
+    Nphi} must be, which leads to time consuming calculations for
+  objects of several wavelengths.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \be C_{\rm sca} & = & \frac{k_0^4}{\|\ve{E}_0\|^2} \int \left\|
     \sum_{j=1}^N \left[ \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.
@@ -80,28 +82,28 @@ sphere is studied.
   \int \ve{n}.\ve{k}_0 \left\| \sum_{j=1}^N \left[
       \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.  \ve{p}(\ve{r}_j)) \right] e^{-i
       k_0 \ve{n}.\ve{r}_j} \right\|^2 {\rm d}\Omega \\
-  \left< \ve{S} \right> .\ve{n} R^2 & = & \frac{c k_0^4}{8\pi }
-  \left\| \sum_{j=1}^N \left[ \ve{p}(\ve{r}_j)-\ve{n}(\ve{n}.
-      \ve{p}(\ve{r}_j)) \right] e^{-i k_0 \ve{n}.\ve{r}_j} \right\|^2
-  \ee
+  \frac{{\rm d} \left< {\cal P} \right>}{{\rm d}\Omega} & = & \frac
+  {1}{2} c \varepsilon_0 n \left\| \ve{E}_{\rm d} (\ve{k}_{\parallel})
+  \right\|^2,  \ee
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
+  where $ \ve{E}_{\rm d} (\ve{k}_{\parallel})$ is the diffracted field
+  in far field.
 
-  Another solution in order to go faster (option {\it quick
-    computation}) and to pass by FFT for the calculation of the
-  diffracted field.  In this case, of course, it is convenient to
-  discretize keeping in mind that the relation $\Delta x \Delta
-  k=2\pi/N$ connects the mesh size of the discretization with the size
-  of the FFT.  This is convenient for objects larger than the
-  wavelength. Indeed, $L=N\Delta x$ corresponds to the size of the
-  object which gives $\Delta k=2\pi/L$, and if the size of the object
-  is too small, then, the $\Delta k$ is too large, and the quadrature
-  is imprecise. Note that since the integration is performed on two
-  planes parallel to the plane $(x,y)$, is not convenient if the
-  incident makes an angle more than 70 degrees with the $z$ axis. The
-  3D representation of the vector of Poynting is done as previously,
-  i.e. with {\it Ntheta} and {\it Nphi} starting with an interpolation
-  upon the calculated points with the FFT.
+  A solution in order to go faster (option {\it quick computation})
+  and to pass by FFT for the calculation of the diffracted field.  In
+  this case, of course, it is convenient to discretize keeping in mind
+  that the relation $\Delta x \Delta k=2\pi/N$ connects the mesh size
+  of the discretization with the size of the FFT.  This is convenient
+  for objects larger than the wavelength. Indeed, $L=N\Delta x$
+  corresponds to the size of the object which gives $\Delta k=2\pi/L$,
+  and if the size of the object is too small, then, the $\Delta k$ is
+  too large, and the quadrature is imprecise. Note that since the
+  integration is performed on two planes parallel to the plane
+  $(x,y)$, is not convenient if the incident makes an angle more than
+  70 degrees with the $z$ axis. The 3D representation of the vector of
+  Poynting is done as previously, i.e. with {\it Ntheta} and {\it
+    Nphi} starting with an interpolation upon the calculated points
+  with the FFT.
 
 \item {\it Emissivity}. This study computes the reflectance,
   transmittance and absorptance. If the object under study is no
