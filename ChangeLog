@@ -1,3 +1,25 @@
+	version 0.3.17
+
+	1) remplacement de la fonction ZBESJ par ma fonction de
+	besselperso.f pour éviter le problème des bessel qui
+	plantaient. Hankel est prete et compilée mais n'est pour l'instant
+	pas inserée. Cela ralenti un peu le code car ma bessel est plus
+	lente. tenseurmulticouchec.f, cdmlib.pro modifie et besselpero
+	hankelpero ajouté.
+	2) corrige un arret. Si couche du dessus absorbante et demande que
+	champ proche alors pas d'arret. arret si champ lointain necessaire
+	soit nenergie+nlentille+ndiffracte.ge.1. chgt cdmlib.f
+	3) changement test pour tester si milieu homogene pour eviter
+	erreur d'arrondi on utilise comparaison. chgt cdmlib.f
+	4) pour polarizabilite PS, verifie dans la création de la sphere
+	si elle est bien dans un milieu homogène, donc continu si dans des
+	couches differentes mais de meme indice
+	optique. chgt obejetspeheresurf.f.
+	5) dans tenseurmulticouchec initialisation de testloin corrigee et
+	zmin changer pour etre identique entre diag et non diag car non
+	diag ne passait pas...dans certains cas.
+
+	--------------------------------------------------------------
 	version 0.3.16
 
 	1) userguide chap5.tex et chap5a.tex

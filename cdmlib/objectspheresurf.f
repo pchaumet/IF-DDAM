@@ -6,7 +6,7 @@
       use HDF5
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,ii,jj,i,j,k
-     $     ,test,IP(3),nnnr,dddis,inv,na,nstop,nmatf,kk
+     $     ,test,IP(3),nnnr,dddis,inv,na,nstop,nmatf,kk,nhomo
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
      $     ,zswf(nmax),k0,xg,yg,zg,x,y,z,aretecube
       double complex eps,epsani(3,3),polaeps(3,3),polarisa(nmax,3,3)
@@ -92,8 +92,9 @@ c     size of the subunit
       aretecube=2.d0*rayon/dble(nnnr)
 
 c     test si l'objet est sur une couche ou plusieurs
-      zmax=zg+rayon
-      zmin=zg-rayon
+      zmax=zg+rayon-aretecube/1000000.d0
+      zmin=zg-rayon+aretecube/1000000.d0
+c     aretecube/1000000.d0 pour eviter les erreurs d'arrondi
       nminc=numerocouche(zmin,neps,nepsmax,zcouche)
       nmaxc=numerocouche(zmax,neps,nepsmax,zcouche)
 c      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,xg,yg,zg,zcouche
@@ -121,9 +122,18 @@ c     $        /aretecube+0.5d0)
       endif
 
       if (nmaxc-nminc.ne.0.and.methode.eq.'PS') then
-         nstop=1
-         infostr='Polarizability PS only for sphere in homogeneous bg'
-         return
+         nhomo=0
+         do i=nminc,nmaxc     
+            call comparaisoncomplexe(epscouche(i),epscouche(0),test)
+            if (test.eq.1) nhomo=1
+         enddo
+
+         if (nhomo.eq.1) then
+            nstop=1
+            infostr
+     $           ='Polarizability PS only for sphere in homogeneous bg'
+            return
+         endif
       endif
 
 

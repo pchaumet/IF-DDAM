@@ -162,7 +162,8 @@ SOURCES		+= aleatoire.f \
                 writehdf5mic.f \
                 writehdf5farfield.f \
 		anglecalculmic.f \
-		calculdate.f
+                calculdate.f \
+                besselperso.f
                 
 INCLUDEPATH 	+= .
 

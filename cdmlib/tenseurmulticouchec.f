@@ -137,50 +137,6 @@ c      write(*,*) 'numero couche dipole',nc,no,zcouche,'zz',z,za
          zmin=dabs(z+za-2.d0*zcouche(neps))
          goto 30
       endif
-c      write(*,*) 'numero couche observation',no,z,neps
-c     calcul de zmax
-c$$$      if(no.le.nc) then
-c$$$         if (no.eq.0) then
-c$$$            zmin=min(dabs(z-za),-z-za+2.d0*zcouche(nc))
-c$$$            zmax=zmin
-c$$$            write(*,*) 'coucou1',-z+za,-z-za+2.d0*zcouche(nc)
-c$$$         else
-c$$$            if (no.eq.nc) then
-c$$$               zmin=-z-za+2.d0*zcouche(nc)
-c$$$               write(*,*) 'zzz',zmin
-c$$$            else
-c$$$               zmin=min(dabs(z-za),-z-za+2.d0*zcouche(nc))
-c$$$            endif
-c$$$            zmax=zmin
-c$$$
-c$$$            zmin=min(zmin,z+za-2.d0*zcouche(no-1))
-c$$$            zmax=max(zmax,z+za-2.d0*zcouche(no-1))
-c$$$
-c$$$            zmin=min(zmin,dabs(z-za)-2.d0*zcouche(no-1)+2.d0*zcouche(nc)
-c$$$     $           )
-c$$$            zmax=max(zmax,dabs(z-za)-2.d0*zcouche(no-1)+2.d0*zcouche(nc)
-c$$$     $           )
-c$$$c     write(*,*) 'coucou4',dabs(z-za)-2.d0*zcouche(no-1)+2.d0
-c$$$c     $           *zcouche(nc),zmin,zmax
-c$$$         endif
-c$$$      elseif(no.gt.nc) then
-c$$$         if (no.eq.neps+1) then
-c$$$            zmin=min(dabs(z-za),z+za-2.d0*zcouche(nc-1))
-c$$$            zmax=zmin
-c$$$            write(*,*) 'coucou10',-za+z,z+za-2.d0*zcouche(nc-1)
-c$$$         else
-c$$$            zmin=min(dabs(z-za),z+za-2.d0*zcouche(nc-1))
-c$$$            zmax=zmin
-c$$$            write(*,*) 'coucou2',-za+z,z+za-2.d0*zcouche(nc)
-c$$$            zmin=min(zmin,-z-za+2.d0*zcouche(no))
-c$$$            zmax=max(zmax,-z-za+2.d0*zcouche(no))
-c$$$            write(*,*) 'coucou3',-z-za+2.d0*zcouche(no)
-c$$$            zmin=min(zmin,-z+za+2.d0*zcouche(no)-2.d0*zcouche(nc-1))
-c$$$            zmax=max(zmax,-z+za+2.d0*zcouche(no)-2.d0*zcouche(nc-1))
-c$$$            write(*,*) 'coucou4',-z+za+2.d0*zcouche(no)-2.d0*zcouche(nc
-c$$$     $           -1),zmin,zmax
-c$$$         endif
-c$$$      endif
       if (nc.eq.no) then
          zmin=min(dabs(z+za-2.d0*zcouche(nc-1)),dabs(-z-za+2.d0
      $        *zcouche(nc)))
@@ -231,7 +187,7 @@ c     PREMIERE INTEGRALE DE 0 A KMAX AVEC CHEMIN ELLIPTIQUE
       aa=-pi/2.d0
       bb=pi/2.d0
       nnn=2
-      
+c      write(*,*) 'premiere integrale diag'
       if (nc.eq.0) then        
 c         write(*,*) 'coucou2 e'
 
@@ -282,6 +238,7 @@ c         write(*,*) 'alpham possible',alpham
 c      write(*,*) 'alpham',kmax,alpham,kmax/k0,alpham/k0      
       aa=kmax
       bb=alpham
+c      write(*,*) 'deuxieme integrale'
       testloin=0
       if (nc.eq.0) then
          
@@ -1182,64 +1139,24 @@ c     repere dans quelle couche est l'observation
          endif
       enddo
 
-c     write(*,*) 'numero couche observation',no,z,neps
-c     calcul de zmax
- 20   if (no.eq.nc) then
-         call propesplibI(a,z,za,k0,epscouche(nc),Txx,Txy,Txz,Tzz)
-         EPSABS=max(epsabs,min(cdabs(Txx),cdabs(Tzz),cdabs(Txy)
-     $        ,cdabs(Txz))*EPSREL)
-      endif
-
-      if (no.eq.0.and.nc.eq.0) then
+ 20   if (no.eq.0.and.nc.eq.0) then
          zmin=dabs(z+za-2.d0*zcouche(0))
          goto 30
       elseif (no.eq.neps+1.and.nc.eq.neps+1) then
          zmin=dabs(z+za-2.d0*zcouche(neps))
          goto 30
       endif
-
-      if (no.le.nc) then
-         if (no.eq.0) then
-            zmin=min(dabs(z-za),dabs(-z-za+2.d0*zcouche(nc)))
-            zmax=zmin
-c     write(*,*) 'coucou1',-z+za,-z-za+2.d0*zcouche(nc)
-         else
-            if (no.eq.nc) then
-               zmin=min(dabs(-z-za+2.d0*zcouche(nc)),dabs(-z-za+2.d0
-     $              *zcouche(nc+1)))
-c               write(*,*) 'zmin',zmin
-            else
-               zmin=min(dabs(z-za),-z-za+2.d0*zcouche(nc))
-            endif
-            zmax=zmin
-            zmin=min(zmin,dabs(z+za-2.d0*zcouche(no-1)))
-            zmax=max(zmax,dabs(z+za-2.d0*zcouche(no-1)))
-            zmin=min(zmin,dabs(z-za)-2.d0*zcouche(no-1)+2.d0*zcouche(nc)
-     $           )
-            zmax=max(zmax,dabs(z-za)-2.d0*zcouche(no-1)+2.d0*zcouche(nc)
-     $           )
-            
-         endif
-      elseif(no.gt.nc) then
-         if (no.eq.neps+1) then
-            zmin=min(dabs(z-za),z+za-2.d0*zcouche(nc-1))
-            zmax=zmin
-c     write(*,*) 'coucou1',-za+z,z+za-2.d0*zcouche(nc-1)
-         else
-            zmin=min(dabs(z-za),z+za-2.d0*zcouche(nc-1))
-            zmax=zmin
-c     write(*,*) 'coucou2',-za+z,z+za-2.d0*zcouche(nc)
-            zmin=min(zmin,-z-za+2.d0*zcouche(no))
-            zmax=max(zmax,-z-za+2.d0*zcouche(no))
-c     write(*,*) 'coucou3',-z-za+2.d0*zcouche(no)
-            zmin=min(zmin,-z+za+2.d0*zcouche(no)-2.d0*zcouche(nc-1))
-            zmax=max(zmax,-z+za+2.d0*zcouche(no)-2.d0*zcouche(nc-1))
-c     write(*,*) 'coucou4',-z+za+2.d0*zcouche(no)-2.d0*zcouche(nc
-c     $           -1),zmin,zmax
-         endif
+      if (nc.eq.no) then
+         zmin=min(dabs(z+za-2.d0*zcouche(nc-1)),dabs(-z-za+2.d0
+     $        *zcouche(nc)))
+         goto 30
+      elseif (nc.lt.no) then
+         zmin=dabs(za-zcouche(nc))
+         goto 30
+      elseif (nc.gt.no) then
+         zmin=dabs(za-zcouche(nc-1))
+         goto 30
       endif
-
-c     write(*,*) 'zzzz',zmin,dabs(z-za),a
 
 c     repette les donnees a cause du common de merde
  30   k02=k0*k0
@@ -1263,15 +1180,18 @@ c     commence l'integration
       enddo
 c     kmax pour le chemin elliptique +k0 pour plus de surete
       kmax=k0*epsmax+k0/2.d0
+c      kmax=k0*epsmax+k0
 c      write(*,*) 'donnees',k0,kmax,epsmax,kmax*a
 c     signe moins parce qu'on passe par la partie imaginaire negative
 c     pour eviter les poles
       hkmax=-min(hc*kmax,1.d0/a)
 c      write(*,*) 'ggg',a*kmax/6.28d0/2.d0,dint(a*kmax/6.28d0/2.d0)+1
 c     hkmax=-hc*kmax
+c      write(*,*) 'rr',hkmax,hc*kmax,1.d0/a
 
 c     PREMIERE INTEGRALE DE 0 A KMAX AVEC CHEMIN ELLIPTIQUE
 c     regarde si il va y avoir beaucoup d'osillation a grand ou pas
+c      write(*,*) 'premiere integrale non diag',a*kmax/6.28d0/2.d0
       if (a*kmax/6.28d0/2.d0.le.1.d0) then
          
          aa=-pi/2.d0
@@ -1351,9 +1271,9 @@ c               write(*,*) 'nnn',2**lordref-1,i,ndecoupe
          endif
          
       endif
-c     do i=1,nnn
+c      do i=1,nnn
 c        write(*,*) 'Ielliptique1',Ielliptique(i),NEVAL
-c     enddo
+c      enddo
 c     stop
 c      write(99,*) NEVAL
 c      write(*,*) 'zmin',zmin
@@ -1367,9 +1287,11 @@ c     zmin plus grand que 2 lambda: plus d'onde evanescente
          NEVAL=0
          goto 40
       endif
+c      write(*,*) 'zmin',zmin,a
 c     DEUXIEME INTEGRALE DE KMAX A L'INFINI AVEC CHEMIN EN DROITE LIGNE
 c     defini la borne superieur de l'integrale par raaport au maxi de
 c     l'exponentiel.
+
       Imin=min(cdabs(Ielliptique(1)), cdabs(Ielliptique(2)),
      $     cdabs(Ielliptique(3)), cdabs(Ielliptique(4))
      $     ,cdabs(Ielliptique(5)))
@@ -1391,7 +1313,7 @@ c     stop
          aa=kmax
          bb=alpham
          testloin=0
-
+c         write(*,*) 'deuxieme inetgrale',nc,no
          if (nc.eq.0) then
             
             call Imultiedessouscomp(aa,nnn,nlda,Iinfini)         
@@ -1424,6 +1346,7 @@ c     stop
      $           ,nnn)
             NEVAL=2**lordref-1
          else
+c            write(*,*) 'deuxieme inetgrale 2',no,nc
             call Imultiicomp(aa,nnn,nlda,Iinfini)         
             do i=1,nnn
                if (cdabs(Iinfini(i))*(bb-aa).le.epsabs) testloin
@@ -1455,6 +1378,7 @@ c         enddo
          Izx=-(Ielliptique(4)+Iinfini(4))
          Izz=(Ielliptique(5)+Iinfini(5))*icomp
       else
+c         write(*,*) 'deuxieme integrale 3',nc,no
          alpham=-dlog(epsrel)/a
 c         write(*,*) 'alphamH',alpham,alpham/k0
          if (zcouche(neps).ge.350.d0/alpham) then
@@ -1467,22 +1391,26 @@ c     stop
          endif
          aa=0.d0
          bb=alpham
+         testloin=0
          if (nc.eq.0) then
+c            write(*,*) 'rrrr',nc,no,testloin
             call ImultiiH_plusdessouscomp(aa,nnn,nlda,Iinfini)         
             do i=1,nnn
                if (cdabs(Iinfini(i))*(bb-aa).le.epsabs) testloin
      $              =testloin+1
+c               write(*,*) 'rrr',cdabs(Iinfini(i))*(bb-aa),epsabs
                Iinfini(i)=0.d0
             enddo
             NEVAL=1
+c            write(*,*) 'rrrr',testloin,nnn
             if (testloin.eq.nnn) goto 60
-
             call intgausskronrodpattersonmulti(aa,bb,ishanks,Iinfinihp
      $           ,erreur,epsrel,EPSABS,lordref,ImultiiH_plusdessouscomp
      $           ,nlda ,nnn)
             NEVAL=2**lordref-1
 c            write(*,*) 'oucou1'
          elseif (nc.eq.neps+1) then
+c            write(*,*) 'ffff',nc,no,aa,nnn,testloin
             call ImultiiH_plusdessuscomp(aa,nnn,nlda,Iinfini)         
             do i=1,nnn
                if (cdabs(Iinfini(i))*(bb-aa).le.epsabs) testloin
@@ -1491,7 +1419,6 @@ c            write(*,*) 'oucou1'
             enddo
             NEVAL=1
             if (testloin.eq.nnn) goto 60
-
             call intgausskronrodpattersonmulti(aa,bb,ishanks,Iinfinihp
      $           ,erreur,epsrel,EPSABS,lordref,ImultiiH_plusdessuscomp
      $           ,nlda ,nnn)
@@ -1500,7 +1427,6 @@ c            write(*,*) 'oucou2'
          else
             call ImultiiH_pluscomp(aa,nnn,nlda,Iinfini)    
             do i=1,nnn
-c               write(*,*) 'ttt',cdabs(Iinfini(i))*(bb-aa),epsabs,i,nnn
                if (cdabs(Iinfini(i))*(bb-aa).le.epsabs) testloin
      $              =testloin+1
                Iinfini(i)=0.d0
@@ -1625,10 +1551,10 @@ c*************************************************************************
       double precision k02,kmax,hkmax,a,z,za,zcouche(0:nepsmax)
       double complex epscouche(0:nepsmax+1),w(0:nepsmax+1)
 
-      integer N,IERR,NZ
-      parameter (N=3)
+      integer N,IERR,NZ,nseqlda,IERR1
+      parameter (N=3,nseqlda=3)
       DOUBLE PRECISION ZR, ZI, CYR(n), CYI(n), FNU
-      double complex JB0,JB1,JB2
+      double complex Jbessel(nseqlda),JB0,JB1,JB2,zz
 
       common/donneemultin/neps,nc,no      
       common/donneemulti/k02,kmax,hkmax,a,z,za
@@ -1650,16 +1576,31 @@ c     calcul de k complex avec theta
 c     calcul des fonctions de Bessel a l'ordre 0,1,2
       zr=zr*a
       zi=zi*a
-      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR)     
-      if (IERR.ne.0.or.NZ.ne.0) then
-         write(*,*) 'probleme dans la fonction de bessel1',NZ,IERR,a,zr
-     $        ,zi
+      zz=a*k
+c      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR1)
+      call bessel(zz, 0, nseqlda, IERR,nseqlda,Jbessel)  
+c      if (IERR.ne.0.or.IERR1.ne.0) then
+      if (IERR.ne.0) then
+         write(*,*) 'probleme dans la fonction de bessel1',IERR,zz
+     $        ,cyr(1)+icomp*cyi(1),Jbessel(1),cyr(2)+icomp*cyi(2)
+     $        ,Jbessel(2),cyr(3)+icomp*cyi(3),Jbessel(3)
          stop
       endif
-      JB0=cyr(1)+icomp*cyi(1)
-      JB1=cyr(2)+icomp*cyi(2)
-      JB2=cyr(3)+icomp*cyi(3)
+c      if (cdabs(cyr(1)+icomp*cyi(1)-Jbessel(1))/cdabs(Jbessel(1)).ge.1.d
+c     $     -12) then
+c         write(*,*) zz,cyr(1)+icomp*cyi(1),Jbessel(1)
+c      endif
+c      JB0=cyr(1)+icomp*cyi(1)
+c      JB1=cyr(2)+icomp*cyi(2)
+c      JB2=cyr(3)+icomp*cyi(3)
+      JB0=Jbessel(1)
+      JB1=Jbessel(2)
+      JB2=Jbessel(3)
+c      write(*,*) zz,cdabs(Jbessel(1)-JB0)/cdabs(JB0),cdabs(Jbessel(2)
+c     $     -JB1)/cdabs(JB1),cdabs(Jbessel(3)-JB2)/cdabs(JB2)
       k2=k*k
+
+      
 c     calcul des wz pour toutes les couches
       do i=0,neps+1
          w(i)=cdsqrt(epscouche(i)*k02-k2)
@@ -2396,7 +2337,7 @@ c*************************************************************************
       icomp=(0.d0,1.d0)
       FNU=0.d0
       k=kmax+icomp*kint
-
+      
 c     premiere espece pour la fonction de Hankel
       zr=kmax*a
       zi=kint*a
@@ -2406,6 +2347,7 @@ c     premiere espece pour la fonction de Hankel
          write(*,*) 'argument',zr,zi
          stop
       endif
+
       HB0=cyr(1)+icomp*cyi(1)
       HB1=cyr(2)+icomp*cyi(2)
       HB2=cyr(3)+icomp*cyi(3)
@@ -4114,10 +4056,10 @@ c*************************************************************************
       double precision k02,kmax,hkmax,a,z,za,zcouche(0:nepsmax)
       double complex epscouche(0:nepsmax+1),w(0:nepsmax+1)
 
-      integer N,IERR,NZ
-      parameter (N=3)
+      integer N,IERR,NZ,nseqlda,IERR1
+      parameter (N=3,nseqlda=3)
       DOUBLE PRECISION ZR, ZI, CYR(n), CYI(n), FNU
-      double complex JB0,JB1,JB2
+      double complex zz,Jbessel(nseqlda),JB0,JB1,JB2
 
       common/donneemultin/neps,nc,no      
       common/donneemulti/k02,kmax,hkmax,a,z,za
@@ -4139,15 +4081,28 @@ c     calcul de k complex avec theta
 c     calcul des fonctions de Bessel a l'ordre 0,1,2
       zr=zr*a
       zi=zi*a
-      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR)     
-      if (IERR.ne.0.or.NZ.ne.0) then
-         write(*,*) 'probleme dans la fonction de bessel2',NZ,IERR,a,zr
-     $        ,zi
+      zz=a*k
+c      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR1)
+      call bessel(zz, 0, nseqlda, IERR,nseqlda,Jbessel)  
+c      if (IERR.ne.0.or.IERR1.ne.0) then
+      if (IERR.ne.0) then
+         write(*,*) 'probleme dans la fonction de bessel2',IERR,zz
+     $        ,cyr(1)+icomp*cyi(1),Jbessel(1),cyr(2)+icomp*cyi(2)
+     $        ,Jbessel(2),cyr(3)+icomp*cyi(3),Jbessel(3)
          stop
       endif
-      JB0=cyr(1)+icomp*cyi(1)
-      JB1=cyr(2)+icomp*cyi(2)
-      JB2=cyr(3)+icomp*cyi(3)
+c      if (cdabs(cyr(1)+icomp*cyi(1)-Jbessel(1))/cdabs(Jbessel(1)).ge.1.d
+c     $     -12) then
+c         write(*,*) zz,cyr(1)+icomp*cyi(1),Jbessel(1)
+c      endif
+c      JB0=cyr(1)+icomp*cyi(1)
+c      JB1=cyr(2)+icomp*cyi(2)
+c      JB2=cyr(3)+icomp*cyi(3)
+      JB0=Jbessel(1)
+      JB1=Jbessel(2)
+      JB2=Jbessel(3)
+c      write(*,*) zz,cdabs(Jbessel(1)-JB0)/cdabs(JB0),cdabs(Jbessel(2)
+c     $     -JB1)/cdabs(JB1),cdabs(Jbessel(3)-JB2)/cdabs(JB2)
       k2=k*k
 c     calcul des wz pour toutes les couches
       do i=0,neps+1
@@ -4662,7 +4617,7 @@ c     premiere espece pour la fonction de Hankel
       HB0=cyr(1)+icomp*cyi(1)
       HB1=cyr(2)+icomp*cyi(2)
       HB2=cyr(3)+icomp*cyi(3)
-
+      write(1030,*) zr,zi,kmax,a,kint,HB0
       k2=k*k      
 c     calcul des wz pour toutes les couches
       do i=0,neps+1
@@ -5142,11 +5097,11 @@ c*************************************************************************
       double precision k02,kmax,hkmax,a,z,za,zcouche(0:nepsmax)
       double complex epscouche(0:nepsmax+1),w(0:nepsmax+1)
 
-      integer N,IERR,NZ
-      parameter (N=3)
+      integer N,IERR,NZ,nseqlda,IERR1
+      parameter (N=3,nseqlda=3)
       DOUBLE PRECISION ZR, ZI, CYR(n), CYI(n), FNU
-      double complex JB0,JB1,JB2
-
+      double complex zz,Jbessel(nseqlda),JB0,JB1,JB2
+      
       common/donneemultin/neps,nc,no      
       common/donneemulti/k02,kmax,hkmax,a,z,za
       common/zcoucheroutine/zcouche
@@ -5167,15 +5122,28 @@ c     calcul de k complex avec theta
 c     calcul des fonctions de Bessel a l'ordre 0,1,2
       zr=zr*a
       zi=zi*a
-      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR) 
-      if (IERR.ne.0.or.NZ.ne.0) then
-         write(*,*) 'probleme dans la fonction de bessel3',NZ,IERR,a,zr
-     $        ,zi,cyr,cyi
+      zz=a*k
+c      call ZBESJ(ZR, ZI, FNU, 1, N, CYR, CYI, NZ, IERR1)
+      call bessel(zz, 0, nseqlda, IERR,nseqlda,Jbessel)  
+c      if (IERR.ne.0.or.IERR1.ne.0) then
+      if (IERR.ne.0) then
+         write(*,*) 'probleme dans la fonction de bessel3',IERR,zz
+     $        ,cyr(1)+icomp*cyi(1),Jbessel(1),cyr(2)+icomp*cyi(2)
+     $        ,Jbessel(2),cyr(3)+icomp*cyi(3),Jbessel(3)
          stop
       endif
-      JB0=cyr(1)+icomp*cyi(1)
-      JB1=cyr(2)+icomp*cyi(2)
-      JB2=cyr(3)+icomp*cyi(3)
+c      if (cdabs(cyr(1)+icomp*cyi(1)-Jbessel(1))/cdabs(Jbessel(1)).ge.1.d
+c     $     -12) then
+c         write(*,*) zz,cyr(1)+icomp*cyi(1),Jbessel(1)
+c      endif
+c      JB0=cyr(1)+icomp*cyi(1)
+c      JB1=cyr(2)+icomp*cyi(2)
+c      JB2=cyr(3)+icomp*cyi(3)
+      JB0=Jbessel(1)
+      JB1=Jbessel(2)
+      JB2=Jbessel(3)
+c      write(*,*) zz,cdabs(Jbessel(1)-JB0)/cdabs(JB0),cdabs(Jbessel(2)
+c     $     -JB1)/cdabs(JB1),cdabs(Jbessel(3)-JB2)/cdabs(JB2)
       k2=k*k
 c     calcul des wz pour toutes les couches
       do i=0,neps+1
@@ -5666,7 +5634,7 @@ c     premiere espece pour la fonction de Hankel
       HB0=cyr(1)+icomp*cyi(1)
       HB1=cyr(2)+icomp*cyi(2)
       HB2=cyr(3)+icomp*cyi(3)
-
+c      write(950,*) kmax,kint,cdabs(HB0)
       k2=k*k      
 c     calcul des wz pour toutes les couches
       do i=0,neps+1
@@ -5840,10 +5808,11 @@ c     write(*,*) 'fin',S11,P11,S21,P21,S12,S22
       integrant(5)=(-S12+S22)*k/w(no)*HB0
 
 
-c     write(30,*) kint,integrant(1)
-c     write(31,*) kint,integrant(2)
-c     write(32,*) kint,integrant(3)
-c     write(33,*) kint,integrant(4)
+c      write(930,*) kint,dreal(integrant(1)),dimag(integrant(1))
+c      write(931,*) kint,dreal(integrant(2)),dimag(integrant(2))
+c      write(932,*) kint,dreal(integrant(3)),dimag(integrant(3))
+c      write(933,*) kint,dreal(integrant(4)),dimag(integrant(4))
+c      write(934,*) kint,dreal(integrant(5)),dimag(integrant(5))
 
       end
 c*************************************************************************

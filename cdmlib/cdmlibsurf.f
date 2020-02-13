@@ -376,9 +376,9 @@ c     arret de suite si pas assez de place pour propa
       endif
 
       nhomo=0
-      ctmp=epscouche(0)
       do i=0,neps+1         
-         if (epscouche(i).ne.ctmp) nhomo=1
+         call comparaisoncomplexe(epscouche(i),epscouche(0),test)
+         if (test.eq.1) nhomo=1
       enddo
 
       if (nsection.eq.1.and.nhomo.ne.0) then 
@@ -694,42 +694,44 @@ c     epsilon of the layers
 
       indice0=dsqrt(dreal(epscouche(0)))
       indicen=dsqrt(dreal(epscouche(neps+1)))
-
-      if (ncote.eq.0.or.ncote.eq.1) then
-         if (dreal(epscouche(neps+1)).le.0.d0) then
-            infostr='epsilon <0 higher layer computation far field'
-            nstop=-1
-            return
+      if (nenergie+nlentille+ndiffracte.ge.1) then
+         
+         if (ncote.eq.0.or.ncote.eq.1) then
+            if (dreal(epscouche(neps+1)).le.0.d0) then
+               infostr='epsilon <0 higher layer computation far field'
+               nstop=-1
+               return
+            endif
+            if (dimag(epscouche(neps+1)).gt.0.d0) then
+               infostr='absorbing superstrate to compute far field'
+               nstop=-1
+               return
+            endif
+            indicem=indicen
+            numapertra=numapertra/indicen
          endif
-         if (dimag(epscouche(neps+1)).gt.0.d0) then
-            infostr='absorbing superstrate to computate far field'
-            nstop=-1
-            return
+         
+         if (ncote.eq.0.or.ncote.eq.-1) then     
+            if (dreal(epscouche(0)).le.0.d0) then
+               infostr='epsilon <0 higher layer computation far field'
+               nstop=-1
+               return
+            endif
+            if (dimag(epscouche(0)).gt.0.d0) then
+               infostr='absorbing substrate to compute far field'
+               nstop=-1
+               return
+            endif
+            indicem=indice0
+            numaperinc=numaperinc/indice0
+            numaperref=numaperref/indice0
          endif
-         indicem=indicen
-         numapertra=numapertra/indicen
-      endif
-
-      if (ncote.eq.0.or.ncote.eq.-1) then     
-         if (dreal(epscouche(0)).le.0.d0) then
-            infostr='epsilon <0 higher layer computation far field'
-            nstop=-1
-            return
-         endif
-         if (dimag(epscouche(0)).gt.0.d0) then
-            infostr='absorbing substrate to computate far field'
-            nstop=-1
-            return
-         endif
-         indicem=indice0
-         numaperinc=numaperinc/indice0
-         numaperref=numaperref/indice0
-      endif
+   
       
-      if (ncote.eq.0) then
-         indicem=max(indice0,indicen)
+         if (ncote.eq.0) then
+            indicem=max(indice0,indicen)
+         endif
       endif
-
 c     change ouverture numerique
       
       if (nlentille.eq.1) then
