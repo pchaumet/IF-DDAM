@@ -64,7 +64,11 @@ première ligne est relative à $\theta$ et la deuxième à $\varphi$. La
 troisième ligne est liée à la polarisation, la valeur pola=1 l'onde
 estpolarisée en TM et pola=0 en TE.  A noter que la polarisation n'est
 pas forcément purement en TE ou TM: soit ${\rm pola}\in[0~1]$ tel que
-$E^2_{\rm TM}={\rm pola}^2E^2$ et $E^2_{\rm TE}=(1-{\rm pola}^2)E^2$.
+$E^2_{\rm TM}={\rm pola}^2E^2$ et $E^2_{\rm TE}=(1-{\rm
+  pola}^2)E^2$. Nous avons donc cette valeur entre 0 et 1, mais pour
+des raisons simplicités nous avons deux valeurs particulères (2 et 3)
+assignées à une polarisation pour champ orienté suivant $x$ ($y$) sans
+que l'utilisateur ait à faire de calcul pour trouver pola.
 
 A noter que la phase est toujours prise nulle à l'origine du repère,
 avec ${\rm Irradiance}=P_0/S$ où $S=\pi w_0^2$ est la surface du

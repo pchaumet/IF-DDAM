@@ -197,7 +197,7 @@ OptionsWindow::tofile(){
   else if (options->getBeam() == "Linear plane wave") {
     opt << "  incidence angle (theta with respect to z):" << options->getIncidenceangle_theta_z() << endl;
     opt << "  incidence angle (phi with respect to x):" << options->getIncidenceangle_phi_x() << endl;
-    opt << "  polarization TM (1) TE (0):" << options->getPolarizationTM() << endl;
+    opt << "  polarization TE->TM (0->1) (2=x) (3=y):" << options->getPolarizationTM() << endl;
   }
   else if (options->getBeam() == "Circular Gaussian" ) {
     opt << "  incidence angle (theta with respect to z):" << options->getIncidenceangle_theta_z() << endl;

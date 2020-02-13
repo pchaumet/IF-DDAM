@@ -31,7 +31,7 @@ c     on eclaire par en dessous.
          infostr='problem in plane incident wave'
          return
       endif
-      p=dsqrt(pp)
+      p=ss*dsqrt(pp)
       s=dsqrt(1.d0-pp)
 
       

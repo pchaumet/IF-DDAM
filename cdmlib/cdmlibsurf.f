@@ -125,8 +125,9 @@ c     variables for the incident field and local field
      $     ,torquexmulti(numberobjetmax),torqueymulti(numberobjetmax)
      $     ,torquezmulti(numberobjetmax)
       integer nbinc
-      double precision ss,pp,theta,phi,psi,I0,Emod,tmp,thetad,phim(10)
-     $     ,thetam(10),ssm(10),ppm(10),Emod11,Emod22,Emod12 ,Emod21
+      double precision ss,pp,theta,phi,psi,I0,Emod,tmp,thetad,phid
+     $     ,phim(10),thetam(10),ssm(10),ppm(10),Emod11,Emod22,Emod12
+     $     ,Emod21
       double complex Eloc(3),Em(3),E0,uncomp,icomp,zzero,E0m(10),Emx,Emy
      $     ,Emz
       double complex, dimension(nxm*nym*nzm) :: macroscopicfieldx
@@ -1379,6 +1380,25 @@ c     ne fait que l'objet
 
          
       if (beam(1:11).eq.'pwavelinear') then
+         tmp=3.d0
+         call comparaisonreel(tmp,pp,test)
+         ss=1.d0
+         if (test.eq.0) then
+            thetad=theta*pi/180.d0
+            phid=phi*pi/180.d0
+            pp=(dsin(phid)**2.d0)/(dcos(thetad)**2.d0*dcos(phid)**2.d0+
+     $           dsin(phid)**2.d0)
+         endif
+         tmp=2.d0
+         call comparaisonreel(tmp,pp,test)
+         if (test.eq.0) then
+            thetad=theta*pi/180.d0
+            phid=phi*pi/180.d0
+            pp=(dcos(phid)**2.d0)/(dcos(thetad)**2.d0*dsin(phid)**2.d0
+     $           +dcos(phid)**2.d0)
+            ss=-1.d0
+         endif
+         
          write(99,*) 'theta=',theta
          write(99,*) 'phi=',phi
          write(99,*) 'pol1=',pp

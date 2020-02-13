@@ -1,3 +1,17 @@
+	version 0.3.18
+
+	1) création de la polarisation suivant x ou y. changement de
+	cdmlib.f, champlineaire* et cdmOptionsWindow.cpp
+	2) modification de la doc pour tenir compte du nouveau champ
+	incident possible: chap3*.tex.
+	3) petite accélération de ma bessel: besselperso.f modifiée
+	4) changement nom de la version dans cdm.pro et cdmlib.pro
+	5) rendu non executable les .f .cpp.h .m: chmod -x
+	6) nettoyage des fichiers inutiles....
+	7) rajout comparaison reel pour pp=2 et 3.
+	8) suppression de fonctiongreensurfcomppara.f
+	
+	--------------------------------------------------------------
 	version 0.3.17
 
 	1) remplacement de la fonction ZBESJ par ma fonction de
