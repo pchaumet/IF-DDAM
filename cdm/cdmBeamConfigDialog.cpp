@@ -34,12 +34,12 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
    if (options->getBeam() == "Circular plane wave") {
     layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
-    layout->addRow(tr("polarization:"),polarizationlayout);
+    layout->addRow(tr("Polarization:"),polarizationlayout);
    }
    else if (options->getBeam() == "Linear plane wave") {
     layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
-    layout->addRow(tr("Polarization TM (1) TE (0):"),polarizationTM);
+    layout->addRow(tr("Polarization TE->TM (0->1) (2,Ey=0) (3,Ex=0):"),polarizationTM);
    }
    else if (options->getBeam() == "Multiple wave") {
 
@@ -70,7 +70,7 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
     
        wavemulticonfiglayout->addRow("Incidence angle (theta with respect to z):",thetamlayout);
        wavemulticonfiglayout->addRow("Incidence angle (phi with respect to x):",phimlayout);
-       wavemulticonfiglayout->addRow("Polarization TM (1) TE (0):",ppmlayout);
+       wavemulticonfiglayout->addRow("Polarization TE->TM (0->1):",ppmlayout);
        // wavemulticonfiglayout->addRow("Polarisation S:",ssmlayout);
        wavemulticonfiglayout->addRow("Amplitude (complex):",E0mlayout);
        
@@ -85,7 +85,7 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
     if (options->getBeam() != "gwaveiso") layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     if (options->getBeam() != "gwaveiso") layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
     if (options->getBeam() != "antenna")
-      layout->addRow(tr("Polarization along x(0) or y(90)::"),polarizationTM);
+      layout->addRow(tr("Polarization along x(0) or y(90):"),polarizationTM);
     layout->addRow(tr("Focus X (nm):"),xgaus);
     layout->addRow(tr("Focus Y(nm):"),ygaus);
     layout->addRow(tr("Focus Z(nm):"),zgaus);
@@ -93,7 +93,7 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
    else if (options->getBeam() == "Circular Gaussian" ) {
     layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);
-    layout->addRow(tr("polarization:"),polarizationlayout);
+    layout->addRow(tr("Polarization:"),polarizationlayout);
     layout->addRow(tr("Focus X(nm):"),xgaus);
     layout->addRow(tr("Focus Y(nm):"),ygaus);
     layout->addRow(tr("Focus Z(nm):"),zgaus);

@@ -55,20 +55,32 @@ $y$.
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Le repère $(x,y,z)$ sert de référentiel absolu par rapport auquel les
-différents éléments (illumination plus objets) sont repérés.
+différents éléments (illumination plus objets) sont repérés.  Nous
+définissons le vecteur polarisation $\ve{s}$ correspondant à la
+polarisation $TE$ et le vecteur $\ve{p}$ correspondant à $TM$ comme:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{s} & = & \frac{\hat{\ve{z}} \times \ve{k}_0}{\| \hat{\ve{z}}
+  \times \ve{k}_0\|} \\
+\ve{p} & = & \frac{\ve{k}_0 \times \ve{s}}{\|\ve{k}_0 \times \ve{s}\|}
+.  \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Linear plane wave}
 
 {\it Linear plane wave } est une onde plane polarisée linéairement. La
 première ligne est relative à $\theta$ et la deuxième à $\varphi$. La
 troisième ligne est liée à la polarisation, la valeur pola=1 l'onde
-estpolarisée en TM et pola=0 en TE.  A noter que la polarisation n'est
-pas forcément purement en TE ou TM: soit ${\rm pola}\in[0~1]$ tel que
+est polarisée en TM et pola=0 en TE défini comme
+$\ve{E}_0=E_p \ve{p} +E_s\ve{s}$ avec $E_p={\rm pola}$ et
+$E_s=\sqrt{1-\rm {pola}^2}$.  A noter que la polarisation n'est pas
+forcément purement en TE ou TM: soit ${\rm pola}\in[0~1]$ tel que
 $E^2_{\rm TM}={\rm pola}^2E^2$ et $E^2_{\rm TE}=(1-{\rm
   pola}^2)E^2$. Nous avons donc cette valeur entre 0 et 1, mais pour
-des raisons simplicités nous avons deux valeurs particulères (2 et 3)
-assignées à une polarisation pour champ orienté suivant $x$ ($y$) sans
-que l'utilisateur ait à faire de calcul pour trouver pola.
+des raisons simplicités nous avons deux valeurs particulières pola=3
+(2) assignées à une polarisation pour un champ orienté tel que
+$\ve{E}_0 \cdot \hat{\ve{x}} =0$ ($\ve{E_0 } \cdot \hat{\ve{y}} =0$)
+sans que l'utilisateur ait à faire de calcul pour trouver la valeur de
+pola.
 
 A noter que la phase est toujours prise nulle à l'origine du repère,
 avec ${\rm Irradiance}=P_0/S$ où $S=\pi w_0^2$ est la surface du

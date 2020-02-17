@@ -50,7 +50,12 @@ c     variable for the multilayer
       filereread1=filereread(1:long)//file1(1:long1)
       long1 = len( trim( file2 ) )
       filereread2=filereread(1:long)//file2(1:long1)
-      write(*,*) 'file to save the input data',filereread1,filereread2
+      if (long.eq.0) then
+         infostr='No file given for read local field from file'
+         nstop=1
+         return
+      endif
+      write(*,*) 'file to save the input data: ',filereread1,filereread2
       open(1000,file=filereread1,status='old',iostat=ierror)
       write(*,*) 'status of the file',ierror
 c     le fichier n'a pas encore ete cree et on le cree

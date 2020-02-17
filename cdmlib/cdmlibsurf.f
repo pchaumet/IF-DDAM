@@ -1787,6 +1787,7 @@ c     close Intensity of the incident field
          return
       endif
 
+
 c     multiplication by a factor 2: Toeplitz matrix transformed in a
 c     circulant matrix with a doble size.
       nbsphere3=3*nbsphere
@@ -1853,6 +1854,10 @@ c     function and its FFT
          write(*,*) '*************************************************'      
          write(*,*) '****** INITIALIZE PLAN FOR FFT ******************'
          write(*,*) '*************************************************'
+
+         call primefactor(nx,1,test)
+         call primefactor(ny,2,test)
+
          call dfftw_plan_dft_2d(planb,nx2,ny2,b11,b11,FFTW_BACKWARD
      $        ,FFTW_ESTIMATE)
          call dfftw_plan_dft_2d(planf,nx2,ny2,b11,b11,FFTW_FORWARD

@@ -1,3 +1,23 @@
+	version 0.3.19
+
+	1) chap3 et chap3a modifié pour expliquer comment la polarisation
+	est choisie ainsi que modif de champlineaire. Mie à jour des pdf.
+	2) correcteur orthographique passé en francais et anglais.
+	3) si pas de nom donné pour la relecture alors arret:
+	if (long.eq.0) then
+        infostr='No file given for read local field from file'
+	  nstop=1
+        return
+        endif
+	4) polarization TE->TM (0->1) (2=x) (3=y): mis dans
+	cdmBeamConfigDialog.cpp
+	5) petite correction dans cdmBeamConfigDialog.cpp
+	6) rajoutte de primefactor et averti si décomposition compliquée
+	qui ralenti la FFT.
+	7) changement nom version en 0.3.19
+
+	
+	--------------------------------------------------------------
 	version 0.3.18
 
 	1) création de la polarisation suivant x ou y. changement de
@@ -10,7 +30,7 @@
 	6) nettoyage des fichiers inutiles....
 	7) rajout comparaison reel pour pp=2 et 3.
 	8) suppression de fonctiongreensurfcomppara.f
-	
+
 	--------------------------------------------------------------
 	version 0.3.17
 

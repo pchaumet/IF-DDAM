@@ -4,7 +4,7 @@
 
 TEMPLATE 	= 	lib
 
-VERSION         =       0.3.18
+VERSION         =       0.3.19
 
 TARGET 		=       cdmlibsurf
 
@@ -163,8 +163,9 @@ SOURCES		+= aleatoire.f \
                 writehdf5farfield.f \
 		anglecalculmic.f \
                 calculdate.f \
-                besselperso.f
-                
+                besselperso.f \
+                primefactor.f
+
 INCLUDEPATH 	+= .
 
 LIBS 		+= 	-lgfortran -lfftw3_omp -lfftw3 -lm -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5

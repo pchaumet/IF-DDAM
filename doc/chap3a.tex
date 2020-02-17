@@ -54,19 +54,31 @@ $x$ or $y$ axis, depending of the beam.
 \label{pola}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The frame $(x,y,z)$ is used as an absolute referential.
+The frame $(x,y,z)$ is used as an absolute referential.  We define the
+polarization vector $\ve{s}$ corresponding to $TE$ polarisation and
+$\ve{p}$ corresponding to $TM$ as,
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\be \ve{s} & = & \frac{\hat{\ve{z}} \times \ve{k}_0 }{\| \hat{\ve{z}}
+  \times \ve{k}_0\|} \\
+\ve{p} & = & \frac{\ve{k}_0 \times \ve{s}}{\|\ve{k}_0 \times \ve{s}\|}
+.  \ee
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \subsection{Linear plane wave }
 
 {\it Linear plane wave} is a plane wave linearly polarized. The first
 line is relative to $\theta$ and the second to $\varphi$. The third
-line is connected to the polarization, polarization TM(1) or TE(0).
-Note that the polarization is not necessarily purely in TE or TM:
-${\rm pola}\in[0~1]$ such as $E^2_{\rm TM}={\rm pola}^2E^2$ and
-$E^2_{\rm TE}=(1-{\rm pola}^2)E^2$. Notice that if one wants a
-polarisation only along $x$ ($y$) direction, one can choose pola=2 (3)
-and the code will compute the right value of pola to get the
-polarisation asked.
+line is connected to the polarization, polarization TM(1) or TE(0) as
+$\ve{E}_0=E_p \ve{p} +E_s\ve{s}$ with $E_p={\rm pola}$ and
+$E_s=\sqrt{1-\rm {pola}^2}$. Note that the polarization is not
+necessarily purely in TE or TM: ${\rm pola}\in[0~1]$ such as
+$E^2_{\rm TM}={\rm pola}^2E^2$ and $E^2_{\rm TE}=(1-{\rm pola}^2)E^2$.
+
+Notice that if one wants that $\ve{E}_0 \cdot \hat{\ve{x}} =0$
+($\ve{E_0 } \cdot \hat{\ve{y}} =0$), one can choose pola=3 (2) and the
+code will compute the right value of pola to get the polarization
+asked.
 
 Note that the phase is always taken null at the origin of the frame,
 with ${\rm Irradiance}=P_0/S$ where $S=\pi w_0^2$ is the surface of
@@ -99,7 +111,7 @@ of the power of all the plane wave is equal to $P_0$.
 
 {\it Linear Gaussian} is a Gaussian wave polarized linearly. The first
 line is relative to $\theta$ and the second to $\varphi$. The third
-line is connected to the angle betwwen the polarization and the $x$
+line is connected to the angle between the polarization and the $x$
 axis (0) or along the $y$ axis (90).
 
 The three following lines help to fix the position of the centre
