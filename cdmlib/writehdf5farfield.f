@@ -1,7 +1,7 @@
       subroutine writehdf5farfield(Ediffkzpos,Ediffkzneg,Eimagexpos
      $     ,Eimageypos,Eimagezpos,Eimageincxpos,kxy,deltakx,deltaky,k0
      $     ,imaxk0,nfft2d,indice0,indicen,ncote,name,group_idff)
-
+#ifdef USE_HDF5
       use HDF5
 
       implicit none
@@ -122,5 +122,5 @@
          call hdf5write1d(group_idff,datasetname,dreal(Eimageincxpos)
      $        ,dim)
       endif
-
+#endif
       end

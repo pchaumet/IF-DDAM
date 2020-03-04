@@ -66,9 +66,15 @@ c     calcul FFT du vecteur B
 !$OMP ENDDO 
 !$OMP END PARALLEL
 
+#ifdef USE_FFTW
          call dfftw_execute_dft(planb,x1,x1)
          call dfftw_execute_dft(planb,x2,x2)
          call dfftw_execute_dft(planb,x3,x3)
+#else
+      call fftsingletonz2d(x1,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(x2,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(x3,0,0,FFTW_BACKWARD)
+#endif
 
          do ll=1,ntp
             kk=matindplan(ll,nn)
@@ -109,10 +115,16 @@ c                     write(*,*) 'bbt1',b11(indice),i,j
 !$OMP END PARALLEL 
             endif
 
-
+#ifdef USE_FFTW
             call dfftw_execute_dft(planf,b11,b11)
             call dfftw_execute_dft(planf,b21,b21)
             call dfftw_execute_dft(planf,b31,b31)
+#else
+      call fftsingletonz2d(b11,0,0,FFTW_FORWARD)
+      call fftsingletonz2d(b21,0,0,FFTW_FORWARD)
+      call fftsingletonz2d(b31,0,0,FFTW_FORWARD)
+#endif
+
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indice,ii)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)

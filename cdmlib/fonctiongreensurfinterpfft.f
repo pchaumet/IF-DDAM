@@ -163,6 +163,7 @@ c*******************************************************
 !$OMP ENDDO 
 !$OMP END PARALLEL  
 
+#ifdef USE_FFTW
             call dfftw_execute_dft(planb,b11,b11)
             call dfftw_execute_dft(planb,b12,b12)
             call dfftw_execute_dft(planb,b13,b13)
@@ -171,6 +172,29 @@ c*******************************************************
             call dfftw_execute_dft(planb,b31,b31)
             call dfftw_execute_dft(planb,b32,b32)
             call dfftw_execute_dft(planb,b33,b33)
+#else
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP SECTIONS 
+!$OMP SECTION   
+      call fftsingletonz3d(b11,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION   
+      call fftsingletonz3d(b12,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION   
+      call fftsingletonz3d(b13,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION   
+      call fftsingletonz3d(b22,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION   
+      call fftsingletonz3d(b23,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION   
+      call fftsingletonz3d(b31,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION   
+      call fftsingletonz3d(b32,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION   
+      call fftsingletonz3d(b33,0,0,0,FFTW_BACKWARD)
+!$OMP END SECTIONS
+!$OMP END PARALLEL  
+#endif
+
              
             kk=matindplan(ll,nn)
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ii,jj,indice)

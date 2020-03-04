@@ -8,7 +8,7 @@ VERSION         =       0.3.19
 
 TARGET 		=       cdmlibsurf
 
-CONFIG          +=      staticlib warn_on
+CONFIG          +=      warn_on 
 
 DEPENDPATH 	+= .
 
@@ -16,15 +16,23 @@ DESTDIR      	= lib
 
 QT      	+=
 
-DEFINES 	+=      CDMVERSION=\\\"$$VERSION\\\"
+DEFINES 	+=      CDMVERSION=\\\"$$VERSION\\\"  DEBUG 
+CONFIG(fftw) {
+DEFINES 	+=      USE_FFTW
+}
+CONFIG(hdf5) {
+DEFINES 	+=      USE_HDF5
+}
 
 DEFINES 	+= 	QT_NO_DEBUG_OUTPUT
 
-QMAKE_CC        =       gfortran -Warray-bounds -fcray-pointer -w
+QMAKE_CC        =       gfortran 
 
-QMAKE_CFLAGS    += -fopenmp -lfftw3_omp -lfftw3 -lm -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
+QMAKE_CFLAGS    += -Warray-bounds -fcray-pointer -w -cpp -mcmodel=large -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -g -fcheck=all -fbacktrace -fopenmp
 
-QMAKE_CFLAGS_RELEASE    = -O3
+QMAKE_LFLAGS    = -mcmodel=large -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -cpp -g -fcheck=all -fbacktrace 
+
+QMAKE_CFLAGS_RELEASE    = -O3 
 
 QMAKE_CFLAGS_THREAD =
 
@@ -65,6 +73,7 @@ SOURCES		+= aleatoire.f \
 		dznrm2.f \
 		espace_libreIcc.f \
 		fdump.f \
+		fftsingletonz.f \
 		fonctiongreensurfcomp.f \
 		fonctiongreensurfcompinterp.f \
 		fonctiongreensurffft.f \
@@ -166,8 +175,30 @@ SOURCES		+= aleatoire.f \
                 besselperso.f \
                 primefactor.f
 
-INCLUDEPATH 	+= .
+INCLUDEPATH     += .
 
-LIBS 		+= 	-lgfortran -lfftw3_omp -lfftw3 -lm -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
+CDMLIB_LIB_PATH  =      ../cdmlib/lib
+
+CONFIG(fftw) {
+	LIBS 		+= -lgfortran -lfftw3_omp -lfftw3 -lm 
+} else {
+	LIBS 		+= 	-lgfortran -lm 
+}
+
+CONFIG(hdf5) {
+# sur centos, fedora, etc...
+  exists( /usr/lib64/gfortran/modules ) {
+	LIBS 		+= 	-I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
+INCLUDEPATH     += /usr/lib64/gfortran/modules
+  }
+# sur ubuntu
+  exists( /usr/include/hdf5/serial ) {
+	LIBS 		+= 	-I/usr/include/hdf5/serial -I/usr/include -L/usr/lib/x86_64-linux-gnu/hdf5/serial -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
+INCLUDEPATH     += /usr/include/hdf5/serial
+
+  }
+} else {
+	LIBS 		+= 	
+}
 
 QMAKE_DISTCLEAN += lib/*

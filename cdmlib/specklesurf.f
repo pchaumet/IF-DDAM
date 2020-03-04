@@ -186,9 +186,16 @@ c     const2=cdexp(icomp*(var1*dble(nkx)+var2*dble(nky)))
 c     fin boucle en delta k
 c     calcul de la FFT
 
+#ifdef USE_FFTW
          call dfftw_execute_dft(planb,Egausxref,Egausxref)
          call dfftw_execute_dft(planb,Egausyref,Egausyref)
          call dfftw_execute_dft(planb,Egauszref,Egauszref)
+#else
+      call fftsingletonz2d(Egausxref,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(Egausyref,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(Egauszref,0,0,FFTW_BACKWARD)
+#endif
+
 
 c     shift+remet dans FF0, le champ incident
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(nkx,nky,ii,jj,indice,nnn,kkk)

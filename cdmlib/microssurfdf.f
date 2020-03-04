@@ -14,7 +14,9 @@
      $     ,numapertra,numaperinc,gross,zlensr,zlenst ,ntypemic , planf
      $     ,planb ,plan2f ,plan2b ,nmatf,file_id ,group_idmic,nstop
      $     ,infostr)
+#ifdef USE_HDF5
       use HDF5
+#endif
       implicit none
       integer nbsphere,ndipole,nx,ny,nz,nx2,ny2 ,nxm,nym,nzm,nplanm
      $     ,ntotalm,nmax,nmatim,nlar,ldabi,nfft2d,nfft2d2,nstop,nmatf
@@ -68,6 +70,11 @@
       character(64) infostr,beam
 
       character(LEN=100) :: datasetname
+
+#ifndef USE_HDF5
+      integer,parameter:: hid_t=4
+#endif
+
       integer(hid_t) :: file_id
       integer(hid_t) :: group_idmic
       integer :: dim(4)

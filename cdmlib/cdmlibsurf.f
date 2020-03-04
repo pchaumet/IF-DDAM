@@ -68,7 +68,9 @@ c     taille double complex (nfft2d,nfft2d,3)
 c     taille entier (nxm*nym*nzm)
      $     Tabdip,Tabmulti,Tabzn)
 
+#ifdef USE_HDF5
       use HDF5
+#endif
 
       implicit none
       
@@ -246,6 +248,9 @@ c     declaration pour HDF5
       integer debug
       integer error
       
+#ifndef USE_HDF5
+      integer,parameter:: hid_t=4
+#endif
       integer(hid_t) :: file_id
       integer(hid_t) :: group_idopt,group_idmic,group_idnf,group_idof
      $     ,group_idff,group_iddip
@@ -259,6 +264,7 @@ c     declaration calcul temps
       call cpu_time(ti)
       call date_and_time(date,time,zone,valuesi)
 
+#ifdef USE_FFTW
       call dfftw_init_threads(iret)
       if (iret.eq.0) then
          write(*,*) 'iret',iret
@@ -267,6 +273,8 @@ c     declaration calcul temps
          return
       endif
       CALL dfftw_plan_with_nthreads(omp_get_max_threads())
+#endif
+
       FFTW_FORWARD=-1
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
@@ -327,6 +335,7 @@ c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
 
       if (nmatf.eq.2) then
          debug=1
+#ifdef USE_HDF5
          call hdf5create(h5file, file_id)
          write(*,*) 'h5 file created :',h5file
          write(*,*) 'file_id         :', file_id
@@ -337,6 +346,7 @@ c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
 c         call h5gcreate_f(file_id,"Optical Force", group_idof, error)
 c         write(*,*) 'error',error
          call h5gcreate_f(file_id,"Near Field", group_idnf, error)
+#endif
       endif
 
 
@@ -1373,11 +1383,12 @@ c     ne fait que l'objet
       subunit=0
       write(*,*) 'Initialize plan for FFT'
 
+#ifdef USE_FFTW
       call dfftw_plan_dft_2d(plan2b,nfft2d,nfft2d,Eimagexpos,Eimagexpos
      $     ,FFTW_BACKWARD,FFTW_ESTIMATE)
       call dfftw_plan_dft_2d(plan2f,nfft2d,nfft2d,Eimagexpos,Eimagexpos
      $     ,FFTW_FORWARD,FFTW_ESTIMATE)
-
+#endif
          
       if (beam(1:11).eq.'pwavelinear') then
          tmp=3.d0
@@ -1858,10 +1869,12 @@ c     function and its FFT
          call primefactor(nx,1,test)
          call primefactor(ny,2,test)
 
+#ifdef USE_FFTW
          call dfftw_plan_dft_2d(planb,nx2,ny2,b11,b11,FFTW_BACKWARD
      $        ,FFTW_ESTIMATE)
          call dfftw_plan_dft_2d(planf,nx2,ny2,b11,b11,FFTW_FORWARD
      $        ,FFTW_ESTIMATE)
+#endif
 
          write(*,*) '************* END PLAN **************************'
          write(*,*) ' '
@@ -2409,11 +2422,12 @@ c     close Intensity of the incident field wide field
          nxm2=nxmpp*2
          nym2=nympp*2
          
+#ifdef USE_FFTW
          call dfftw_plan_dft_2d(planbn, nxm2,nym2,b11,b11,FFTW_BACKWARD
      $        ,FFTW_ESTIMATE)
          call dfftw_plan_dft_2d(planfn, nxm2,nym2,b11,b11,FFTW_FORWARD
      $        ,FFTW_ESTIMATE)
-
+#endif
 
 c     compute Green function (local field)
          hcc=0.3d0
@@ -4658,6 +4672,7 @@ c     9999 format(201(d22.15,1x))
 
  999  if (nmatf.eq.2) then
 !     fermeture du fichier hdf5
+#ifdef USE_HDF5
          CALL h5gclose_f(group_idopt,error) 
          CALL h5gclose_f(group_iddip,error)
          CALL h5gclose_f(group_idff,error)
@@ -4666,6 +4681,9 @@ c     CALL h5gclose_f(group_idof,error)
          CALL h5gclose_f(group_idnf,error)
          call hdf5close(file_id)
          write(*,*) 'close h5file'
+#else
+        write(*,*) "No HDF5!"
+#endif
       endif
       
       if (nstop == -1) then

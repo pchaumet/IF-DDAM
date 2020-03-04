@@ -1,5 +1,6 @@
       subroutine writehdf5mic(Ex,Ey,Ez,nfft2d,imaxk0,Ediff,ntest ,name
      $     ,group_idmic)
+#ifdef USE_HDF5
       use HDF5
       
       implicit none
@@ -110,5 +111,5 @@
       endif
 
 
-
+#endif
       end

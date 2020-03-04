@@ -33,7 +33,11 @@ Options::Options()
   nsideList = (QStringList() << "Side kz<0"  <<  "Both side" << "Side kz>0");
   
   nrigList = (QStringList() << "Rigorous" << "Renormalized Born" << "Born"<< "Born order 1");
+#ifdef USE_HDF5
   nmatlabList = (QStringList() << "Save in ascii file" << "Do not save file" << "Save in HDF5 file");
+#else
+  nmatlabList = (QStringList() << "Save in ascii file" << "Do not save file");
+#endif
   ntypemicList = (QStringList() << "Holographic" << "Brightfield" << "Darkfield & phase");
   
   rangeofstudyList = (QStringList() << "object" << "cube around object" << "wide field");

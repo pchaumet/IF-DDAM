@@ -17,9 +17,15 @@
       fac=deltakx*deltaky
 
       nfft2d2=nfft2d/2
+#ifdef USE_FFTW
       call dfftw_execute_dft(planb,Ex,Ex)
       call dfftw_execute_dft(planb,Ey,Ey)
       call dfftw_execute_dft(planb,Ez,Ez)
+#else
+      call fftsingletonz2d(Ex,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(Ey,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(Ez,0,0,FFTW_BACKWARD)
+#endif
       
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice,kk)   
 !$OMP& PRIVATE(tmpx,tmpy,tmpz)

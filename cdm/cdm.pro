@@ -18,6 +18,13 @@ DEFINES 	+=      CDMVERSION=\\\"$$VERSION\\\"
 unix::DEFINES  +=      OS=LINUX
 win32::DEFINES  +=      OS=WIN32
 
+CONFIG(fftw) {
+DEFINES 	+=      USE_FFTW
+}
+CONFIG(hdf5) {
+DEFINES 	+=      USE_HDF5
+}
+
 #DEFINES 	+= 	QT_NO_DEBUG_OUTPUT
 
 MOC_DIR         = moc
@@ -29,10 +36,13 @@ RCC_DIR         = resources
 
 QMAKE_CXXFLAGS_RELEASE  -= -O2
 
-QMAKE_CXXFLAGS 	+= -O3 
+QMAKE_CXXFLAGS 	+= -g -O3 
 
-QMAKE_LFLAGS    += -fopenmp -lfftw3_omp -lfftw3 -lm
-QMAKE_LFLAGS    += -O3
+QMAKE_CC        =       gfortran
+
+QMAKE_CFLAGS    += -Warray-bounds -fcray-pointer -w -cpp -mcmodel=large -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -g -fcheck=all -fbacktrace -fopenmp
+
+QMAKE_LFLAGS    = -mcmodel=large -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -cpp -g -fcheck=all -fbacktrace -fopenmp
 
 HEADERS 	+= 	cdmMain.h \
 			cdmOptions.h \
@@ -80,17 +90,32 @@ QWTPLOT3_INC_PATH  =    ../qwtplot3d/include
 
 INCLUDEPATH 	+=	$$CDMLIB_INC_PATH $$QWT_INC_PATH $$QWTPLOT3_INC_PATH
 
-win32::LIBS 	+= -L$$CDMLIB_LIB_PATH -lcdmlib \
+win32::LIBS 	+= -L$$CDMLIB_LIB_PATH -lcdmlibsurf \
                    -L$$QWT_LIB_PATH -lqwt \
                    -L$$QWTPLOT3_LIB_PATH -lqwtplot3d \
                    -lglu32 -lz -lopengl32 -lgfortran
 
-unix:LIBS            += -Wl,-Bstatic \
+unix:LIBS            += -Wl,-rpath -Wl,$$CDMLIB_LIB_PATH \
                    -L$$CDMLIB_LIB_PATH -lcdmlibsurf \
                    -L$$QWT_LIB_PATH -lqwt \
                    -L$$QWTPLOT3_LIB_PATH -lqwtplot3d \
                    -Wl,-Bdynamic \
-                   -lGLU -lgfortran -lfftw3_omp -lfftw3 -lm -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
+                   -lGLU -lgfortran 
+
+CONFIG(fftw) {
+unix:LIBS            += -lfftw3_omp -lfftw3 -lm
+}
+
+CONFIG(hdf5) {
+# sur centos, fedora, etc...
+  exists( /usr/lib64/gfortran/modules ) {
+  unix:LIBS            += -I/usr/lib64/gfortran/modules -I/usr/include -L/usr/lib64 -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
+  }
+# sur ubuntu
+  exists( /usr/include/hdf5/serial ) {
+  unix:LIBS            += -I/usr/include/hdf5/serial -I/usr/include -L/usr/lib/x86_64-linux-gnu/hdf5/serial -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5
+  }
+}
 
 
 # make install

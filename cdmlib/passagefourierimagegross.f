@@ -86,9 +86,15 @@
 !$OMP ENDDO 
 !$OMP END PARALLEL
 
+#ifdef USE_FFTW
       call dfftw_execute_dft(planf,Eimx,Eimx)
       call dfftw_execute_dft(planf,Eimy,Eimy)
       call dfftw_execute_dft(planf,Eimz,Eimz)
+#else
+      call fftsingletonz2d(Eimx,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(Eimy,0,0,FFTW_BACKWARD)
+      call fftsingletonz2d(Eimz,0,0,FFTW_BACKWARD)
+#endif
       
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice,kk)   
 !$OMP& PRIVATE(tmpx,tmpy,tmpz)

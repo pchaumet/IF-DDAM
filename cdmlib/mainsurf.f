@@ -1,4 +1,6 @@
+#ifdef USE_HDF5
       use HDF5
+#endif
       implicit none
 c     integer
       integer ii,jj,kk,i,j,k,nstop
