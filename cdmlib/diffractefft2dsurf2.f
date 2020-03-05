@@ -142,13 +142,12 @@ c     Info string
          call fftsingletonz2d(Eloinx,nfft2d,nfft2d,FFTW_FORWARD)
 !$OMP SECTION   
          call fftsingletonz2d(Eloiny,nfft2d,nfft2d,FFTW_FORWARD)
-!$OMP SECTION   
+!$OMP SECTION  
          call fftsingletonz2d(Eloinz,nfft2d,nfft2d,FFTW_FORWARD)
 !$OMP END SECTIONS
 !$OMP END PARALLEL
-#endif
+#endif         
 
-         
          kk=1+nx*ny*(k-1)
 
          if (ncote.eq.0.or.ncote.eq.1) then

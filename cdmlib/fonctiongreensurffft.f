@@ -94,27 +94,26 @@ c*******************************************************
             call dfftw_execute_dft(planb,b32,b32)
             call dfftw_execute_dft(planb,b33,b33)
 #else
-!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP PARALLEL 
 !$OMP SECTIONS 
-!$OMP SECTION   
-      call fftsingletonz3d(b11,0,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz3d(b12,0,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz3d(b13,0,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz3d(b22,0,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz3d(b23,0,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz3d(b31,0,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz3d(b32,0,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz3d(b33,0,0,0,FFTW_BACKWARD)
+!$OMP SECTION
+            call fftsingletonz2d(b11,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION
+            call fftsingletonz2d(b12,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION            
+            call fftsingletonz2d(b13,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION
+            call fftsingletonz2d(b22,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION
+            call fftsingletonz2d(b23,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION
+            call fftsingletonz2d(b31,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION
+            call fftsingletonz2d(b32,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION
+            call fftsingletonz2d(b33,NX2,NY2,FFTW_BACKWARD)
 !$OMP END SECTIONS
-!$OMP END PARALLEL  
-
+!$OMP END PARALLEL 
 #endif
 
 

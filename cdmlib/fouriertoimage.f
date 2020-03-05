@@ -23,24 +23,25 @@
       call dfftw_execute_dft(plan2b,Eimageincx,Eimageincx)
       call dfftw_execute_dft(plan2b,Eimageincy,Eimageincy)
       call dfftw_execute_dft(plan2b,Eimageincz,Eimageincz)
-#else
+#else 
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP SECTIONS 
 !$OMP SECTION   
-      call fftsingletonz2d(Eimageincx,nfft2d,nfft2d,FFTW_FORWARD)
+      call fftsingletonz2d(Eimageincx,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP SECTION   
-      call fftsingletonz2d(Eimageincy,nfft2d,nfft2d,FFTW_FORWARD)
+      call fftsingletonz2d(Eimageincy,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP SECTION   
-      call fftsingletonz2d(Eimageincz,nfft2d,nfft2d,FFTW_FORWARD)
+      call fftsingletonz2d(Eimageincz,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP SECTION   
-      call fftsingletonz2d(Eimagex,nfft2d,nfft2d,FFTW_FORWARD)
+      call fftsingletonz2d(Eimagex,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP SECTION   
-      call fftsingletonz2d(Eimagey,nfft2d,nfft2d,FFTW_FORWARD)
+      call fftsingletonz2d(Eimagey,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP SECTION   
-      call fftsingletonz2d(Eimagez,nfft2d,nfft2d,FFTW_FORWARD)
+      call fftsingletonz2d(Eimagez,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP END SECTIONS
 !$OMP END PARALLEL
 #endif
+
 
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP& PRIVATE(i,j,indicex,indicey,indice,kk,ctmp)

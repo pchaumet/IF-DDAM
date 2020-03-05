@@ -7,6 +7,7 @@
 #ifdef USE_HDF5
       use HDF5
 #endif
+
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,nxm ,nym ,nzm
      $     ,i,j,k,test ,IP(3),nnnr,dddis,inv,na,nstop,nmatf
@@ -30,12 +31,10 @@
       integer *8 planb
       integer FFTW_BACKWARD,FFTW_ESTIMATE,FFTW_FORWARD
 
-      character(LEN=100) :: datasetname
-
 #ifndef USE_HDF5
       integer,parameter:: hid_t=4
 #endif
-
+      character(LEN=100) :: datasetname
       integer(hid_t) :: file_id
       integer(hid_t) :: group_iddip
       integer :: dim(4)
@@ -211,10 +210,9 @@ c     Profil des hauteurs
       call dfftw_plan_dft_3d(planb, nx,ny,nz,epsb,epsb,FFTW_BACKWARD
      $     ,FFTW_ESTIMATE)
       call dfftw_execute_dft(planb, epsb, epsb)
-#else
-      call fftsingletonz3d(epsb, nx,ny,nz,FFTW_BACKWARD)
+#else   
+      call fftsingletonz3d(epsb,NX,NY,NZ,FFTW_BACKWARD)
 #endif
-
       moyenne=0.d0
       ecartype=0.d0
       do i=1,nk

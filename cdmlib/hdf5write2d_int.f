@@ -2,6 +2,7 @@
       !dim(1)=nx dim(2)=ny dim(3)=nxm dim(4)=nym
       subroutine hdf5write2d_int(file_id, datasetname, data0, dim0)
 #ifdef USE_HDF5
+
          use HDF5
          implicit none
          integer(hid_t) :: file_id

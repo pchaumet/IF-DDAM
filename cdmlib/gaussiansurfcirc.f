@@ -48,10 +48,9 @@ c     faisceau gaussien de d=-N/2*dx -xs(1) et pareil en y.
       character(64) infostr
       integer FFTW_BACKWARD
       integer*8 planb
-
-      FFTW_BACKWARD=+1
       
 c     changement unite angle, psi =0 defini pol p
+      FFTW_BACKWARD=+1
       pi=dacos(-1.d0)
       theta=thetat*pi/180.d0
       phi=phit*pi/180.d0
@@ -226,24 +225,22 @@ c     const2=cdexp(icomp*(var1*dble(nkx)+var2*dble(nky)))
          
 c     fin boucle en delta k
 c     calcul de la FFT
-
 #ifdef USE_FFTW
          call dfftw_execute_dft(planb,Egausxref,Egausxref)
          call dfftw_execute_dft(planb,Egausyref,Egausyref)
          call dfftw_execute_dft(planb,Egauszref,Egauszref)
-#else
+#else        
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP SECTIONS 
 !$OMP SECTION   
-      call fftsingletonz2d(Egausxref,0,0,FFTW_BACKWARD)
+         call fftsingletonz2d(Egausxref,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP SECTION   
-      call fftsingletonz2d(Egausyref,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz2d(Egauszref,0,0,FFTW_BACKWARD)
+         call fftsingletonz2d(Egausyref,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP SECTION  
+         call fftsingletonz2d(Egauszref,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP END SECTIONS
-!$OMP END PARALLEL           
+!$OMP END PARALLEL
 #endif
-
 c     shift+remet dans FF0, le champ incident
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(nkx,nky,ii,jj,indice,nnn,kkk)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)

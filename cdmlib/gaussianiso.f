@@ -55,6 +55,7 @@ c     fluxinc=1/(2mu0c) *4*pi²/k0 *Int[ |A(k||)|² kz dk|| ]
       integer FFTW_BACKWARD
       integer*8 planb
       
+      FFTW_BACKWARD=+1
       write(*,*) 'info',infostr
       infostr='tt'
       write(*,*) 'info',infostr
@@ -237,6 +238,7 @@ c     const2=cdexp(icomp*(var1*dble(nkx)+var2*dble(nky)))
 
 c     fin boucle en delta k
 c     calcul de la FFT
+
 #ifdef USE_FFTW
          call dfftw_execute_dft(planb,Egausxref,Egausxref)
          call dfftw_execute_dft(planb,Egausyref,Egausyref)
@@ -245,15 +247,14 @@ c     calcul de la FFT
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP SECTIONS 
 !$OMP SECTION   
-      call fftsingletonz2d(Egausxref,0,0,FFTW_BACKWARD)
+         call fftsingletonz2d(Egausxref,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP SECTION   
-      call fftsingletonz2d(Egausyref,0,0,FFTW_BACKWARD)
-!$OMP SECTION   
-      call fftsingletonz2d(Egauszref,0,0,FFTW_BACKWARD)
+         call fftsingletonz2d(Egausyref,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP SECTION  
+         call fftsingletonz2d(Egauszref,nfft2d,nfft2d,FFTW_BACKWARD)
 !$OMP END SECTIONS
 !$OMP END PARALLEL
 #endif
-
 
 c     shift+remet dans FF0, le champ incident
          do nkx=-nfft2d2,-nfft2d2+nx-1

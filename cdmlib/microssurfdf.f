@@ -14,9 +14,11 @@
      $     ,numapertra,numaperinc,gross,zlensr,zlenst ,ntypemic , planf
      $     ,planb ,plan2f ,plan2b ,nmatf,file_id ,group_idmic,nstop
      $     ,infostr)
+
 #ifdef USE_HDF5
       use HDF5
 #endif
+
       implicit none
       integer nbsphere,ndipole,nx,ny,nz,nx2,ny2 ,nxm,nym,nzm,nplanm
      $     ,ntotalm,nmax,nmatim,nlar,ldabi,nfft2d,nfft2d2,nstop,nmatf
@@ -37,8 +39,9 @@
       double precision tol,tol1,tolinit,aretecube,eps0,k0,P0,irra,pi
      $     ,numaperref,numapertra,numaperinc,numaperk,kxinc,kyinc,I0
      $     ,deltax,deltakx ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
+     $     ,deltakm,xmin,xmax,ymin,ymax
       integer i,j,ii,jj,k,kk,idelta,jdelta,ideltam,nrig,npolainc
-     $     ,nquicklens,npol,imaxk0,niter,niterii
+     $     ,nquicklens,npol,imaxk0,niter,niterii,imul
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
       double precision kxy(nfft2d),xy(nfft2d),gross,kx,ky,deltatheta,phi
      $     ,theta,zlensr,zlenst
@@ -74,7 +77,6 @@
 #ifndef USE_HDF5
       integer,parameter:: hid_t=4
 #endif
-
       integer(hid_t) :: file_id
       integer(hid_t) :: group_idmic
       integer :: dim(4)
@@ -90,6 +92,7 @@ c     initialise
       npolainc=0
       icomp=(0.d0,1.d0)
       nbsphere3=3*nbsphere
+      numaperk=k0*numaperinc
       x=0.d0
       y=0.d0
       indice0=dsqrt(dreal(epscouche(0)))
@@ -101,34 +104,75 @@ c     initialise
          return
       endif
 
-
-
+c     calcul de deltak      
+      xmax=-1.d300
+      xmin=1.d300
+      ymax=-1.d300
+      ymin=1.d300
+!$OMP PARALLEL  DEFAULT(SHARED) PRIVATE(i)
+!$OMP DO SCHEDULE(STATIC) REDUCTION(max:xmax,ymax)
+!$OMP& REDUCTION(min:xmin,ymin)      
+      do i=1,nbsphere
+         xmax=max(xmax,xs(i))
+         xmin=min(xmin,xs(i))
+         ymax=max(ymax,ys(i))
+         ymin=min(ymin,ys(i))     
+      enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
+      deltakm=pi/max(xmax-xmin,ymax-ymin)
       deltax=aretecube
       
       if (nquicklens.eq.1) then
          
-         deltakx=2.d0*pi/(aretecube*dble(nfft2d))        
-         imaxk0=nint(k0/deltakx)+1
-         
+       deltakx=2.d0*pi/(aretecube*dble(nfft2d))
+
+         if (deltakx.ge.numaperk) then
+            nstop=1
+          infostr='In FFT lens nfft2d too small:Increase size of FFT 1'
+            return
+         endif        
+         imul=idint(deltakm/deltakx)
+         if (imul.eq.0) then
+            nstop=1
+          infostr='In FFT lens nfft2d too small:Increase size of FFT 2'
+            return            
+         endif
+ 223     deltak=deltakx*dble(imul)
+         write(*,*) 'change delta k :',imul,deltak
+         imaxk0=nint(k0/deltak)+1
+         if (imaxk0.le.3) then
+            imul=imul-1
+            if (imul.eq.0) then
+               nstop=1
+          infostr='In FFT lens nfft2d too small:Increase size of FFT 3'
+               return
+            endif
+            goto 223
+         endif
+         deltakx=deltak
+         write(*,*) 'Step size delta k : ',deltakx,'m-1'
+
       else
-         write(*,*) 'Step size delta k : ',2.d0*pi
-     $        /(dble(nfft2d)*aretecube)
          k=0
- 222     deltakx=2.d0*pi/(dble(nfft2d)*aretecube)/dble(2**k)
-         imaxk0=nint(k0/deltakx)+1
-         
-         if (imaxk0.le.5) then
+         deltakx=2.d0*pi/(dble(nfft2d)*aretecube)
+ 222     deltak=deltakx*dnint(deltakm/deltakx)/dble(2**k)
+         imaxk0=nint(k0/deltak)+1
+         if (imaxk0.le.2) then
             k=k+1
             write(*,*) 'change delta k :',k,dble(nfft2d*(2
      $           **k)),nfft2d
             goto 222
          endif
+         deltakx=deltak
+         write(*,*) 'Step size delta k : ',deltakx,'m-1'
       endif
+
+      deltax=aretecube
       deltak=deltakx
-      deltaky=deltakx
       deltatheta=deltak/k0*numaperinc
       ideltam=max(int(2.d0*pi/deltatheta)+1,8)
-      numaperk=k0*numaperinc
+      deltaky=deltakx
 
       if (nfft2d.gt.4096) then
          nstop=1
@@ -181,14 +225,14 @@ c     calcul puissance
             ss=1.d0
             pp=0.d0
          elseif (npolainc.eq.2) then
-            ss=0.d0
+            ss=1.d0
             pp=1.d0
          else
             if (ipol.eq.1) then
                ss=1.d0
                pp=0.d0
             else
-               ss=0.d0
+               ss=1.d0
                pp=1.d0
             endif
          endif
@@ -204,14 +248,17 @@ c     sommation
             kyinc=dsin(phi)*k0*numaperinc
             
 c     calcul champ incident
-            
+
+            write(*,*) 'fg',epscouche,zcouche,neps ,nepsmax ,k0,E0,ss,pp
+     $           ,kxinc ,kyinc
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)
-
             do i=1,nbsphere           
                call champlineairekxky(epscouche,zcouche,neps ,nepsmax
      $              ,xs(i),ys(i),zs(i),k0,E0,ss,pp,kxinc ,kyinc ,infostr
      $              ,nstop,FF0(3*i-2),FF0(3*i-1) ,FF0(3*i))
+               write(*,*) 'gg',xs(i),ys(i),zs(i),FF0(3*i-2),FF0(3*i-1)
+     $              ,FF0(3*i),i
             enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL
@@ -793,6 +840,18 @@ c     sommation de toutes les images incohérentes.
             write(651,*) kx/k0
          enddo
 
+         open(410,file='kxincidentdf.mat')
+         open(411,file='kyincidentdf.mat')
+         do idelta=0,ideltam-1
+            phi=dble(idelta)*2.d0*pi/dble(ideltam)
+            theta=dasin(numaperinc)
+            kxinc=dcos(phi)*numaperinc
+            kyinc=dsin(phi)*numaperinc
+            write(410,*) kxinc
+            write(411,*) kyinc
+         enddo
+         close(410)
+         close(411)
 
          if (ncote.eq.0.or.ncote.eq.1) then
             
@@ -881,6 +940,26 @@ c     sommation de toutes les images incohérentes.
             call writehdf5mic(Eimageincxneg,Eimageincyneg,Eimageinczneg
      $           ,nfft2d,imaxk0,Ediffkzpos,k,datasetname,group_idmic)
          endif
+
+         do idelta=0,ideltam-1
+            phi=dble(idelta)*2.d0*pi/dble(ideltam)
+            theta=dasin(numaperinc)
+            kxy(idelta+1)=dcos(phi)*numaperinc
+         enddo
+         dim(1)=ideltam
+         dim(2)=nfft2d
+         datasetname='kx incident df'
+         call hdf5write1d(group_idmic,datasetname,kxy,dim)
+         do idelta=0,ideltam-1
+            phi=dble(idelta)*2.d0*pi/dble(ideltam)
+            theta=dasin(numaperinc)
+            kxy(idelta+1)=dsin(phi)*numaperinc
+         enddo
+         dim(1)=ideltam
+         dim(2)=nfft2d
+         datasetname='ky incident df'
+         call hdf5write1d(group_idmic,datasetname,kxy,dim)
+         
       endif
       
 

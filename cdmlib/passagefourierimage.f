@@ -59,10 +59,17 @@ c         do j=-nfft2d2,nfft2d2-1
       call dfftw_execute_dft(planb,Eimx,Eimx)
       call dfftw_execute_dft(planb,Eimy,Eimy)
       call dfftw_execute_dft(planb,Eimz,Eimz)
-#else
-      call fftsingletonz2d(Eimx,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(Eimy,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(Eimz,0,0,FFTW_BACKWARD)
+#else   
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP SECTIONS 
+!$OMP SECTION   
+         call fftsingletonz2d(Eimx,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP SECTION   
+         call fftsingletonz2d(Eimy,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP SECTION  
+         call fftsingletonz2d(Eimz,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP END SECTIONS
+!$OMP END PARALLEL
 #endif
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice,kk)   

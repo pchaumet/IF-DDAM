@@ -13,5 +13,4 @@
          ! H5F_ACC_TRUNC_F cree si n existe pas sinon ecrase
          call h5fcreate_f(filename, H5F_ACC_TRUNC_F, file_id, error)
 #endif
-
       end subroutine hdf5create

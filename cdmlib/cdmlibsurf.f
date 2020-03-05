@@ -247,10 +247,10 @@ c     declaration pour HDF5
       character(LEN=100) :: datasetname
       integer debug
       integer error
-      
+
 #ifndef USE_HDF5
       integer,parameter:: hid_t=4
-#endif
+#endif    
       integer(hid_t) :: file_id
       integer(hid_t) :: group_idopt,group_idmic,group_idnf,group_idof
      $     ,group_idff,group_iddip
@@ -260,7 +260,8 @@ c     declaration calcul temps
       character(10) :: time
       character(5)  :: zone
       integer values(8),values2(8),valuesi(8),valuesf(8)
-      
+      CHARACTER(len=32) :: PROG_STRING
+
       call cpu_time(ti)
       call date_and_time(date,time,zone,valuesi)
 
@@ -279,7 +280,20 @@ c     declaration calcul temps
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
 
-      
+      call GETARG(0, PROG_STRING)
+#ifdef CDMVERSION
+      PROG_STRING = trim(PROG_STRING) // ' ' // CDMVERSION
+#endif
+#ifdef DEBUG
+      PROG_STRING = trim(PROG_STRING) // ' debug  '
+#endif
+#ifdef USE_FFTW
+      PROG_STRING = trim(PROG_STRING) // ' with FFTW '
+#endif
+#ifdef USE_HDF5
+      PROG_STRING = trim(PROG_STRING) // ' with HDF5 '
+#endif
+      write (*,*) trim(PROG_STRING)
 
       
       ncote=ncote-1
@@ -1292,6 +1306,7 @@ c     cré le fichier de data pour connaitre les options pour matlab
       write(900,*) indice0
       write(900,*) ntypemic
       write(900,*) nmatf
+      write(900,*) numaperinc
       close(900)
       if (nmatf.eq.2) then
          open(901,file='filenameh5')
@@ -1365,6 +1380,8 @@ c     cré le fichier de data pour connaitre les options pour matlab
          call hdf5write1d_int(group_idopt,datasetname,ntypemic,dim)
          datasetname='nmatf'
          call hdf5write1d_int(group_idopt,datasetname,nmatf,dim)
+         datasetname='numaperinc'
+         call hdf5write1d_int(group_idopt,datasetname,numaperinc,dim)
       endif
 
 c     ne fait que l'objet
@@ -1874,10 +1891,9 @@ c     function and its FFT
      $        ,FFTW_ESTIMATE)
          call dfftw_plan_dft_2d(planf,nx2,ny2,b11,b11,FFTW_FORWARD
      $        ,FFTW_ESTIMATE)
-#endif
-
          write(*,*) '************* END PLAN **************************'
          write(*,*) ' '
+#endif
 
          hcc=0.3d0
          epsabs=0.d0
@@ -2421,8 +2437,8 @@ c     close Intensity of the incident field wide field
 
          nxm2=nxmpp*2
          nym2=nympp*2
-         
-#ifdef USE_FFTW
+
+#ifdef USE_FFTW        
          call dfftw_plan_dft_2d(planbn, nxm2,nym2,b11,b11,FFTW_BACKWARD
      $        ,FFTW_ESTIMATE)
          call dfftw_plan_dft_2d(planfn, nxm2,nym2,b11,b11,FFTW_FORWARD
@@ -4671,8 +4687,8 @@ c     9999 format(201(d22.15,1x))
       endif
 
  999  if (nmatf.eq.2) then
-!     fermeture du fichier hdf5
 #ifdef USE_HDF5
+!     fermeture du fichier hdf5
          CALL h5gclose_f(group_idopt,error) 
          CALL h5gclose_f(group_iddip,error)
          CALL h5gclose_f(group_idff,error)
@@ -4681,8 +4697,6 @@ c     CALL h5gclose_f(group_idof,error)
          CALL h5gclose_f(group_idnf,error)
          call hdf5close(file_id)
          write(*,*) 'close h5file'
-#else
-        write(*,*) "No HDF5!"
 #endif
       endif
       

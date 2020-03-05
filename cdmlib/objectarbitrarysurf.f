@@ -6,7 +6,6 @@
 #ifdef USE_HDF5
       use HDF5
 #endif
-
       implicit none
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,ii,jj,i,j,k
      $     ,test,IP(3),nnnr,dddis,inv,nx1,ny1,nz1,na,nstop,ierror
@@ -22,12 +21,10 @@
       character(3) trope
       character(64) namefile
       character(64) infostr
-
-      character(LEN=100) :: datasetname
-
 #ifndef USE_HDF5
       integer,parameter:: hid_t=4
 #endif
+      character(LEN=100) :: datasetname
       integer(hid_t) :: file_id
       integer(hid_t) :: group_iddip
       integer :: dim(4)

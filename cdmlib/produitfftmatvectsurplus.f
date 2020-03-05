@@ -68,11 +68,17 @@ c     calcul FFT du vecteur B
          call dfftw_execute_dft(planb,x2,x2)
          call dfftw_execute_dft(planb,x3,x3)
 #else
-      call fftsingletonz2d(x1,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(x2,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(x3,0,0,FFTW_BACKWARD)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP SECTIONS 
+!$OMP SECTION   
+         call fftsingletonz2d(x1,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION   
+         call fftsingletonz2d(x2,NX2,NY2,FFTW_BACKWARD)
+!$OMP SECTION  
+         call fftsingletonz2d(x3,NX2,NY2,FFTW_BACKWARD)
+!$OMP END SECTIONS
+!$OMP END PARALLEL
 #endif
-
          
          do ll=1,ntp
 
@@ -118,12 +124,18 @@ c     calcul FFT du vecteur B
             call dfftw_execute_dft(planf,b21,b21)
             call dfftw_execute_dft(planf,b31,b31)
 #else
-      call fftsingletonz2d(b11,0,0,FFTW_FORWARD)
-      call fftsingletonz2d(b21,0,0,FFTW_FORWARD)
-      call fftsingletonz2d(b31,0,0,FFTW_FORWARD)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP SECTIONS 
+!$OMP SECTION   
+            call fftsingletonz2d(b11,NX2,NY2,FFTW_FORWARD)
+!$OMP SECTION   
+            call fftsingletonz2d(b21,NX2,NY2,FFTW_FORWARD)
+!$OMP SECTION  
+            call fftsingletonz2d(b31,NX2,NY2,FFTW_FORWARD)
+!$OMP END SECTIONS
+!$OMP END PARALLEL
 #endif
-
-            
+     
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indice,ii)
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2)
             do j=1,ny

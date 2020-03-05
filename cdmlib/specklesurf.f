@@ -191,11 +191,17 @@ c     calcul de la FFT
          call dfftw_execute_dft(planb,Egausyref,Egausyref)
          call dfftw_execute_dft(planb,Egauszref,Egauszref)
 #else
-      call fftsingletonz2d(Egausxref,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(Egausyref,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(Egauszref,0,0,FFTW_BACKWARD)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP SECTIONS 
+!$OMP SECTION   
+         call fftsingletonz2d(Egausxref,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP SECTION   
+         call fftsingletonz2d(Egausyref,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP SECTION  
+         call fftsingletonz2d(Egauszref,nfft2d,nfft2d,FFTW_BACKWARD)
+!$OMP END SECTIONS
+!$OMP END PARALLEL
 #endif
-
 
 c     shift+remet dans FF0, le champ incident
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(nkx,nky,ii,jj,indice,nnn,kkk)

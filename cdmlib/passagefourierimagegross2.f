@@ -7,9 +7,9 @@
      $     ,v(3),kx,ky,k0,k0n,indiceopt,fac,side,u1,u2,costmp,sintmp
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
      $     *nfftmax),tmpx,tmpy ,tmpz,ctmp
-      integer FFTW_BACKWARD
+      integer FFTW_FORWARD
       integer*8 planb,planf
-      FFTW_BACKWARD=+1
+      FFTW_FORWARD=-1
 
 
       pi=dacos(-1.d0)
@@ -80,10 +80,17 @@
       call dfftw_execute_dft(planf,Ex,Ex)
       call dfftw_execute_dft(planf,Ey,Ey)
       call dfftw_execute_dft(planf,Ez,Ez)
-#else
-      call fftsingletonz2d(Ex,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(Ey,0,0,FFTW_BACKWARD)
-      call fftsingletonz2d(Ez,0,0,FFTW_BACKWARD)
+#else   
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP SECTIONS 
+!$OMP SECTION   
+      call fftsingletonz2d(Ex,nfft2d,nfft2d,FFTW_FORWARD)
+!$OMP SECTION   
+      call fftsingletonz2d(Ey,nfft2d,nfft2d,FFTW_FORWARD)
+!$OMP SECTION  
+      call fftsingletonz2d(Ez,nfft2d,nfft2d,FFTW_FORWARD)
+!$OMP END SECTIONS
+!$OMP END PARALLEL
 #endif
       
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice,kk)   

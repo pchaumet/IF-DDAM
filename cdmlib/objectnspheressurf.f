@@ -4,9 +4,11 @@
      $     ,nx ,ny,nz,methode ,na,epsilon,polarisa,neps,nepsmax,dcouche
      $     ,zcouche,epscouche ,tabzn,nmatf,file_id,group_iddip,infostr
      $     ,nstop)
+
 #ifdef USE_HDF5
       use HDF5
 #endif
+
       implicit none
       integer nmax,tabdip(nmax),tabnbs(nmax),nbsphere,ndipole,nx,ny,nz
      $     ,na,ii,jj,i,j,k,test,IP(3),nnnr,dddis,inv,is,numbersphere
@@ -26,13 +28,10 @@
       character(2) methode
       character(3) trope
       character(64) infostr
-
-      character(LEN=100) :: datasetname
-
 #ifndef USE_HDF5
       integer,parameter:: hid_t=4
 #endif
-
+      character(LEN=100) :: datasetname
       integer(hid_t) :: file_id
       integer(hid_t) :: group_iddip
       integer :: dim(4)

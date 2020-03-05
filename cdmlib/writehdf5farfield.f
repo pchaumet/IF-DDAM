@@ -122,5 +122,6 @@
          call hdf5write1d(group_idff,datasetname,dreal(Eimageincxpos)
      $        ,dim)
       endif
+
 #endif
       end

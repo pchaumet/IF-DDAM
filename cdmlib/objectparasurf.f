@@ -23,13 +23,10 @@
       character(2) methode
       character(3) trope
       character(64) infostr
-
-      character(LEN=100) :: datasetname
-
 #ifndef USE_HDF5
       integer,parameter:: hid_t=4
 #endif
-
+      character(LEN=100) :: datasetname
       integer(hid_t) :: file_id
       integer(hid_t) :: group_iddip
       integer :: dim(4)

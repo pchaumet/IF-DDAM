@@ -24,7 +24,8 @@
       
       do i=1,nba
          pp=ppm(i)
-         ss=ssm(i)
+c     ss=ssm(i)
+         ss=1.d0
          thetat=thetam(i)
          phit=phim(i)
          E0=E0m(i)

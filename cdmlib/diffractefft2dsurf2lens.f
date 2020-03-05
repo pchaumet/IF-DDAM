@@ -135,8 +135,8 @@ c      imax=nint(NA*k0*indice0/deltakx)+1
          enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL  
-   
-#ifdef USE_FFTW
+
+#ifdef USE_FFTW   
          call dfftw_execute_dft(planf,Eloinx,Eloinx)
          call dfftw_execute_dft(planf,Eloiny,Eloiny)
          call dfftw_execute_dft(planf,Eloinz,Eloinz)
@@ -147,12 +147,11 @@ c      imax=nint(NA*k0*indice0/deltakx)+1
          call fftsingletonz2d(Eloinx,nfft2d,nfft2d,FFTW_FORWARD)
 !$OMP SECTION   
          call fftsingletonz2d(Eloiny,nfft2d,nfft2d,FFTW_FORWARD)
-!$OMP SECTION   
+!$OMP SECTION  
          call fftsingletonz2d(Eloinz,nfft2d,nfft2d,FFTW_FORWARD)
 !$OMP END SECTIONS
-!$OMP END PARALLEL           
-#endif
-
+!$OMP END PARALLEL
+#endif 
          
          kk=1+nx*ny*(k-1)
 

@@ -2,6 +2,7 @@
       !dim(1)=nx dim(2)=nxm 
       subroutine hdf5write1d_int(file_id, datasetname, data0, dim0)
 #ifdef USE_HDF5
+
          use HDF5
          implicit none
          integer(hid_t) :: file_id
@@ -54,5 +55,4 @@
          !ferme le dataspace du dataset
          call h5sclose_f(dataspace_id, error)
 #endif
-
       end subroutine hdf5write1d_int
