@@ -166,7 +166,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     double wavelength;
     wavelength = options->getWavelength();
     QLOG_DEBUG () << "Wavelength:" << QString::number(wavelength,'g',5);
-    char beam[64];
+    char beam[64] = {'\n'};
     
     if (options->getBeam() == "Circular plane wave") strcpy (beam,"pwavecircular");
     if (options->getBeam() == "Linear plane wave") strcpy (beam,"pwavelinear");
@@ -183,7 +183,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
      namefileinc[i] = ' ';
     strncpy(namefileinc,(char*)options->getBeamFile().toStdString().c_str(),options->getBeamFile().size());
     QLOG_DEBUG () << "BeamFile:" << options->getBeamFile();
-    char object[64];
+    char object[64] = {' '};
 
     if (options->getObject() == "sphere") strcpy (object,"sphere");
     if (options->getObject() == "inhomogeneous sphere") strcpy (object,"inhomosphere");
@@ -736,7 +736,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
      return;
     }
    else
-     QLOG_DEBUG() << "Memory used=" << needed_mem << "MB (available memory="
+     QLOG_INFO() << "Memory used=" << needed_mem << "MB (available memory="
                  << available_mem << "MB)";
     
    incidentfield = run->getIncidentField();
@@ -835,7 +835,9 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    Tabmulti = run->getTabmulti();
    Tabzn = run->getTabzn();
 
-   cdmlibsurf_(&wavelength, beam, object, anisotropy, material,
+   QLOG_INFO() << "appel lib fortran" << __FILE__ << '@' << __LINE__;
+   QLOG_INFO() << "beam:" << beam <<  __FILE__ << '@' << __LINE__;
+  cdmlibsurf_(&wavelength, beam, object, anisotropy, material,
 	       &discretization, &tolerance, methodeit, polarizability, &nreadCheck, filereread, &nmatlabCheck, fileh5,
 	       // ligne du multicouche
 	   &neps, zcouche, (dcmplx*)epscouche, materiallayer,

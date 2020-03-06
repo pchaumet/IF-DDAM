@@ -1,7 +1,5 @@
 #include "cdmMain.h"
 
-#define DEBUG_LEVEL QsLogging::InfoLevel
-
 CdmMain::CdmMain( QString _appDirPath, QMainWindow* parent, Qt::WindowFlags fl)
   : QMainWindow( parent, fl )
 {
@@ -254,18 +252,18 @@ int main(int argc, char *argv[])
   QsLogging::DestinationPtr debugDestination(QsLogging::DestinationFactory::MakeDebugOutputDestination() );
   logger.addDestination(debugDestination.get());
   logger.addDestination(fileDestination.get());
-  logger.setLoggingLevel(DEBUG_LEVEL);
-  
+  logger.setLoggingLevel(QsLogging::InfoLevel); // InfoLevel or DebugLevel
+
   QLOG_INFO() << "cdm version " << CDMVERSION
 	      << " started : " <<  app.applicationDirPath();
   QLOG_INFO() << "Built with Qt" << QT_VERSION_STR << "running on" << qVersion();
-  QLOG_INFO() << "Qt User Data location : " 
-              <<  QDir::currentPath();
+  QLOG_INFO() << "Qt User Data location : " <<  QDir::currentPath();
+
   CdmMain* cdm = new CdmMain(app.applicationDirPath(),NULL,NULL);
   cdm->setWindowTitle("Discrete Dipole Approximation with a multilayer");
   cdm->show();
   foreach (const QString &path, app.libraryPaths())
-  QLOG_DEBUG() << path;
+  QLOG_DEBUG() << path << __FILE__ << '@' << __LINE__;
  
   return app.exec();
 }
