@@ -1,3 +1,40 @@
+	version 0.5.1
+
+	Fin de la fusion des trois branches en une seule commencée à la
+	version 0.5.0.
+
+	--------------------------------------------------------------
+	version 0.5.0
+
+	1) passage des fortrans avec ifdef pour FFTW et HDF5
+	2) change chap1*.tex sur comment compiler le code.
+	3)  6 et 7 de 0.3.20 inclu dans cette version.
+	4) ajout de README
+
+	--------------------------------------------------------------
+	version 0.3.20
+
+	1) Brightfield change pour le nombre d'incidence car trop grand
+	par defaut.  Maintenant base sur delta k=2*pi /(2L) et multiple de
+	deltakx=2 pi/ (a*N) pour éviter les problèmes d'arrondi si on ne
+	tombe pas sur un point incident de fourier.
+	2) Meme chose que le 1 mais pour dark field. par contre plus
+	multiple de delakx car sur un cercle.
+	3) modification de ifdda.m pour tracer les incidents choisis pour
+	le df et le bf dans la figure 800
+	4) correction erreur introduite par le 4 de la version 19, quand
+	ss a été introduit pour gerer le cas pp=2 ou 3. Maintenant ss=1
+	sinon ou -1 dans le cas 3=x.
+	5) verifier quand pp pas entre 0 et 1 pour multi il y a arret.
+	6) supression de [0 1] pour le condenseur car en fait entre 0 et n
+	incident comme pour la lentille.
+	7) ajout des limites d'ouverture numerique dans l'interface
+	graphique et convetion + superstrat et - substrat, ajout dans doc.
+	chaplater(a).tex et .cpp associé à l'interface.
+
+	finir n+ et n- pour microsocope
+
+	--------------------------------------------------------------
 	version 0.3.19
 
 	1) chap3 et chap3a modifié pour expliquer comment la polarisation
@@ -16,7 +53,7 @@
 	qui ralenti la FFT.
 	7) changement nom version en 0.3.19
 
-	
+
 	--------------------------------------------------------------
 	version 0.3.18
 

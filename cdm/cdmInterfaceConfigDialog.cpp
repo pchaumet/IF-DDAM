@@ -29,13 +29,13 @@ InterfaceConfigDialog::InterfaceConfigDialog(QWidget *parent,Qt::WindowFlags fl,
      if (i ==0) {
        epsilonlayout->addWidget(epsilonr.at(i));
        epsilonlayout->addWidget(materiallayer.at(i));
-       layout->addRow("Medium (real) where the light source is (lowest z):",epsilonlayout);
+       layout->addRow("<html><body>Medium (real) where the light source is (lowest z: &epsilon;_ ):</body></html>",epsilonlayout);
      }
      else if (i == options->getInterfaceNumber()) {
        epsilonlayout->addWidget(epsilonr.at(i));
        epsilonlayout->addWidget(epsiloni.at(i));
        epsilonlayout->addWidget(materiallayer.at(i));
-       layout->addRow("Last medium (highest z):",epsilonlayout);
+       layout->addRow("<html><body>Last medium (highest z: &epsilon; <sub>+<\sub> ):</body></html>",epsilonlayout);
      }
      else {
        epsilonlayout->addWidget(epsilonr.at(i));

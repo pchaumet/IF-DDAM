@@ -259,15 +259,15 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
 
   nar = new QLineEdit(QString::number(options->getNAR()));
   nar->setFixedWidth(60);
-  narLabel = new QLabel("Numerical aperture (reflexion)");
+  narLabel = new QLabel("<html><body> Numerical aperture: [0 n_[ (reflexion)</body></html>");
   nat = new QLineEdit(QString::number(options->getNAT()));
   nat->setFixedWidth(60);
-  natLabel = new QLabel("Numerical aperture (tranmission):");
+  natLabel = new QLabel("<html><body> Numerical aperture: [0 n<sub>+</sub>[  (tranmission)</body></html>");
 
 
   nainc = new QLineEdit(QString::number(options->getNAinc()));
   nainc->setFixedWidth(60);
-  naincLabel = new QLabel("Numerical aperture [0,1] (condenser lens):");
+  naincLabel = new QLabel("<html><body> Numerical aperture: [0 n_[ (condenser lens)</body></html>");
 
   gross = new QLineEdit(QString::number(options->getGross()));
   gross->setFixedWidth(60);
