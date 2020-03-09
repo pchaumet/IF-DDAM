@@ -311,7 +311,7 @@ c         write(*,*) 'propa',Txx,Tzz,'surf',Ixx,Izz
          Ixx=Ixx+Txx
          Izz=Izz+Tzz
       endif
-      write(98,*) NEVAL
+c      write(98,*) NEVAL
 c     divise par epsilon de la couche ou il y a le dipole
       Ixx=Ixx/epscouche(nc)
       Izz=Izz/epscouche(nc)
@@ -1139,7 +1139,15 @@ c     repere dans quelle couche est l'observation
          endif
       enddo
 
- 20   if (no.eq.0.and.nc.eq.0) then
+c     write(*,*) 'numero couche observation',no,z,neps
+c     calcul de zmax
+ 20   if (no.eq.nc) then
+         call propesplibI(a,z,za,k0,epscouche(nc),Txx,Txy,Txz,Tzz)
+         EPSABS=max(epsabs,min(cdabs(Txx),cdabs(Tzz),cdabs(Txy)
+     $        ,cdabs(Txz))*EPSREL)
+      endif
+
+      if (no.eq.0.and.nc.eq.0) then
          zmin=dabs(z+za-2.d0*zcouche(0))
          goto 30
       elseif (no.eq.neps+1.and.nc.eq.neps+1) then
@@ -1503,7 +1511,7 @@ c     write(*,*) 'libre',Txx,Txy,Txz,Tzz
          Izx=Izx+Txz
          Izz=Izz+Tzz
       endif   
-      write(98,*) NEVAL
+c      write(98,*) NEVAL
 c     divise par epsilon de la couche ou il y a le dipole
       Ixx=Ixx/epscouche(nc)
       Izz=Izz/epscouche(nc)
@@ -4617,7 +4625,7 @@ c     premiere espece pour la fonction de Hankel
       HB0=cyr(1)+icomp*cyi(1)
       HB1=cyr(2)+icomp*cyi(2)
       HB2=cyr(3)+icomp*cyi(3)
-      write(1030,*) zr,zi,kmax,a,kint,HB0
+c      write(1030,*) zr,zi,kmax,a,kint,HB0
       k2=k*k      
 c     calcul des wz pour toutes les couches
       do i=0,neps+1

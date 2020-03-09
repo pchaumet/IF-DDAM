@@ -64,8 +64,6 @@ c      write(*,*) 'couc3'
 
       nmat=0
       nmati=0
-      n1max=0
-      n2max=0
       epsabs=0.d0
 
       pi=dacos(-1.d0)
@@ -112,6 +110,7 @@ c     $              ,np1,np2
 c**********************************************************
 c     verifie dimension des tableaux
 c**********************************************************
+      nmat=matindplan(nplan,nplan)*nmati
       write(*,*) 'nbsphere',nbsphere,' nmat',nmat,' nmati',nmati,'ntp'
      $     ,ntp
       write(*,*) 'nmax',nmax,' nbs',nbs,' nmatim',nmatim,'ntp',ntp
@@ -119,7 +118,7 @@ c**********************************************************
          write(*,*) 'decoupe trop la sphere',nbsphere,nmax
          stop
       endif
-      
+
       if (nmat.gt.nbs) then
          write(*,*) 'pas assez de place pour propa',nmat,nbs
          stop
@@ -135,9 +134,4 @@ c**********************************************************
          stop
       endif
       
-      if (n1max.gt.n1m) then
-         write(*,*) 'trop d element lateral',n1max,n2max,n1m         
-         stop
-      endif         
-
       end

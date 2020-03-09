@@ -260,7 +260,7 @@ c     declaration calcul temps
       character(10) :: time
       character(5)  :: zone
       integer values(8),values2(8),valuesi(8),valuesf(8)
-      CHARACTER(len=32) :: PROG_STRING
+      CHARACTER(len=64) :: PROG_STRING
 
       call cpu_time(ti)
       call date_and_time(date,time,zone,valuesi)
@@ -847,11 +847,11 @@ c     Built the object
          endif
          call objetsphereinhomosurf(eps,xs,ys,zs,xswf,yswf,zswf ,k0
      $        ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
-     $        ,polarizability,nproche,epsilon,polarisa,rayon,lc,hc,ng
-     $        ,localfieldx,neps,nepsmax,dcouche,zcouche,epscouche,tabzn
-     $        ,nmatf,file_id,group_iddip,infostr,nstop)
+     $        ,polarizability,nproche,epsilon,polarisa,rayon,xg,yg,zg,lc
+     $        ,hc,ng ,localfieldx,neps,nepsmax,dcouche,zcouche,epscouche
+     $        ,tabzn ,nmatf,file_id,group_iddip,infostr,nstop)
          localfieldx=0.d0
-         write(99,*) 'sphere',rayon
+         write(*,*) 'sphere',rayon,xg,yg,zg,lc,hc,ng
       elseif (object(1:13).eq.'inhomocuboid1') then
          numberobjet=1
          if (trope.ne.'iso') then

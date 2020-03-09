@@ -291,10 +291,16 @@ c     ecriture des faisceaux
             write(1000,*) 'lc      =',lc
             write(1000,*) 'st. de. =',hc
             write(1000,*) 'seed    =',ng
+            write(1000,*) 'pos x   =',xg
+            write(1000,*) 'pos y   =',yg
+            write(1000,*) 'pos z   =',zg
             write(1001) rayon
             write(1001) lc
             write(1001) hc
             write(1001) ng
+            write(1001) xg
+            write(1001) yg
+            write(1001) zg
          elseif(object(1:13).eq.'inhomocuboid1') then
 
             write(1000,*) 'sidex   =',sidex
@@ -807,6 +813,15 @@ c     write(*,*) '13',ctmp,eps
             if (test.ne.0) goto 1000
             read(1000) ntmp
             if (ntmp.ne.ng) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,xg,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,yg,test)
+            if (test.ne.0) goto 1000
+            read(1000) tmp
+            call comparaisonreel(tmp,zg,test)
+            if (test.ne.0) goto 1000        
 
          elseif (object(1:13).eq.'inhomocuboid1') then
 

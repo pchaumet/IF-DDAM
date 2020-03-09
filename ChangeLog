@@ -1,3 +1,22 @@
+	version 0.5.2
+
+	1) changement nom version.
+	2) increase len=32 en 64 car coupait.
+	3) correction calcul nmat dans fonctiongreensurfcompinterp.f
+	4) pb sphere inhomo zg pas mis centre en zero tout le temps:
+	decallage xg,yg,zg +relecture.f changés
+	5) correction de la fonction ou j'avais introduit une erreur par
+	accident dans la version 0.3.17
+	6) ecrit proprement conservation energy dans gaussiansurf*.f
+	7) modification de cdmlib.pro pour prendre en compte l'option
+	fopenmp et -03
+
+	faire tests options.db3 pour verifier les trois versions.
+	test3 assez discrétisé pour le BF?
+
+
+
+	--------------------------------------------------------------
 	version 0.5.1
 
 	Fin de la fusion des trois branches en une seule commencée à la

@@ -1,7 +1,7 @@
       subroutine objetsphereinhomosurf(eps,xs,ys,zs,xswf,yswf,zswf ,k0
      $     ,aretecube ,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
-     $     ,methode ,na ,epsilon,polarisa,rayon,lc,hc,ng,epsb,neps
-     $     ,nepsmax ,dcouche,zcouche,epscouche,tabzn,nmatf,file_id
+     $     ,methode ,na ,epsilon,polarisa,rayon,xg,yg,zg,lc,hc,ng,epsb
+     $     ,neps ,nepsmax ,dcouche,zcouche,epscouche,tabzn,nmatf,file_id
      $     ,group_iddip,infostr ,nstop)
 #ifdef USE_HDF5
       use HDF5
@@ -10,7 +10,7 @@
       integer nmax,tabdip(nmax),nbsphere,ndipole,nx,ny,nz,i,j,k,test
      $     ,IP(3),nnnr,dddis,inv,na,nstop,nmatf
       double precision xs(nmax),ys(nmax),zs(nmax),xswf(nmax),yswf(nmax)
-     $     ,zswf(nmax),k0,lc,hc,x,y,z,zg,aretecube,pi
+     $     ,zswf(nmax),k0,lc,hc,x,y,z,xg,yg,zg,aretecube,pi
       double complex eps,polarisa(nmax,3,3) ,epsilon(nmax,3 ,3),ctmp
      $     ,epsb(nmax),icomp,eps0
 
@@ -87,7 +87,10 @@ c     Initialization
       ngraine=4*ng+1
 
       lc=lc*1.d-9
-      
+      xg=xg*1.d-9
+      yg=yg*1.d-9
+      zg=zg*1.d-9
+
 c     mesh 
       open(20,file='x.mat')
       open(21,file='y.mat')
@@ -119,26 +122,21 @@ c     size of the subunit
       aretecube=2.d0*rayon/dble(nnnr)
 
 c     test si l'objet est sur une couche ou plusieurs
-      zmax=rayon
-      zmin=-rayon
+      zmax=zg+rayon
+      zmin=zg-rayon
       nminc=numerocouche(zmin,neps,nepsmax,zcouche)
       nmaxc=numerocouche(zmax,neps,nepsmax,zcouche)
       write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
-      if (nmaxc-nminc.ge.2) then
+      if (nmaxc-nminc.ge.1) then
 c     shift the layers
          do k=nminc,nmaxc-1           
-            do i=1,nnnr
-               z=-rayon+aretecube*(dble(i)-0.5d0)
+            do i=1,nz
+               z=-rayon+aretecube*(dble(i)-0.5d0)+zg
                if (zcouche(k).ge.z.and.zcouche(k).lt.z+aretecube) then
                   zcouche(k)=z+aretecube/2.d0
                endif              
             enddo
          enddo
-      elseif (nmaxc-nminc.eq.1) then
-c     object inside two layers
-c     compute the position of down subunit: shift the object
-         z=-rayon+aretecube*0.5d0
-         zg=aretecube*nint(z/aretecube+0.5d0)-z-aretecube/2.d0
       endif
 
       write(*,*) 'obj2',nminc,nmaxc,zg
@@ -231,8 +229,8 @@ c     Profil des hauteurs
                   if (dsqrt(x*x+y*y+z*z).lt.rayon) then
                      nbsphere=nbsphere+1
                      Tabdip(ndipole)=nbsphere
-                     xs(nbsphere)=x
-                     ys(nbsphere)=y
+                     xs(nbsphere)=x+xg
+                     ys(nbsphere)=y+yg
                      zs(nbsphere)=z+zg
 c                     write(*,*) 'ggg',xs(nbsphere),ys(nbsphere)
 c     $                    ,zs(nbsphere),xswf(ndipole),yswf(ndipole)
@@ -274,8 +272,8 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
                   zswf(ndipole)=z+zg
                   
                   if (dsqrt(x*x+y*y+z*z).lt.rayon) then                    
-                     xs(nbsphere)=x
-                     ys(nbsphere)=y
+                     xs(nbsphere)=x+xg
+                     ys(nbsphere)=y+yg
                      zs(nbsphere)=z+zg
 c                     write(*,*) 'fff',xs(nbsphere),ys(nbsphere)
 c     $                    ,zs(nbsphere),xswf(ndipole),yswf(ndipole)
@@ -296,9 +294,9 @@ c     write (*,*) 'nbsphere = ', nbsphere
                      epsilon(nbsphere,3,3)=eps
                      
                   else
-                     xs(nbsphere)=x
-                     ys(nbsphere)=y
-                     zs(nbsphere)=z
+                     xs(nbsphere)=x+xg
+                     ys(nbsphere)=y+yg
+                     zs(nbsphere)=z+zg
                      eps0=epscouche(numerocouche(zs(nbsphere),neps
      $                    ,nepsmax,zcouche))
                      epsilon(nbsphere,1,1)=eps0
