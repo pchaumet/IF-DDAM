@@ -42,6 +42,7 @@ indice0=h5read(namefileh5,'/Option/index lower')
 indicen=h5read(namefileh5,'/Option/index upper')
 ntypemic=h5read(namefileh5,'/Option/ntypemic')
 ntypefile=h5read(namefileh5,'/Option/nmatf')
+numaperinc=h5read(namefileh5,'/Option/numaperinc');
 
 else
    
@@ -73,6 +74,7 @@ indice0=inputmatlab(23);        % indice0
 indicen=inputmatlab(24);        % indicen
 ntypemic=inputmatlab(25);       % type microsocopy
 ntypefile=inputmatlab(26);      % mat file or hdf5 file
+numaperinc=inputmatlab(27);     % Numerical aperture for condenser
 
 if (ntypefile == 1);
 disp('Data files do not computed')
@@ -1522,7 +1524,7 @@ imagebfypos(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field y 
 imagebfypos(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field y component imaginary part');
 imagebfzpos(:,1)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field z component real part');
 imagebfzpos(:,2)=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field z component imaginary part');
-
+imagebfpos(1)
 end;
 
 
@@ -1542,14 +1544,14 @@ load imageincbfxpos.mat -ascii
 load imageincbfypos.mat -ascii
 load imageincbfzpos.mat -ascii
 elseif(ntypefile == 2);
-imageincbfpos=h5read(namefileh5,'/Microscopy/Image bright field kz>0 field modulus');
+imageincbfpos=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field modulus');
 imageincbfxpos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field x component real part');
 imageincbfxpos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field x component imaginary part');
 imageincbfypos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field y component real part');
 imageincbfypos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field y component imaginary part');
 imageincbfzpos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field z component real part');
 imageincbfzpos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz>0 field z component imaginary part');
-
+imageincbfpos(1)
 
 end;
 imageincm=reshape(imageincbfpos,nfft,nfft);
@@ -1670,7 +1672,7 @@ load imageincbfxneg.mat -ascii
 load imageincbfyneg.mat -ascii
 load imageincbfzneg.mat -ascii
 elseif(ntypefile == 2);
-imageincbfneg=h5read(namefileh5,'/Microscopy/Image bright field kz<0 field modulus');
+imageincbfneg=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field modulus');
 imageincbfxneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field x component real part');
 imageincbfxneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field x component imaginary part');
 imageincbfyneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident bright field kz<0 field y component real part');
@@ -1765,7 +1767,36 @@ uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 
 end;
 
-	
+
+figure(800)
+set(800,'DefaultAxesFontName','Times')
+set(800,'DefaultAxesFontSize',12)
+set(800,'DefaultAxesFontWeight','Bold')
+set(800,'DefaultTextfontName','Times')
+set(800,'DefaultTextfontSize',12)
+set(800,'DefaultTextfontWeight','Bold')
+set(800,'Position',[0 0 1000 600])
+
+if (ntypefile == 0);
+load kxincidentbf.mat -ascii
+load kyincidentbf.mat -ascii
+elseif (ntypefile ==2)
+kxincidentbf=h5read(namefileh5,'/Microscopy/kx incident bf');
+kyincidentbf=h5read(namefileh5,'/Microscopy/ky incident bf');
+end;
+
+plot(kxincidentbf,kyincidentbf,'b+')
+title('Position in Fourier space of all the incident field to compute bf')
+xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
+ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+axis xy  
+axis equal
+axis image
+
+hold on
+rectangle('Position',[-numaperinc -numaperinc 2*numaperinc 2*numaperinc],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
+
+
 elseif (ntypemic ==2);
 
 %%%%%%%%%%%%%%%%%%%%%%% Lens for z>0 %%%%%%%%%%%%%%%%
@@ -1805,7 +1836,7 @@ load imageincdfxpos.mat -ascii
 load imageincdfypos.mat -ascii
 load imageincdfzpos.mat -ascii
 elseif(ntypefile == 2);
-imageincdfpos=h5read(namefileh5,'/Microscopy/Image dark field kz>0 field modulus');
+imageincdfpos=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field modulus');
 imageincdfxpos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field x component real part');
 imageincdfxpos(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field x component imaginary part');
 imageincdfypos(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz>0 field y component real part');
@@ -1933,7 +1964,7 @@ load imageincdfxneg.mat -ascii
 load imageincdfyneg.mat -ascii
 load imageincdfzneg.mat -ascii
 elseif(ntypefile == 2);
-imageincdfneg=h5read(namefileh5,'/Microscopy/Image dark field kz<0 field modulus');
+imageincdfneg=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field modulus');
 imageincdfxneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field x component real part');
 imageincdfxneg(:,2)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field x component imaginary part');
 imageincdfyneg(:,1)=h5read(namefileh5,'/Microscopy/Image+incident dark field kz<0 field y component real part');
@@ -2028,6 +2059,37 @@ uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 'Callback',{@plotimageincnegreal,ximage,imageincm,imageincxc,imageincyc,imageinczc});
 
 end;
-	
+
+
+figure(800)
+set(800,'DefaultAxesFontName','Times')
+set(800,'DefaultAxesFontSize',12)
+set(800,'DefaultAxesFontWeight','Bold')
+set(800,'DefaultTextfontName','Times')
+set(800,'DefaultTextfontSize',12)
+set(800,'DefaultTextfontWeight','Bold')
+set(800,'Position',[0 0 1000 600])
+
+if (ntypefile == 0);
+load kxincidentdf.mat -ascii
+load kyincidentdf.mat -ascii
+elseif (ntypefile ==2)
+kxincidentdf=h5read(namefileh5,'/Microscopy/kx incident df');
+kyincidentdf=h5read(namefileh5,'/Microscopy/ky incident df');
+end;
+
+plot(kxincidentdf,kyincidentdf,'o','MarkerSize',5,...
+     'MarkerEdgeColor','blue','MarkerFaceColor',[0 0 1])
+title('Position in Fourier space of all the incident field to compute df')
+xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
+ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
+axis xy  
+axis equal
+axis image
+
+hold on
+rectangle('Position',[-numaperinc -numaperinc 2*numaperinc 2*numaperinc],'Curvature',[1 1],'linewidth',1,'edgecolor','red')
+
+
 end;
 end;

@@ -11,9 +11,9 @@
      $     Eimageincxneg,Eimageincyneg ,Eimageinczneg, Efourierxneg
      $     ,Efourieryneg,Efourierzneg, Efourierincxneg ,Efourierincyneg
      $     ,Efourierinczneg,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref
-     $     ,numapertra,numaperinc,gross,zlensr,zlenst ,ntypemic , planf
-     $     ,planb ,plan2f ,plan2b ,nmatf,file_id ,group_idmic,nstop
-     $     ,infostr)
+     $     ,numapertra,numaperinc,imaxk0,gross,zlensr,zlenst ,ntypemic ,
+     $     planf ,planb ,plan2f ,plan2b ,nmatf,file_id ,group_idmic
+     $     ,nstop ,infostr)
 
 #ifdef USE_HDF5
       use HDF5
@@ -41,7 +41,7 @@
      $     ,deltax,deltakx ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
      $     ,deltakm,xmin,xmax,ymin,ymax
       integer i,j,ii,jj,k,kk,idelta,jdelta,ideltam,nrig,npolainc
-     $     ,nquicklens,npol,imaxk0,niter,niterii,imul
+     $     ,nquicklens,npol,imaxk0,niter,niterii,imul,imaxinc
       DOUBLE PRECISION,DIMENSION(nxm*nym*nzm)::xs,ys,zs
       double precision kxy(nfft2d),xy(nfft2d),gross,kx,ky,deltatheta,phi
      $     ,theta,zlensr,zlenst
@@ -139,9 +139,9 @@ c     calcul de deltak
             return            
          endif
  223     deltak=deltakx*dble(imul)
-         write(*,*) 'change delta k :',imul,deltak
-         imaxk0=nint(k0/deltak)+1
-         if (imaxk0.le.3) then
+         write(*,*) 'change delta k incident:',deltak,'m-1',imul
+         imaxinc=nint(k0/deltak)+1
+         if (imaxinc.le.3) then
             imul=imul-1
             if (imul.eq.0) then
                nstop=1
@@ -150,26 +150,21 @@ c     calcul de deltak
             endif
             goto 223
          endif
-         deltakx=deltak
-         write(*,*) 'Step size delta k : ',deltakx,'m-1'
-
+         write(*,*) 'Step size delta k diffracted: ',deltak,'m-1'
       else
          k=0
          deltakx=2.d0*pi/(dble(nfft2d)*aretecube)
+         write(*,*) 'Final delta k diffracted',deltakx,'m-1'
  222     deltak=deltakx*dnint(deltakm/deltakx)/dble(2**k)
-         imaxk0=nint(k0/deltak)+1
-         if (imaxk0.le.2) then
+         imaxinc=nint(k0/deltak)+1
+         if (imaxinc.le.2) then
             k=k+1
-            write(*,*) 'change delta k :',k,dble(nfft2d*(2
-     $           **k)),nfft2d
+            write(*,*) 'change delta k incident:',deltak,'m-1',k
             goto 222
          endif
-         deltakx=deltak
-         write(*,*) 'Step size delta k : ',deltakx,'m-1'
       endif
 
       deltax=aretecube
-      deltak=deltakx
       deltatheta=deltak/k0*numaperinc
       ideltam=max(int(2.d0*pi/deltatheta)+1,8)
       deltaky=deltakx
@@ -185,7 +180,7 @@ c     calcul de deltak
          return
       endif
 
-      write(*,*) 'Number of incidence',ideltam,deltakx,imaxk0
+      write(*,*) 'Number of incidence',ideltam,deltakx,imaxinc
 
 c     initalise
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
@@ -219,7 +214,7 @@ c     calcul puissance
       call irradiancesurf(P0,w0,E0,irra,epscouche(0))
       I0=cdabs(E0)**2
       niterii=0
-
+      write(*,*) 'npol',npol,npolainc
       do ipol=1,npol
          if (npolainc.eq.1) then
             ss=1.d0
@@ -240,6 +235,7 @@ c     calcul puissance
          
 c     sommation 
          do idelta=0,ideltam-1
+c         do idelta=0,1
             niterii=niterii+1
             write(*,*) '*** incidence',niterii,'/',niter,' *****'
             phi=dble(idelta)*2.d0*pi/dble(ideltam)
@@ -249,16 +245,12 @@ c     sommation
             
 c     calcul champ incident
 
-            write(*,*) 'fg',epscouche,zcouche,neps ,nepsmax ,k0,E0,ss,pp
-     $           ,kxinc ,kyinc
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)
             do i=1,nbsphere           
                call champlineairekxky(epscouche,zcouche,neps ,nepsmax
      $              ,xs(i),ys(i),zs(i),k0,E0,ss,pp,kxinc ,kyinc ,infostr
      $              ,nstop,FF0(3*i-2),FF0(3*i-1) ,FF0(3*i))
-               write(*,*) 'gg',xs(i),ys(i),zs(i),FF0(3*i-2),FF0(3*i-1)
-     $              ,FF0(3*i),i
             enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL
@@ -383,6 +375,7 @@ c     dipole a partir champ local
             nfft2dtmp=nfft2d
             if (nquicklens.eq.1) then
                rloin=1.d0
+c               write(*,*) 'ff local',FF
                call diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym ,nzm
      $              ,nfft2dtmp,nfft2d,k0,xs,ys,zs,aretecube
      $              ,Efourierxpos,Efourierypos,Efourierzpos,FF ,imaxk0
@@ -513,7 +506,8 @@ c     passe le champ diffracte lointain en amplitude e(k||)
             tmp=indice0*k0
             call deltakroutine(kxinc,kyinc,deltakx,deltaky,tmp,ikxinc
      $           ,jkyinc)
-
+c            write(*,*) 'ff ij',kxinc,kyinc,deltakx,deltaky,k0,ikxinc
+c     $           ,jkyinc
             if (ncote.eq.0.or.ncote.eq.-1) then
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC) 
@@ -562,7 +556,7 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                            Efourierincxneg(indice) =Efourierxneg(indice)
                            Efourierincyneg(indice) =Efourieryneg(indice)
                            Efourierinczneg(indice) =Efourierzneg(indice)
-                        endif
+                        endif                        
                      endif
                   enddo
                enddo
@@ -571,7 +565,7 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                if (nstop.eq.1) return
 
                if (zlensr.ne.0.d0) then
-                  write(*,*) 'ffff2'
+
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,kx,ky,kz,ctmp,indice)   
 !$OMP DO SCHEDULE(DYNAMIC) COLLAPSE(2)          
                   do i=-imaxk0,imaxk0
@@ -659,7 +653,8 @@ c     ajoute onde plane
                      endif
                      if (indicen*indicen*k0*k0*numapertra*numapertra
      $                    *0.9999d0-kx*kx-ky*ky.gt.0.d0) then
-                        
+c                        write(*,*) 'ff champ',Efourierypos(indice)
+c     $                       ,indice
                         indice=indicex+nfft2d*(indicey-1)
                         if (i.eq.ikxinc.and.j.eq.jkyinc) then
                            call champlineairemicrokxky(epscouche,
@@ -686,7 +681,6 @@ c     ajoute onde plane
 
                
                if (zlenst.ne.0.d0) then
-                  write(*,*) 'ffff',indicen
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,kx,ky,kz,ctmp,indice)   
 !$OMP DO SCHEDULE(DYNAMIC) COLLAPSE(2)          
                   do i=-imaxk0,imaxk0

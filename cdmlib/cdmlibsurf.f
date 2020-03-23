@@ -1825,6 +1825,7 @@ c     circulant matrix with a doble size.
       nxy2=nx2*ny2
       ntotal=8*nx*ny*nz      
 
+      nlecture1=0
       if (nlecture.eq.1) then
 c         write(*,*) 'relecture',filereread
          call relecturesurf(lambda,beam,object,trope,nnnr,tolinit, side,
@@ -2142,8 +2143,6 @@ c     dipole a partir champ local
 !$OMP ENDDO 
 !$OMP END PARALLEL  
       
-    
-
       write(99,*) 'End of the iterative method'
 c     ******************************************************
 c     compute the near field with FFT
@@ -3038,7 +3037,6 @@ c******************************************************************
      $        ,Efourierypos,Efourierzpos,FF,imaxk0,deltakx,deltaky
      $        ,Ediffkzpos,Ediffkzneg,rloin,rloin,tmp,tmp,nepsmax ,neps
      $        ,dcouche,zcouche,epscouche,ncote ,nstop ,infostr,plan2f)
-
          write(*,*) '******* END DIFFRACTED FIELD WITH FFT ***********'
          write(*,*) ' '
       endif
@@ -3831,9 +3829,9 @@ c     gamma)
      $           ,Eimageinczneg, Efourierxneg ,Efourieryneg,Efourierzneg
      $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
      $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref,numapertra
-     $           ,numaperinc ,gross,zlensr,zlenst ,ntypemic , planf
-     $           ,planb ,plan2f ,plan2b ,nmatf,file_id ,group_idmic
-     $           ,nstop ,infostr)
+     $           ,numaperinc,imaxk0,gross,zlensr,zlenst ,ntypemic ,
+     $           planf ,planb ,plan2f ,plan2b ,nmatf,file_id
+     $           ,group_idmic ,nstop ,infostr)
             
          elseif (ntypemic.eq.2) then
             npolainc=0
@@ -3852,9 +3850,9 @@ c     gamma)
      $           ,Eimageinczneg, Efourierxneg ,Efourieryneg,Efourierzneg
      $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
      $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref,numapertra
-     $           ,numaperinc ,gross,zlensr,zlenst,ntypemic,planf,planb
-     $           ,plan2f,plan2b ,nmatf,file_id ,group_idmic  ,nstop
-     $           ,infostr)
+     $           ,numaperinc,imaxk0,gross,zlensr,zlenst,ntypemic,planf
+     $           ,planb ,plan2f,plan2b ,nmatf,file_id ,group_idmic
+     $           ,nstop ,infostr)
          else
             write(*,*) 'holographic microscopy'
             call cpu_time(t1)
