@@ -41,10 +41,10 @@ c     initialisation
       x=0.d0
       y=0.d0
       write(*,*) 'plane wave linear'
-      write(*,*) 'point in NA',imax*2+1
-      write(*,*) 'size FFT',nfft2d
       write(*,*) 'delta k',deltakx,'m-1'
-      
+      write(*,*) 'Number of point in the numerical aperture',imax*2+1
+      write(*,*) 'Size of FFT',nfft2d
+      write(*,*) 'Size of the pixel',aretecube
 c     calcul le kx et ky correspondant au theta et phi
       kxinc=k0*dsin(theta*pi/180.d0)*dcos(phi*pi/180.d0)*indice0
       kyinc=k0*dsin(theta*pi/180.d0)*dsin(phi*pi/180.d0)*indice0

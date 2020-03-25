@@ -151,17 +151,26 @@ c     calcul de deltak
          write(*,*) 'Step size delta k diffracted: ',deltak,'m-1'
       else
          k=0
-         deltakx=2.d0*pi/(dble(nfft2d)*aretecube)
+ 224     deltakx=2.d0*pi/(dble(nfft2d)*aretecube)/dble(2**k)
+         imaxk0=nint(k0/deltakx)+1            
+         if (imaxk0.le.5) then
+            k=k+1
+            write(*,*) 'Change delta k diffracted:',deltakx,'m-1',k
+            goto 224
+         endif
          write(*,*) 'Final delta k diffracted',deltakx,'m-1'
+
+         k=0
  222     deltak=deltakx*dnint(deltakm/deltakx)/dble(2**k)
          imaxinc=nint(k0/deltak)+1
          if (imaxinc.le.2) then
             k=k+1
-            write(*,*) 'change delta k incident:',deltak,'m-1',k
+            write(*,*) 'Change delta k incident:',deltak,'m-1',k
             goto 222
          endif
+         write(*,*) 'Final delta k incident : ',deltak,'m-1'
       endif
-
+      deltaky=deltakx
       ideltam=imaxinc
 
       ii=0
@@ -380,7 +389,6 @@ c     dipole a partir champ local
 !$OMP ENDDO 
 !$OMP END PARALLEL  
                   nfft2dtmp=nfft2d
-c                  write(*,*) 'fff dipole',FF
                   if (nquicklens.eq.1) then
                      rloin=1.d0
 c                     write(*,*) 'fff local',nx,ny,nz,nxm,nym,nzm,nfft2d
@@ -402,9 +410,9 @@ c     compute the diffracted field
                         else
                            indicex=nfft2d+i+1
                         endif
+
                         kx=deltakx*dble(i)
                         do j=-imaxk0,imaxk0
-                           
                            if (j.ge.0) then
                               indicey=j+1
                            else
@@ -413,17 +421,15 @@ c     compute the diffracted field
                            ky=deltaky*dble(j)
                            ii=imaxk0+i+1
                            jj=imaxk0+j+1
-
                            if (ncote.eq.1.or.ncote.eq.0) then
 c     calcul champ dessus
                               
                               if (k0*k0*indicen*indicen*numapertra
      $                             *numapertra*0.9999d0-kx*kx-ky
-     $                             *ky.gt.0.d0) then  
+     $                             *ky.gt.0.d0) then
                                  z=1.d0
                                  kz=dsqrt(k0*k0*indicen*indicen -kx *kx
      $                                -ky*ky)
-
                                  Emx=0.d0
                                  Emy=0.d0
                                  Emz=0.d0
@@ -457,14 +463,13 @@ c     calcul champ dessus
                                     Emz=Emz+(Stenseur(3,1)*FF(kk+1)
      $                                   +Stenseur(3,2)*FF(kk+2)
      $                                   +Stenseur(3 ,3)*FF(kk+3))*ctmp
-                                 enddo        
+                                 enddo
                                  Ediffkzpos(ii,jj,1)=Emx
                                  Ediffkzpos(ii,jj,2)=Emy
                                  Ediffkzpos(ii,jj,3)=Emz
                                  
                               endif
                            endif
-
 c     calcul champ dessous
                            if (ncote.eq.-1.or.ncote.eq.0) then
                               if (k0*k0*indice0*indice0*numaperref
@@ -512,8 +517,8 @@ c     calcul champ dessous
                         enddo
                      enddo
                   endif
-
 c     calcul image
+                  
 c     passe le champ diffracte lointain en amplitude e(k||)
                   call diffractefft2dtoeposfour(Ediffkzpos,Ediffkzneg
      $                 ,Efourierxpos,Efourierypos,Efourierzpos
@@ -523,6 +528,7 @@ c     passe le champ diffracte lointain en amplitude e(k||)
      $                 ,nstop ,infostr)
                   if (nstop.eq.1) return
                   tmp=indice0*k0
+
                   call deltakroutine(kxinc,kyinc,deltak,deltak,tmp
      $                 ,ikxinc,jkyinc)
                   if (ncote.eq.0.or.ncote.eq.-1) then
@@ -624,8 +630,6 @@ c     passe le champ diffracte lointain en amplitude e(k||)
 !$OMP END PARALLEL   
                      endif
 
-
-                     
                      if (gross.eq.-1.d0) then
                         
                         call passagefourierimage2(Efourierincxneg
@@ -647,6 +651,7 @@ c     passe le champ diffracte lointain en amplitude e(k||)
      $                       ,sidemic,plan2f,plan2b)
                      endif
                   endif
+
                   if (ncote.eq.0.or.ncote.eq.1) then
 c     ajoute onde plane
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   

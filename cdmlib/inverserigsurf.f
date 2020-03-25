@@ -57,7 +57,6 @@ c     ********************
             return
          endif
          ncompte=ncompte+1
-         write(*,*) 'ncompte',ncompte
          if (nstat.eq.1) then
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)
 !$OMP DO           
@@ -68,17 +67,14 @@ c     ********************
 !$OMP END PARALLEL           
          endif
 
-         
          call produitfftmatvectsurm(xi,xr,nbsphere,ndipole,nx,ny,nz
      $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
      $        ,matindplan,Tabdip,b31,b32,b33,FF,b11,b12,b13,a11,a12
      $        ,a13 ,a22,a23,a31,a32,a33,polarisa,planb,planf)
-
          if (nstop == -1) then
             infostr = 'Calculation cancelled during iterative method'
             return
          endif
-         
          if (nstat.ne.1) goto  2002
 c     compute the Residue
          tol1=0.d0
@@ -90,9 +86,8 @@ c     compute the Residue
          enddo            
 !$OMP ENDDO 
 !$OMP END PARALLEL
-         tol1=dsqrt(tol1)/NORM   
+         tol1=dsqrt(tol1)/NORM
          nloop=nloop+1
-         write(*,*) 'tfinal',t2-t0           
          write(*,*) 'tol1',tol1
 
 
@@ -540,7 +535,6 @@ c     compute the Residue
 !$OMP ENDDO 
 !$OMP END PARALLEL  
          endif
-         write(*,*) 'ncompte',ncompte,nou
          
          call produitfftmatvectsurm(xi,xr,nbsphere,ndipole,nx,ny,nz
      $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
@@ -591,7 +585,6 @@ c     compute the Residue
 !$OMP ENDDO 
 !$OMP END PARALLEL   
          endif
-         write(*,*) 'ncompte',ncompte,nou
          
          call produitfftmatvectsurm(xi,xr,nbsphere,ndipole,nx,ny,nz
      $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
@@ -636,7 +629,7 @@ c     compute the Residue
 !$OMP ENDDO 
 !$OMP END PARALLEL     
          endif
-         write(*,*) 'ncompte',ncompte,nloop,nou
+
          call produitfftmatvectsurm(xi,xr,nbsphere,ndipole,nx,ny,nz
      $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
      $        ,matindplan,Tabdip,b31,b32,b33,FF,b11,b12,b13,a11,a12
@@ -679,7 +672,6 @@ c     compute the Residue
 !$OMP ENDDO 
 !$OMP END PARALLEL 
          endif
-         write(*,*) 'ncompte',ncompte,nou
          
          call produitfftmatvectsurm(xi,xr,nbsphere,ndipole,nx,ny,nz
      $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
@@ -725,7 +717,7 @@ c     compute the Residue
 !$OMP ENDDO 
 !$OMP END PARALLEL  
          endif
-         write(*,*) 'ncompte',ncompte,nou
+
          call produitfftmatvectsurm(xi,xr,nbsphere,ndipole,nx,ny,nz
      $        ,nx2,ny2,nxm,nym,nzm,nzm,nplanm,ntotalm,nmax
      $        ,matindplan,Tabdip,b31,b32,b33,FF,b11,b12,b13,a11,a12

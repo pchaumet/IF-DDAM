@@ -76,7 +76,7 @@ c     taille entier (nxm*nym*nzm)
       
 c     integer
       integer ii,jj,kk,ll,i,j,k,l,i2,j2,ii2,jj2,cnt,nstop,cntwf,kkm,jjm
-     $     ,iim,nrig,nhomo,nmatf
+     $     ,iim,nrig,nhomo,nmatf,nn
       integer  nlocal,nmacro,nsection,nforce ,nforced
      $     ,nquickdiffracte,nquicklens,ndiffracte,ncote,npolainc
      $     ,ntorque,ntorqued ,nsens ,nproche,nprochefft ,nlecture
@@ -807,35 +807,34 @@ c     décrément de 1 de nproche pour faciliter le code C
 c     look  for compute near field with FFT
       if (nlecture.eq.1.and.nproche.eq.-1) nproche=0
       
-      
+      write(*,*) 'coucou'
       if (nquickdiffracte.eq.1.and.nproche.eq.-1) nproche=0
+      write(*,*) 'coucou1'
       if (beam(1:5).eq.'gwave'.and.nproche.eq.-1) nproche=0
       nprochefft=0
-
+      write(*,*) 'coucou2'
 c     test si wide field demandé
       if (nproche.ge.1) then
-         if (nx.ne.nxm.or.ny.ne.nym.or.nz.ne.nzm) then
-            nprochefft=nproche
-            nproche=0
-         else
-            nproche=0
-         endif
+         nprochefft=nproche
+         nproche=0       
       endif
-
+      write(*,*) 'coucou3',nprochefft
       if (nobjet.eq.-1.and.nproche.ge.1) nobjet=0
-      
+      write(*,*) 'coucou4'
       if (nstop.eq.1) return
 
 c     Built the object
       if (object(1:6).eq.'sphere') then
          numberobjet=1
+         write(*,*) 'coucou5'
          call objetspheresurf(trope,eps,epsani,xs,ys,zs,xswf,yswf,zswf
      $        ,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
      $        ,polarizability ,nproche,epsilon,polarisa,rayon,xg,yg,zg
      $        ,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn,nmatf
      $        ,file_id,group_iddip,infostr ,nstop)
          write(99,*) 'sphere',rayon
-
+         write(*,*) 'coucou6'
+         write(*,*) 'coucou7'
       elseif (object(1:12).eq.'inhomosphere') then
          numberobjet=1
          if (trope.ne.'iso') then
@@ -968,6 +967,13 @@ c     Built the object
          infostr='Object unknown'
          nstop=1
          return
+      endif
+
+      if (nprochefft.eq.1) then
+         write(*,*) 'nx',nx,ny,nz,nxm,nym,nzm
+         if (nx.eq.nxm.and.ny.eq.nym.and.nz.eq.nzm) then
+            nprochefft=0
+         endif
       endif
       write(*,*) '************ END OBJECT *************************'
       write(*,*) ' '
@@ -1920,22 +1926,23 @@ c     compute Green function (local field)
 c     write(*,*) 'fonction interp',hcc,tolinit,epsabs,aretecube,k0
 c     $           ,neps,nepsmax,nbsphere ,nmax ,n1m,nzm,nz,nbs,nmat
 c     $           ,nmatim,nplanm
+          
             call fonctiongreensurfcomp(hcc,tolinit,epsabs,xswf,yswf,zswf
      $           ,aretecube,k0,neps,nepsmax,dcouche,zcouche,epscouche
      $           ,ndipole ,nmax,n1m,nzm,nz,nbs,nmat,nmatim,nplanm,Tabzn
      $           ,a ,matind ,matindplan,matindice,matrange,nt)
-c     write(*,*) 'xyz',xs(1),ys(1),zs(1)
+
 c     compte FFT of the Green function
             write(*,*) '******* BEGIN FFT of GREEN FUNCTION **********'
             call fonctiongreensurffft(nx,ny,nz,nx2,ny2,nxm,nym,n1m,nzm
      $           ,nplanm,nmatim,nbs,ntotalm,aretecube,a,matind
      $           ,matindplan,matindice,matrange,b11,b12,b13,b22 ,b23
      $           ,b31,b32,b33,a11,a12,a13,a22,a23,a31,a32,a33,planb)
+           
          else
 c            write(*,*) 'fonction interp',hcc,tolinit,epsabs,nx,ny ,nz
 c     $           ,aretecube,k0,neps,nepsmax,dcouche,zcouche ,epscouche
 c     $           ,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim ,nplanm
-
             call  fonctiongreensurfcompinterp(hcc,tolinit,epsabs,nx,ny
      $           ,nz,zswf,aretecube,k0,neps,nepsmax,dcouche,zcouche
      $           ,epscouche,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim
@@ -1947,12 +1954,34 @@ c     $           ,ndipole,nmax,n1m,nzm,nz,nbs,nmat,nmatim ,nplanm
      $           ,a ,matind ,matindplan ,matindice ,matrange,b11,b12,b13
      $           ,b22,b23 ,b31 ,b32,b33,a11 ,a12,a13 ,a22,a23,a31 ,a32
      $           ,a33,planb)
-c     write(*,*) 'a11',a11
          endif
          call cpu_time(t2)
          call date_and_time(date,time,zone,values2)
          message='to compute Green function'
          call calculatedate(values2,values,t2,t1,message)
+
+         if (nlentille.eq.1.and.nprochefft.eq.1.and.ntypemic.ne.0) then
+            open(2000,file='greenfft',form='unformatted')
+            do nn=1,nz
+               do ll=nn,nz
+                  kk=matindplan(ll,nn)
+                  do jj=1,ny2
+                     do ii=1,nx2
+                        write(2000) a11(ii,jj,kk)
+                        write(2000) a12(ii,jj,kk)
+                        write(2000) a13(ii,jj,kk)
+                        write(2000) a22(ii,jj,kk)
+                        write(2000) a23(ii,jj,kk)
+                        write(2000) a31(ii,jj,kk)
+                        write(2000) a32(ii,jj,kk)
+                        write(2000) a33(ii,jj,kk)
+                     enddo
+                  enddo
+               enddo
+            enddo
+            close(2000)
+          endif
+         
          write(*,*) '**************** END GREEN FUNCTION *************'
          write(*,*) ' '
          
@@ -2147,7 +2176,7 @@ c     dipole a partir champ local
 c     ******************************************************
 c     compute the near field with FFT
 c     ******************************************************
-
+      write(*,*) 'ffff',nprochefft
  1000 if (nprochefft.ge.1) then
 
          write(*,*) '*************************************************'      
@@ -2253,7 +2282,7 @@ c     write xyz wf for hdf5
             call hdf5write1d(group_idnf,datasetname,xswf,dim)
             
          endif
-c     create the new vector position and memorize teh local field
+c     create the new vector position and memorize the local field
          do i=1,nzmpp
             do j=1,nympp
                do k=1,nxmpp
@@ -2471,9 +2500,6 @@ c     compte FFT of the Green function
      $           ,planbn)
          else
             
-c     write(*,*) 'fonction interp2',hcc,tolinit,epsabs,nxm,nym
-c     $           ,nzm,aretecube,k0,neps,nepsmax,dcouche,zcouche
-c     $           ,epscouche,subunit,nmax,n1m,nzm,nzm,nbs,nmat,nmatim
             call  fonctiongreensurfcompinterp(hcc,tolinit,epsabs,nxmpp
      $           ,nympp,nzmpp,zswf,aretecube,k0,neps,nepsmax,dcouche
      $           ,zcouche,epscouche,subunit,nmax,n1m,nzm,nzmpp,nbs,nmat
@@ -3781,38 +3807,76 @@ c     gamma)
             write(*,*) 'Microscopy half angle in transmission:'
      $           ,dasin(numapertra)*180.d0/pi
          endif
-
          if (ntypemic.ne.0.and.(nprochefft.ge.1.or.nlecture1.eq.1)) then
             write(*,*)
-     $           'recompute Green function if large far field used'
-            if (ninterp.eq.0) then
-               call fonctiongreensurfcomp(hcc,tolinit,epsabs,xswf,yswf
-     $              ,zswf,aretecube,k0,neps,nepsmax,dcouche,zcouche
-     $              ,epscouche,ndipole ,nmax,n1m,nzm,nz,nbs,nmat,nmatim
-     $              ,nplanm,Tabzn,a ,matind ,matindplan,matindice
-     $              ,matrange,nt)
-               call fonctiongreensurffft(nx,ny,nz,nx2,ny2,nxm,nym,n1m
-     $              ,nzm,nplanm,nmatim,nbs,ntotalm,aretecube,a,matind
-     $              ,matindplan,matindice,matrange,b11,b12,b13,b22 ,b23
-     $              ,b31,b32,b33,a11,a12,a13,a22,a23,a31,a32,a33,planb)
+     $           'reread Green function if large far field used'
+            open(2000,file='greenfft',status='old',form='unformatted')
+            do nn=1,nz
+               do ll=nn,nz
+                  kk=matindplan(ll,nn)
+                  do jj=1,ny2
+                     do ii=1,nx2
+                        read(2000) a11(ii,jj,kk)
+                        read(2000) a12(ii,jj,kk)
+                        read(2000) a13(ii,jj,kk)
+                        read(2000) a22(ii,jj,kk)
+                        read(2000) a23(ii,jj,kk)
+                        read(2000) a31(ii,jj,kk)
+                        read(2000) a32(ii,jj,kk)
+                        read(2000) a33(ii,jj,kk)
+                     enddo
+                  enddo
+               enddo
+            enddo
+            close(2000)
+          
+c     recalcul la polarisabilité qui a ete tuee par large field
+            kk=1
+            ll=1
+            if (trope.eq.'iso') then
+               write(*,*) 'ndipole',ndipole,aretecube,k0
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,eps,eps0,ctmp,ii,jj)   
+!$OMP DO SCHEDULE(STATIC)              
+               do i=1,ndipole
+                  eps=epsilon(i,1,1)
+                  eps0=epscouche(numerocouche(zs(i),neps,nepsmax
+     $                 ,zcouche))                  
+                  call poladiffcomp(aretecube,eps,eps0,k0,kk
+     $                 ,polarizability,ctmp)
+                  do ii=1,3
+                     do jj=1,3
+                        polarisa(i,ii,jj)=0.d0
+                     enddo
+                     polarisa(i,ii,ii)=ctmp
+                  enddo
+               enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
             else
-               call  fonctiongreensurfcompinterp(hcc,tolinit,epsabs,nx
-     $              ,ny,nz,zswf,aretecube,k0,neps,nepsmax,dcouche
-     $              ,zcouche,epscouche,ndipole,nmax,n1m,nzm,nz,nbs,nmat
-     $              ,nmatim,nplanm,Tabzn,a,matind,matindplan,matindice
-     $              ,matrange,ninter ,ninterp,nt)
-
-               call fonctiongreensurfinterpfft(nx,ny,nz,nx2,ny2,nxm,nym
-     $              ,n1m,nzm,nplanm,nmatim,nbs,ntotalm,ninter,ninterp
-     $              ,aretecube,a ,matind ,matindplan ,matindice
-     $              ,matrange,b11,b12,b13,b22,b23 ,b31 ,b32,b33,a11 ,a12
-     $              ,a13 ,a22,a23,a31 ,a32,a33,planb)
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,epsani,eps0,ii,jj,Eder)   
+!$OMP DO SCHEDULE(STATIC)                  
+               do i=1,ndipole
+                  eps0=epscouche(numerocouche(zs(i),neps,nepsmax
+     $                 ,zcouche))
+                  do ii=1,3
+                     do jj=1,3
+                        epsani(ii,jj)=epsilon(i,ii,jj)
+                     enddo
+                  enddo
+                  call polaepstenscomp(aretecube,epsani,eps0,k0,kk
+     $                 ,polarizability,ll,Eder)
+                  do ii=1,3
+                     do jj=1,3
+                        polarisa(i,ii,jj)=Eder(ii,jj)
+                     enddo
+                  enddo
+               enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL
             endif
-
          endif
             
          if (ntypemic.eq.1) then
-
             npolainc=0
             call microssurfbf(xi,xr,nbsphere,ndipole,nx,ny,nz,nx2,ny2
      $           ,nxm,nym,nzm,nplanm,nmatim,ntotalm,nmax,matindplan

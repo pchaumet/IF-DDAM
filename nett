@@ -1,5 +1,6 @@
 make clean
 rm */*.mat
+rm */greenfft
 rm */fort.*
 rm */*/*.a
 rm qwtplot3d/Makefile

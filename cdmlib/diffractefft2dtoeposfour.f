@@ -36,21 +36,17 @@ c     Info string
       enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL
-      
       if (nfft2d.gt.4096) then
          nstop=1
          infostr='nfft2d too large'
          return
       endif
       
-      
       if (deltakx.ge.k0) then
          nstop=1
          infostr='In FFT  diffracted to epos nfft2d too small'
-         stop
          return
       endif
-
       
       if (ncote.eq.0.or.ncote.eq.1) then        
          indicen=dsqrt(dreal(epscouche(neps+1)))

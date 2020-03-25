@@ -1,8 +1,22 @@
+	version 0.5.5
+
+	1) quand large field on recalculait la fonction de Green
+	maintenant on relit les fonctions de Green du binaire. + erreur
+	car ne recalculait pas la pola qui a ete effacee par large field.
+	2) recalcul delkax pour bf et df comme espace libre.
+	3) initialise deltaky=deltakx dans bf
+	4) dans inverserigsurf t2 non initialiser dans GPBICG
+	5)
+
+
+
+	--------------------------------------------------------------
 	version 0.5.4
 
 	1) Correction erreur sur bf. Confusion deltak incident et
 	diffracte, de meme pour imaxk0 entre diffracte et incident.  Passe
 	imaxk0 en argument de microsurfbf maintenant.
+	2) libre et surface cohérent en df et bf....
 
 	--------------------------------------------------------------
 	version 0.5.3

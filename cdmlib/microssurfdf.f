@@ -153,15 +153,24 @@ c     calcul de deltak
          write(*,*) 'Step size delta k diffracted: ',deltak,'m-1'
       else
          k=0
-         deltakx=2.d0*pi/(dble(nfft2d)*aretecube)
+ 224     deltakx=2.d0*pi/(dble(nfft2d)*aretecube)/dble(2**k)
+         imaxk0=nint(k0/deltakx)+1            
+         if (imaxk0.le.5) then
+            k=k+1
+            write(*,*) 'Change delta k diffracted:',deltakx,'m-1',k
+            goto 224
+         endif
          write(*,*) 'Final delta k diffracted',deltakx,'m-1'
+
+         k=0
  222     deltak=deltakx*dnint(deltakm/deltakx)/dble(2**k)
          imaxinc=nint(k0/deltak)+1
          if (imaxinc.le.2) then
             k=k+1
-            write(*,*) 'change delta k incident:',deltak,'m-1',k
+            write(*,*) 'Change delta k incident:',deltak,'m-1',k
             goto 222
          endif
+         write(*,*) 'Final delta k incident : ',deltak,'m-1'
       endif
 
       deltax=aretecube

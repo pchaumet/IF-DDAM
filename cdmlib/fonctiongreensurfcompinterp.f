@@ -69,7 +69,6 @@ c      write(*,*) 'couc3'
       pi=dacos(-1.d0)
       x0=0.d0
       y0=0.d0
-      
       aretecubeint=aretecube/dble(ninterp)
       ninter=ceiling(dsqrt(dble(nx*nx+ny*ny)))*ninterp
       
@@ -78,7 +77,6 @@ c      write(*,*) 'couc3'
          matind(k)=nmati
          a(k)=aretecubeint*dble(k)
       enddo
-
 
       do np1=1,nz
          do np2=np1,nz

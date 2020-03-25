@@ -228,9 +228,6 @@ c      write(*,*) 'obj2',nminc,nmaxc,zg
                      if (trope.eq.'iso') then                       
                         call poladiffcomp(aretecube,eps,eps0,k0,dddis
      $                       ,methode,ctmp)
-c                        write(*,*) 'polarefsphere',aretecube,eps,eps0,k0
-c     $                       ,dddis,methode,ctmp
-c                        write (*,*) 'nbsphere = ', nbsphere
                         polarisa(nbsphere,1,1)=ctmp
                         polarisa(nbsphere,2,2)=ctmp
                         polarisa(nbsphere,3,3)=ctmp
