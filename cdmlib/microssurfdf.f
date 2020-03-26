@@ -66,7 +66,7 @@
       double precision dcouche(nepsmax),zcouche(0:nepsmax),x,y,indice0
      $     ,indicen,z,kz
       double complex Arx,Ary,Arz,Atx,Aty,Atz,Emx,Emy,Emz,ctmp,Stenseur(3
-     $     ,3),Em(3),Eloc(3),epsani(3,3)
+     $     ,3),Em(3),Eloc(3),epsani(3,3),zfocus
       integer*8 planf,planb,plan2f,plan2b,planfn,planbn
       integer FFTW_FORWARD,FFTW_ESTIMATE,FFTW_BACKWARD,nsens
      $     ,numerocouche
@@ -528,13 +528,11 @@ c     $           ,jkyinc
 !$OMP ENDDO 
 !$OMP END PARALLEL
 
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,indicex,indicey,indice)
-!$OMP& PRIVATE(kx,ky,Arx,Ary,Arz,Atx,Aty,Atz)       
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice)
+!$OMP& PRIVATE(kx,ky,Arx,Ary,Arz,Atx,Aty,Atz,zfocus)       
 !$OMP DO SCHEDULE(STATIC)  COLLAPSE(2)                 
                do i=-imaxk0,imaxk0
                   do j=-imaxk0,imaxk0
-                     ii=imaxk0+i+1
-                     jj=imaxk0+j+1
                      kx=dble(i)*deltakx
                      if (i.ge.0) then
                         indicex=i+1
@@ -549,18 +547,27 @@ c     $           ,jkyinc
                      endif
                      if (indice0*indice0*k0*k0*numaperref*numaperref
      $                    *0.9999d0 -kx*kx-ky*ky.gt.0.d0) then
+                        kz=dsqrt(indice0*indice0*k0*k0-kx*kx-ky*ky)
+                        zfocus=cdexp(-icomp*kz*zlensr)
                         indice=indicex+nfft2d*(indicey-1)
+                        Efourierxneg(indice)=Efourierxneg(indice)
+     $                       *zfocus
+                        Efourieryneg(indice)=Efourieryneg(indice)
+     $                       *zfocus
+                        Efourierzneg(indice)=Efourierzneg(indice)
+     $                       *zfocus
+
                         if (i.eq.ikxinc.and.j.eq.jkyinc) then
                            call champlineairemicrokxky(epscouche,
      $                          zcouche,neps,nepsmax,x,y,k0,E0 ,ss ,pp
      $                          ,kx,ky,infostr ,nstop ,Arx,Ary,Arz ,Atx
      $                          ,Aty ,Atz)
                            Efourierincxneg(indice) =Efourierxneg(indice)
-     $                          +Arx/deltakx /deltakx*icomp
+     $                          +Arx/deltakx/deltakx*icomp*zfocus
                            Efourierincyneg(indice) =Efourieryneg(indice)
-     $                          +Ary/deltakx /deltakx*icomp
+     $                          +Ary/deltakx/deltakx*icomp*zfocus
                            Efourierinczneg(indice) =Efourierzneg(indice)
-     $                          +Arz/deltakx /deltakx*icomp
+     $                          +Arz/deltakx/deltakx*icomp*zfocus
                         else
                            Efourierincxneg(indice) =Efourierxneg(indice)
                            Efourierincyneg(indice) =Efourieryneg(indice)
@@ -573,40 +580,6 @@ c     $           ,jkyinc
 !$OMP END PARALLEL
                if (nstop.eq.1) return
 
-               if (zlensr.ne.0.d0) then
-
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,kx,ky,kz,ctmp,indice)   
-!$OMP DO SCHEDULE(DYNAMIC) COLLAPSE(2)          
-                  do i=-imaxk0,imaxk0
-                     do j=-imaxk0,imaxk0
-                        ii=imaxk0+i+1
-                        jj=imaxk0+j+1
-                        kx=dble(i)*deltakx
-                        ky=dble(j)*deltaky
-                        if (indice0*indice0*k0*k0*numaperref*numaperref
-     $                       *0.9999d0-kx*kx-ky*ky.gt.0.d0) then 
-                           kz=dsqrt(indice0*indice0*k0*k0-kx*kx-ky*ky) 
-                           ctmp=cdexp(-icomp*kz*zlensr)
-                           indice=i+nfft2d2+1+nfft2d*(j+nfft2d2)
-                           Efourierxneg(indice) =Efourierxneg(indice)
-     $                          *ctmp
-                           Efourieryneg(indice) =Efourieryneg(indice)
-     $                          *ctmp
-                           Efourierzneg(indice) =Efourierzneg(indice)
-     $                          *ctmp
-                           Efourierincxneg(indice)
-     $                          =Efourierincxneg(indice)*ctmp
-                           Efourierincyneg(indice)
-     $                          =Efourierincyneg(indice)*ctmp
-                           Efourierinczneg(indice)
-     $                          =Efourierinczneg(indice)*ctmp
-                        endif
-                     enddo
-                  enddo
-!$OMP ENDDO 
-!$OMP END PARALLEL   
-               endif
-               
                if (gross.eq.-1.d0) then
                   
                   call passagefourierimage2(Efourierincxneg
@@ -641,13 +614,11 @@ c     ajoute onde plane
 !$OMP END PARALLEL
 
                
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,indicex,indicey,indice)
-!$OMP& PRIVATE(kx,ky,Arx,Ary,Arz,Atx,Aty,Atz)
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,indicex,indicey,indice)
+!$OMP& PRIVATE(kx,ky,Arx,Ary,Arz,Atx,Aty,Atz,zfocus)
 !$OMP DO SCHEDULE(STATIC)  COLLAPSE(2)                    
                do i=-imaxk0,imaxk0
                   do j=-imaxk0,imaxk0
-                     ii=imaxk0+i+1
-                     jj=imaxk0+j+1
                      kx=dble(i)*deltakx
                      if (i.ge.0) then
                         indicex=i+1
@@ -662,20 +633,27 @@ c     ajoute onde plane
                      endif
                      if (indicen*indicen*k0*k0*numapertra*numapertra
      $                    *0.9999d0-kx*kx-ky*ky.gt.0.d0) then
-c                        write(*,*) 'ff champ',Efourierypos(indice)
-c     $                       ,indice
+                        kz=dsqrt(indicen*indicen*k0*k0-kx*kx-ky *ky)
+                        zfocus=cdexp(icomp*kz*zlenst)
                         indice=indicex+nfft2d*(indicey-1)
+                        Efourierxpos(indice)=Efourierxpos(indice)
+     $                       *zfocus
+                        Efourierypos(indice)=Efourierypos(indice)
+     $                       *zfocus
+                        Efourierzpos(indice)=Efourierzpos(indice)
+     $                       *zfocus
+                        
                         if (i.eq.ikxinc.and.j.eq.jkyinc) then
                            call champlineairemicrokxky(epscouche,
      $                          zcouche,neps,nepsmax,x,y,k0,E0 ,ss ,pp
      $                          ,kx,ky,infostr ,nstop ,Arx,Ary,Arz ,Atx
      $                          ,Aty ,Atz)
                            Efourierincxpos(indice) =Efourierxpos(indice)
-     $                          +Atx/deltakx /deltakx*icomp
+     $                          +Atx/deltakx /deltakx*icomp*zfocus
                            Efourierincypos(indice) =Efourierypos(indice)
-     $                          +Aty/deltakx /deltakx*icomp
+     $                          +Aty/deltakx /deltakx*icomp*zfocus
                            Efourierinczpos(indice) =Efourierzpos(indice)
-     $                          +Atz/deltakx /deltakx*icomp
+     $                          +Atz/deltakx /deltakx*icomp*zfocus
                         else
                            Efourierincxpos(indice) =Efourierxpos(indice)
                            Efourierincypos(indice) =Efourierypos(indice)
@@ -687,40 +665,6 @@ c     $                       ,indice
 !$OMP ENDDO 
 !$OMP END PARALLEL
                if (nstop.eq.1) return
-
-               
-               if (zlenst.ne.0.d0) then
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,ii,jj,kx,ky,kz,ctmp,indice)   
-!$OMP DO SCHEDULE(DYNAMIC) COLLAPSE(2)          
-                  do i=-imaxk0,imaxk0
-                     do j=-imaxk0,imaxk0
-                        ii=imaxk0+i+1
-                        jj=imaxk0+j+1
-                        kx=dble(i)*deltakx
-                        ky=dble(j)*deltaky
-                        if (indicen*indicen*k0*k0*numapertra*numapertra
-     $                       *0.9999d0-kx*kx-ky*ky.gt.0.d0) then 
-                           kz=dsqrt(indicen*indicen*k0*k0-kx*kx-ky*ky) 
-                           ctmp=cdexp(icomp*kz*zlenst)
-                           indice=i+nfft2d2+1+nfft2d*(j+nfft2d2)
-                           Efourierxpos(indice) =Efourierxpos(indice)
-     $                          *ctmp
-                           Efourierypos(indice) =Efourierypos(indice)
-     $                          *ctmp
-                           Efourierzpos(indice) =Efourierzpos(indice)
-     $                          *ctmp
-                           Efourierincxpos(indice)
-     $                          =Efourierincxpos(indice)*ctmp
-                           Efourierincypos(indice)
-     $                          =Efourierincypos(indice)*ctmp
-                           Efourierinczpos(indice)
-     $                          =Efourierinczpos(indice)*ctmp
-                        endif
-                     enddo
-                  enddo
-!$OMP ENDDO 
-!$OMP END PARALLEL     
-               endif
 
                if (gross.eq.-1.d0) then
                   call passagefourierimage2(Efourierincxpos

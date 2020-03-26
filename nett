@@ -1,4 +1,5 @@
 make clean
+rm cdmlib/lib/libcdmlibsurf.so*
 rm */*.mat
 rm */greenfft
 rm */fort.*

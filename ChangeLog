@@ -1,3 +1,16 @@
+	version 0.5.6
+
+	1) initialise nmaxpp dans le fortran si large field pas fait.
+	2) erreur corrige ds cdmRunWidget.cpp un espace
+	de trop pour image scattered.
+	3) changement nom version.
+	4) grosse erreur dans bf pour zlensr et zlenst. Supression de
+	beaucoup de lignes, pour mettre la focalisation dans la boucle
+	avant.
+	5) zfocus dans bf declaré en precision au lieu de complex
+	6) meme erreur sur df que 5 pour bf. Correction.
+
+	--------------------------------------------------------------
 	version 0.5.5
 
 	1) quand large field on recalculait la fonction de Green
@@ -6,8 +19,6 @@
 	2) recalcul delkax pour bf et df comme espace libre.
 	3) initialise deltaky=deltakx dans bf
 	4) dans inverserigsurf t2 non initialiser dans GPBICG
-	5)
-
 
 
 	--------------------------------------------------------------

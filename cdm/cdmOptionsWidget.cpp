@@ -1243,7 +1243,7 @@ OptionsWidget::updateOptions() {
   options->setOpticaltorque(opticaltorque->isChecked());
   options->setOpticaltorquedensity(opticaltorquedensity->isChecked());
   options->setNproche(rangeofstudy->currentIndex());
-  QLOG_INFO() << "NPROCHE 2" << options->getNproche();
+  QLOG_DEBUG() << "NPROCHE 2" << options->getNproche();
 
   if ( options->getNread() == true )
    options->setFilereread(this->getFilereread());

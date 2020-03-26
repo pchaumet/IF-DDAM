@@ -736,7 +736,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
      return;
     }
    else
-     QLOG_INFO() << "Memory used=" << needed_mem << "MB (available memory="
+     QLOG_DEBUG() << "Memory used=" << needed_mem << "MB (available memory="
                  << available_mem << "MB)";
     
    incidentfield = run->getIncidentField();
@@ -835,8 +835,8 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    Tabmulti = run->getTabmulti();
    Tabzn = run->getTabzn();
 
-   QLOG_INFO() << "appel lib fortran" << __FILE__ << '@' << __LINE__;
-   QLOG_INFO() << "beam:" << beam <<  __FILE__ << '@' << __LINE__;
+   QLOG_DEBUG() << "appel lib fortran" << __FILE__ << '@' << __LINE__;
+   QLOG_DEBUG() << "beam:" << beam <<  __FILE__ << '@' << __LINE__;
   cdmlibsurf_(&wavelength, beam, object, anisotropy, material,
 	       &discretization, &tolerance, methodeit, polarizability, &nreadCheck, filereread, &nmatlabCheck, fileh5,
 	       // ligne du multicouche
@@ -953,7 +953,7 @@ RunWidget::displayFinishedBox()
 void 
 RunWidget::displayResults()
 {
-   QLOG_INFO () << " RESULTS !!!";
+   QLOG_DEBUG () << " RESULTS !!!";
  
    int nmax = options->getNxm()*options->getNym()*options->getNzm();
    // calcul dimension des tenseurs surface
@@ -1380,7 +1380,7 @@ RunWidget::displayResults()
 			       << "Image plane: Scattered field: z<0" << "Image plane: Total field: z<0"));
    if (nside == 2) 
    farfieldComboBox->addItems((QStringList() << "Fourier plane: Scattered field: kz>0" <<  "Fourier plane: Total field: kz>0"
-			       << "Image plane:  Scattered field: z>0" << "Image plane: Total field: z>0"));
+			       << "Image plane: Scattered field: z>0" << "Image plane: Total field: z>0"));
    }
    else if (ntypemic == 1 || ntypemic == 2) {
      if (nside == 1) 
@@ -1556,12 +1556,19 @@ RunWidget::plotmicroscopy() {
    int col = 0;
    int nfft2d;
    nfft2d = options->getnfft2d();
+   QLOG_DEBUG ( ) << "size" << nfft2d; 
    QString title,xtitle,ytitle;
    if ( type == "Intensity" ) {
+     QLOG_DEBUG ( ) << "size3" << nfft2d;
+     QLOG_DEBUG ( ) << "field" << field;
      if ( field == "Image plane: Scattered field: z>0" ) {
        title = "Image plane: Scattered field: z>0";
        xtitle = "x(m)";
        ytitle = "y(m)";
+       QLOG_DEBUG ( ) << "size2" << nfft2d;
+       for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
+	 QLOG_DEBUG () << "data" << i << norm(run->getEimageZ()[i]);
+       }
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getXY()[line],run->getXY()[col], (
                           norm(run->getEimageX()[i]) +

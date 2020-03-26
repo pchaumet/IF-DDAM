@@ -4,7 +4,7 @@
 
 TEMPLATE 	= 	app
 
-VERSION         =       0.5.2
+VERSION         =       0.5.6
 
 TARGET 		=       cdm
 
@@ -36,7 +36,7 @@ RCC_DIR         = resources
 
 QMAKE_CXXFLAGS_RELEASE  -= -O2
 
-QMAKE_CXXFLAGS 	+= -g -O3 
+QMAKE_CXXFLAGS 	+= -mcmodel=large -Warray-bounds -g -O3 
 
 #QMAKE_CFLAGS    += -Warray-bounds -fcray-pointer -w -cpp -g
 

@@ -450,6 +450,7 @@ c     ne fait rien
 c     calculation size parameter initialization
       ntotalm=4*nxm*nym
       nmax = nxm*nym*nzm
+      nmaxpp = nxm*nym*nzm
       nfft2d2=nfft2d/2
       ldabi = 3*nxm*nym*nzm
       nlar = 12
@@ -807,34 +808,26 @@ c     décrément de 1 de nproche pour faciliter le code C
 c     look  for compute near field with FFT
       if (nlecture.eq.1.and.nproche.eq.-1) nproche=0
       
-      write(*,*) 'coucou'
       if (nquickdiffracte.eq.1.and.nproche.eq.-1) nproche=0
-      write(*,*) 'coucou1'
       if (beam(1:5).eq.'gwave'.and.nproche.eq.-1) nproche=0
       nprochefft=0
-      write(*,*) 'coucou2'
 c     test si wide field demandé
       if (nproche.ge.1) then
          nprochefft=nproche
          nproche=0       
       endif
-      write(*,*) 'coucou3',nprochefft
       if (nobjet.eq.-1.and.nproche.ge.1) nobjet=0
-      write(*,*) 'coucou4'
       if (nstop.eq.1) return
 
 c     Built the object
       if (object(1:6).eq.'sphere') then
          numberobjet=1
-         write(*,*) 'coucou5'
          call objetspheresurf(trope,eps,epsani,xs,ys,zs,xswf,yswf,zswf
      $        ,k0 ,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny,nz
      $        ,polarizability ,nproche,epsilon,polarisa,rayon,xg,yg,zg
      $        ,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn,nmatf
      $        ,file_id,group_iddip,infostr ,nstop)
          write(99,*) 'sphere',rayon
-         write(*,*) 'coucou6'
-         write(*,*) 'coucou7'
       elseif (object(1:12).eq.'inhomosphere') then
          numberobjet=1
          if (trope.ne.'iso') then
@@ -2176,7 +2169,7 @@ c     dipole a partir champ local
 c     ******************************************************
 c     compute the near field with FFT
 c     ******************************************************
-      write(*,*) 'ffff',nprochefft
+
  1000 if (nprochefft.ge.1) then
 
          write(*,*) '*************************************************'      

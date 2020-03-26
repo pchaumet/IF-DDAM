@@ -4,7 +4,7 @@
 
 TEMPLATE 	= 	lib
 
-VERSION         =       0.5.2
+VERSION         =       0.5.6
 
 TARGET 		=       cdmlibsurf
 
@@ -30,7 +30,7 @@ QMAKE_CC        =       gfortran
 
 QMAKE_CFLAGS    += -Warray-bounds -fcray-pointer -w -cpp -fopenmp 
 
-QMAKE_CFLAGS_RELEASE    = -O3 
+QMAKE_CFLAGS_RELEASE    = -O3 -g
 
 QMAKE_CFLAGS_THREAD =
 
