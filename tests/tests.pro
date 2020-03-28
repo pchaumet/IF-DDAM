@@ -4,9 +4,9 @@
 
 TEMPLATE 	= 	app
 
-VERSION         =       0.4.6
+VERSION         =       0.5.7
 
-TARGET 		=       tests
+TARGET 		=       main
 
 CONFIG          +=      warn_on debug
 
@@ -22,9 +22,9 @@ DEFINES 	+=      USE_HDF5
 
 QMAKE_CC        =       gfortran 
 
-QMAKE_CFLAGS    += -Warray-bounds -fcray-pointer -w -cpp -mcmodel=large -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -g -fcheck=all -fbacktrace -fopenmp
+QMAKE_CFLAGS    += -Warray-bounds -w -cpp -mcmodel=large -fopenmp
 
-QMAKE_LFLAGS    = -mcmodel=large -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -cpp -g -fcheck=all -fbacktrace -fopenmp
+QMAKE_LFLAGS    = -mcmodel=large -fopenmp
 
 QMAKE_CFLAGS_RELEASE    = -O3 
 
@@ -32,7 +32,7 @@ QMAKE_CFLAGS_THREAD =
 
 HEADERS 	+=      
 
-SOURCES		+= 	main.f
+SOURCES		+= 	mainsurf.f
                         
 INCLUDEPATH 	+= .
 

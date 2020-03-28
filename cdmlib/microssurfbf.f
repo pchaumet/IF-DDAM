@@ -36,7 +36,7 @@
       double complex, dimension(3*nxm*nym*nzm) :: FF,FF0,FFloc
       integer, dimension(nxm*nym*nzm) :: Tabdip
       character(12) methodeit
-      double precision tol,tol1,tolinit,aretecube,eps0,k0,P0,irra,pi
+      double precision tol,tol1,tolinit,aretecube,eps0,k0,k02,P0,irra,pi
      $     ,numaperref,numapertra,numaperinc,numaperk,kxinc,kyinc,I0
      $     ,deltax,deltakx ,deltaky,w0 ,deltak,pp,ss,tmp,rloin,sidemic
      $     ,deltakm,xmin,xmax,ymin,ymax
@@ -90,6 +90,7 @@ c     initialise
       npolainc=0
       icomp=(0.d0,1.d0)
       numaperk=k0*numaperinc
+      k02=k0*k0
       nbsphere3=3*nbsphere
       x=0.d0
       y=0.d0
@@ -428,8 +429,8 @@ c     calcul champ dessus
      $                             *numapertra*0.9999d0-kx*kx-ky
      $                             *ky.gt.0.d0) then
                                  z=1.d0
-                                 kz=dsqrt(k0*k0*indicen*indicen -kx *kx
-     $                                -ky*ky)
+                                 kz=dsqrt(k02*indicen*indicen-kx*kx-ky
+     $                                *ky)
                                  Emx=0.d0
                                  Emy=0.d0
                                  Emz=0.d0
@@ -472,12 +473,12 @@ c     calcul champ dessus
                            endif
 c     calcul champ dessous
                            if (ncote.eq.-1.or.ncote.eq.0) then
-                              if (k0*k0*indice0*indice0*numaperref
+                              if (k02*indice0*indice0*numaperref
      $                             *numaperref*0.9999d0-kx*kx-ky
      $                             *ky.gt.0.d0) then    
                                  z=-1.d0
-                                 kz=-dsqrt(k0*k0*indice0*indice0 -kx *kx
-     $                                -ky*ky)
+                                 kz=-dsqrt(k02*indice0*indice0-kx*kx-ky
+     $                                *ky)
                                  call  tenseurmulticoucheloinfft(kx,ky
      $                                ,kz,z,zs(1),k0,nepsmax,neps
      $                                ,dcouche,zcouche,epscouche
@@ -559,11 +560,10 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                            else
                               indicey=nfft2d+j+1
                            endif
-                           if (indice0*indice0*k0*k0*numaperref
+                           if (indice0*indice0*k02*numaperref
      $                          *numaperref*0.9999d0 -kx*kx-ky
      $                          *ky.gt.0.d0) then
-                              kz=dsqrt(indice0*indice0*k0*k0-kx*kx-ky
-     $                             *ky)
+                              kz=dsqrt(indice0*indice0*k02-kx*kx-ky*ky)
                               zfocus=cdexp(-icomp*kz*zlensr)
                               indice=indicex+nfft2d*(indicey-1)
                               Efourierxneg(indice)=Efourierxneg(indice)
@@ -654,11 +654,10 @@ c     ajoute onde plane
                               indicey=nfft2d+j+1
                            endif
 
-                           if (indicen*indicen*k0*k0*numapertra
+                           if (indicen*indicen*k02*numapertra
      $                          *numapertra*0.9999d0-kx*kx-ky
      $                          *ky.gt.0.d0) then
-                              kz=dsqrt(indicen*indicen*k0*k0-kx*kx-ky
-     $                             *ky)
+                              kz=dsqrt(indicen*indicen*k02-kx*kx-ky*ky)
                               zfocus=cdexp(icomp*kz*zlenst)
                               indice=indicex+nfft2d*(indicey-1)
                               Efourierxpos(indice)=Efourierxpos(indice)

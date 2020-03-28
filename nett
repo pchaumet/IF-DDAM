@@ -1,5 +1,4 @@
 make clean
-rm cdmlib/lib/libcdmlibsurf.so*
 rm */*.mat
 rm */greenfft
 rm */fort.*
@@ -15,8 +14,10 @@ rm qwt-6.1.2/Makefile
 rm cdmlib/Makefile.cdmlibsurf
 rm cdm/Makefile
 rm Makefile
+rm tests/Makefile
 rm */*prout*
 rm bin/output
+rm tests/output
 rm *~
 rm */*~
 rm */cdm
@@ -29,9 +30,18 @@ rm bin/.lf
 rm bin/.data
 rm bin/.bin
 rm bin/*.h5
+rm tests/*.lf
+rm tests/*.bin
+rm tests/*.data
+rm tests/.lf
+rm tests/.data
+rm tests/.bin
+rm tests/*.h5
+rm tests/filenameh5
 rm cdmlib/*.h5
 rm */*.log
 rm */output
 rm */*.o
 rm */a.out
 rm */main
+rm cdmlib/lib/libcdmlibsurf.so*

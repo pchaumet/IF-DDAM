@@ -606,13 +606,13 @@ c     save the diffracted field in kx,ky and the total field
       open(520,file='kx.mat')
       open(521,file='ky.mat')
 c     save the density of the optical force
-      open(60,file='forcex.mat')
-      open(61,file='forcey.mat')
-      open(62,file='forcez.mat')
+c      open(60,file='forcex.mat')
+c      open(61,file='forcey.mat')
+c      open(62,file='forcez.mat')
 c     save the density of optical torque
-      open(63,file='torquex.mat')
-      open(64,file='torquey.mat')
-      open(65,file='torquez.mat')
+c      open(63,file='torquex.mat')
+c      open(64,file='torquey.mat')
+c      open(65,file='torquez.mat')
 c     save epsilon
       open(66,file='epsilon.mat')
 c     initialization of the data

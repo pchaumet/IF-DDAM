@@ -1555,12 +1555,15 @@ RunWidget::plotmicroscopy() {
    int line = 0;
    int col = 0;
    int nfft2d;
+   int ntypemic;
+   
    nfft2d = options->getnfft2d();
-   QLOG_DEBUG ( ) << "size" << nfft2d; 
+   ntypemic = options->getNtypemic();
+   QLOG_INFO ( ) << "size" << nfft2d; 
+   QLOG_INFO ( ) << "field" << field;
+   QLOG_INFO ( ) << "ntypemic" << ntypemic;
    QString title,xtitle,ytitle;
-   if ( type == "Intensity" ) {
-     QLOG_DEBUG ( ) << "size3" << nfft2d;
-     QLOG_DEBUG ( ) << "field" << field;
+   if ( type == "Intensity" ) {  
      if ( field == "Image plane: Scattered field: z>0" ) {
        title = "Image plane: Scattered field: z>0";
        xtitle = "x(m)";
@@ -1837,7 +1840,7 @@ RunWidget::plotmicroscopy() {
        ytitle = "y(m)";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getXY()[line],run->getXY()[col], abs(run->getEimageX()[i])));
-         datapc->push_back(QwtPoint3D(run->getXY()[line],run->getXY()[col], arg(run->getEimageX()[i])));
+	 datapc->push_back(QwtPoint3D(run->getXY()[line],run->getXY()[col], arg(run->getEimageX()[i])));
          col++;
          if ( col == nfft2d ) {
             col = 0;
@@ -2171,9 +2174,11 @@ RunWidget::plotmicroscopy() {
      plot = new PlotRaster(this, data, (int)nfft2d, title + " Modulus", xtitle, ytitle, options->getColors());
      plot->setObjectName("plotraster");
      plotlayout->addWidget(plot);
-     plotpc = new PlotRaster(this, datapc, (int)nfft2d, title + " phase", xtitle, ytitle, options->getColors());
-     plotpc->setObjectName("plotraster");
-     plotlayout->addWidget(plotpc);
+     if (ntypemic == 0) {
+       plotpc = new PlotRaster(this, datapc, (int)nfft2d, title + " phase", xtitle, ytitle, options->getColors());
+       plotpc->setObjectName("plotraster");
+       plotlayout->addWidget(plotpc);
+     }
    }
    plotfinalwidget->setLayout(plotlayout);
    plotwidget->setCurrentIndex(plotwidget->addTab(plotfinalwidget,"Microscopy"));

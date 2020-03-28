@@ -4,7 +4,7 @@
 
 TEMPLATE 	= 	lib
 
-VERSION         =       0.5.6
+VERSION         =       0.5.7
 
 TARGET 		=       cdmlibsurf
 
@@ -100,7 +100,6 @@ SOURCES		+= aleatoire.f \
 		irradiancesurf.f \
 		j4save.f \
 		local-macro-surf.f \
-		mainsurf.f \
 		module_mie.f \
 		numerocouche.f \
 		objectarbitrarysurf.f \

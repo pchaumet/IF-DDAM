@@ -1,3 +1,21 @@
+	version 0.5.7
+
+	1) déplacement de mainsurf vers le directory tests et supression
+	dans cdmlib. Création de tests.pro qui crée le code main.
+	2) changement de nett pour tuer ce qui est dans tests + changement
+	nom version
+	3) création ds bin/tests/options.db3 de quatre tests.
+	4) Dans cdmRunWidget.cpp si df et bf alors ne trace pas la phase
+	pour les composantes car pas de sens.
+	5) verifier bf et df identique avec homogène par composante.
+	6) k02 pour df et bf
+	7) creation de 4 test dans options.db3 sous bin/tests
+	8) creation mainsurf qui correspond au cas test1 
+	9) comment des créations des fichiers force et torque.
+
+	quand kz>0 afficher que  transmis
+
+	--------------------------------------------------------------
 	version 0.5.6
 
 	1) initialise nmaxpp dans le fortran si large field pas fait.
