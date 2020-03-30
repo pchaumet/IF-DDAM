@@ -1,5 +1,6 @@
 make clean
 rm */*.mat
+rm */*/*.mat
 rm */greenfft
 rm */fort.*
 rm */*/*.a
@@ -36,8 +37,14 @@ rm tests/*.data
 rm tests/.lf
 rm tests/.data
 rm tests/.bin
-rm tests/*.h5
-rm tests/filenameh5
+rm tests/test*/*.h5
+rm tests/test*/filenameh5
+rm tests/test*/main
+rm tests/test*/fort.*
+rm tests/test*/output
+rm tests/test*/Makefile
+rm tests/test*/*.log
+rm bin/filenameh5
 rm cdmlib/*.h5
 rm */*.log
 rm */output
