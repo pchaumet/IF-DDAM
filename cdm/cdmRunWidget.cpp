@@ -199,8 +199,6 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     if (options->getObject() == "cylinder") strcpy (object,"cylinder");
     if (options->getObject() == "concentric spheres") strcpy (object,"concentricsphere");
     if (options->getObject() == "arbitrary") strcpy (object,"arbitrary");
-
-
     
     QLOG_DEBUG () << "Object:" << options->getObject();
     char namefileobj[64];

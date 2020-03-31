@@ -40,7 +40,7 @@ Options::Options()
 #endif
   ntypemicList = (QStringList() << "Holographic" << "Brightfield" << "Darkfield & phase");
   
-  rangeofstudyList = (QStringList() << "object" << "cube around object" << "wide field");
+  rangeofstudyList = (QStringList() << "Object" << "Cube around object" << "Wide field");
 
   ninterpList = (QStringList() << "Rigorous" << "Level 1" << "Level 2" << "Level 3" << "Level 4");
   

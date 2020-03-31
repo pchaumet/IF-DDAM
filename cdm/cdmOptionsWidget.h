@@ -83,6 +83,9 @@ class OptionsWidget : public QWidget
       void handleObjectSelectionChanged(int index);
       void handleObjectNumberSelectionChanged(int index);
       void handleBeamSelectionChanged(int index);
+      void handleSideSelectionChanged(int index);
+      void handleTypemicSelectionChanged(int index);
+      void handleRangeofstudySelectionChanged(int index);
       void handleWaveMultiNumberSelectionChanged(int index);
       void configureBeam();
       void configureInterface();
@@ -195,7 +198,8 @@ class OptionsWidget : public QWidget
     QComboBox       *rangeofstudy;
     QCheckBox       *dipolepsilon, *farfield, *force, *nearfield ;
     QLabel          *nthetaLabel, *nphiLabel, *grossLabel, *zlensrLabel, *zlenstLabel, *nsideLabel;
-    QLabel          *narLabel,  *natLabel, *naincLabel;
+    QLabel          *narLabel,  *natLabel, *naincLabel, *nxmpLabel, *nympLabel, *nzmpLabel;
+    QLabel          *emptynxmpLabel, *emptynympLabel, *emptynzmpLabel;
     QLineEdit       *nxm, *nym, *nzm, *ntheta, *nphi, *nar, *nat, *gross, *zlensr, *zlenst, *nainc, *meshsize;
     QLineEdit       *nxmp, *nymp, *nzmp, *nxx, *nyy, *nzz;
     QDialog         *cfgWindow;

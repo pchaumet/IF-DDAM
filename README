@@ -37,6 +37,8 @@ If you want to use HDF5, type:
 qmake-qt4 "CONFIG+=fftw hdf5"
 make
 
+if you have 4 processors,
+export OMP_NUM_THREADS=4
 -------------------------------------------------------------
 Linux installation:
 -------------------------------------------------------------

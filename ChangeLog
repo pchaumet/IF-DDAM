@@ -1,3 +1,14 @@
+	version 0.5.9
+
+	1) Quand kz>0 afficher que transmis, kz>0 affiche que réfléchi.
+	2) numerical aperture pour le condenseur affiche pas pour
+	holographic.
+	3) correction 1 et 2 pour intialiser correctement.
+	4) passer le additionnal side dans la bonne option de champ proche
+	et plus dans numerical parameter
+	5) Passer les notations avec : pour tous. Plus homogènes.
+
+	--------------------------------------------------------------
 	version 0.5.8
 
 	1) création de quatre tests sous tests qui correspondent aux
