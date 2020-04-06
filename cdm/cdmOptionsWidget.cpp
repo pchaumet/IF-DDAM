@@ -287,7 +287,6 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   ntypemic->addItems(options->ntypemicList);
   ntypemic->setCurrentIndex(options->getNtypemic());
   ntypemic->setFixedWidth(150);
-  ntypemic->setCurrentIndex(0);
   connect(ntypemic, SIGNAL(currentIndexChanged(int)),this,
 	SLOT(handleTypemicSelectionChanged(int)));
     

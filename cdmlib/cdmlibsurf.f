@@ -962,12 +962,6 @@ c     Built the object
          return
       endif
 
-      if (nprochefft.eq.1) then
-         write(*,*) 'nx',nx,ny,nz,nxm,nym,nzm
-         if (nx.eq.nxm.and.ny.eq.nym.and.nz.eq.nzm) then
-            nprochefft=0
-         endif
-      endif
       write(*,*) '************ END OBJECT *************************'
       write(*,*) ' '
       if (nstop.eq.1) return

@@ -539,7 +539,7 @@ c     ntorqued=1 ! calcul la desnite de couple dans l'objet l'objet.
 
       nenergie=1                ! 0 Do not compute energy, 1 compute energy conservation.
 
-      nmatf=2                   ! 1 Do not save the data, 0 save the data in mat file, 2 save the data in one hdf5 file.
+      nmatf=0                   ! 1 Do not save the data, 0 save the data in mat file, 2 save the data in one hdf5 file.
       h5file='ifdda.h5'         ! name of the hdf5 file
      
 

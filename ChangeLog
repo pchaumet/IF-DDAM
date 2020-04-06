@@ -1,3 +1,20 @@
+	version 0.5.10
+
+	1) Passe la gestion de nxmp=nymp=nzmp=0 dans le C++ et plus dans
+	le fortran.
+	2) setNtypemic(query.value(39).toInt()) était en double!
+	3) ntypemic->setCurrentIndex(0); enlevé il ne faut l'intialiser
+	c'est le load qui le fait.
+	4) options.db3 disparu remis en place, et revérifié.
+	5) cdmOptionsWindow.cpp modifie pour inclure microscopy et les
+	nouvelles options.
+
+	tabfft2 a faire.
+
+
+
+
+	--------------------------------------------------------------
 	version 0.5.9
 
 	1) Quand kz>0 afficher que transmis, kz>0 affiche que réfléchi.

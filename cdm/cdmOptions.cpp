@@ -707,7 +707,7 @@ Options::loadDb(QString name){
     this->setGross(query.value(36).toDouble());
     this->setZlensr(query.value(37).toDouble());
     this->setZlenst(query.value(38).toDouble());
-    this->setNtypemic(query.value(39).toDouble());
+    this->setNtypemic(query.value(39).toInt());
     this->setNside(query.value(40).toInt());
     this->setMeshsize(query.value(41).toDouble());
     this->setnfft2d(query.value(42).toInt());

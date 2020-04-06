@@ -313,9 +313,9 @@ OptionsWindow::tofile(){
       opt << " number of subunit Y:" << options->getNyy() << endl;
       opt << " number of subunit Z:" << options->getNzz() << endl;
       opt << " meshsize:" << options->getMeshsize() << endl;      
-      opt << "  radius:" << options->getSphereradius().at(i) << endl;
-      opt << "  seed:" << options->getSphereseed() << endl;
-      opt << "  density:" << options->getDensity() << endl;
+      opt << " radius:" << options->getSphereradius().at(i) << endl;
+      opt << " seed:" << options->getSphereseed() << endl;
+      opt << " density:" << options->getDensity() << endl;
      }
     else if (options->getObject() == "ellipsoid") {
       opt << " half axe A:" << options->getDemiaxea() << endl;
@@ -371,13 +371,21 @@ OptionsWindow::tofile(){
     opt << "  cross section + poynting checked:" << options->getCrosssectionpoynting() << endl;
     opt << "  quick computation:" << options->getQuickdiffract() << endl;
     opt << "   ntheta:" << options->getNtheta() << endl;
-    opt << "   nphi:" << options->getNphi() << endl;
-    opt << "  microscopy checked:" << options->getMicroscopy() << endl;
-    opt << "   numerical aperture:" << options->getNAR() << endl;
-    opt << "   numerical aperture:" << options->getNAT() << endl;
-    opt << "   magnification:" << options->getGross() << endl;
-    opt << "side [0=Side kz<0, 1=Both side (NA=1), 2=Side kz<0]:" << options->getNside() << endl;
+    opt << "   nphi:" << options->getNphi() << endl;   
   }
+
+ opt << " microscopy checked:" << options->getMicroscopy() << endl;
+  if ( options->getMicroscopy() ) {
+    opt << " numerical aperture:" << options->getNAR() << endl;
+    opt << " numerical aperture:" << options->getNAT() << endl;
+    opt << " numerical aperture:" << options->getNAinc() << endl;
+    opt << " magnification:" << options->getGross() << endl;
+    opt << " side [0=Side kz<0, 1=Both side (NA=1), 2=Side kz<0]:" << options->getNside() << endl;
+    opt << " Type fo microscopy:" << options->getNtypemic() << endl;
+    opt << " Focal plane ref:" << options->getZlensr() << endl;
+    opt << " Focal plane trans:" << options->getZlenst() << endl;
+  }
+  
   opt << " force checked:" << options->getForce() << endl;
   if ( options->getForce() ) {
     opt << "  optical force checked:" << options->getOpticalforce() << endl;
@@ -391,16 +399,16 @@ OptionsWindow::tofile(){
     opt << "  macroscopic field checked:" << options->getMacroscopicfield() << endl;
     int nproche = options->getNproche();
     opt << "  range of study (-0,1,2):" << nproche << endl;
+    opt << " nxm:" << options->getNxm() << endl;
+    opt << " nym:" << options->getNym() << endl;
+    opt << " nzm:" << options->getNzm() << endl;
+    opt << " nxmp:" << options->getNxmp() << endl;
+    opt << " nymp:" << options->getNymp() << endl;
+    opt << " nzmp:" << options->getNzmp() << endl;
   }
   opt << "numerical parameters options:" << endl;
   opt << " tolerance:" << options->getTolerance() << endl;
-  opt << " methode:" << options->getMethodeit() << endl;
-  opt << " nxm:" << options->getNxm() << endl;
-  opt << " nym:" << options->getNym() << endl;
-  opt << " nzm:" << options->getNzm() << endl;
-  opt << " nxmp:" << options->getNxmp() << endl;
-  opt << " nymp:" << options->getNymp() << endl;
-  opt << " nzmp:" << options->getNzmp() << endl;
+  opt << " methode:" << options->getMethodeit() << endl;  
   opt << " polarizability:" << options->getPolarizability() << endl;
   opt << " FFT:" << options->getnfft2d() << endl;
   optfile.close();

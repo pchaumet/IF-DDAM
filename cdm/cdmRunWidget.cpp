@@ -290,17 +290,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     int opticaltorqueCheck;
     opticaltorqueCheck = options->getOpticaltorque();
     int opticaltorquedensityCheck;
-    opticaltorquedensityCheck = options->getOpticaltorquedensity();
-    int nprocheCheck;
-    options->setNproche(options->getNproche());
-    if ( options->getObjectNumber() > 1 ) {
-      if ( options->getNproche() == 0 )
-	options->setNproche(1);
-    }
-    if ( options->getNearfield() == 0) {
-      options->setNproche(0);
-    }
-    nprocheCheck = options->getNproche();    
+    opticaltorquedensityCheck = options->getOpticaltorquedensity();    
     int microscopyCheck;
     microscopyCheck = options->getMicroscopy();
     int microscopyFFTCheck;
@@ -328,7 +318,22 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
     nzmp = options->getNzmp();
     ntheta = options->getNtheta();
     nphi = options->getNphi();
-
+    if (options->getNproche() ==2 ) {
+      if (nxmp == 0  && nymp == 0 && nzmp == 0) {
+	options->setNproche(1);
+      }
+    }
+    int nprocheCheck;
+    options->setNproche(options->getNproche());
+    if ( options->getObjectNumber() > 1 ) {
+      if ( options->getNproche() == 0 )
+	options->setNproche(1);
+    }
+    if ( options->getNearfield() == 0) {
+      options->setNproche(0);
+    }
+    nprocheCheck = options->getNproche();   
+    
     if (options->getObject() == "cuboid (meshsize)" || options->getObject() == "random spheres (meshsize)" || options->getObject() == "inhomogeneous cuboid (meshsize)") {
       if (options->getNproche() !=2) {
 	nxm = options->getNxx();
@@ -951,7 +956,8 @@ RunWidget::displayFinishedBox()
 void 
 RunWidget::displayResults()
 {
-   QLOG_DEBUG () << " RESULTS !!!";
+   QLOG_INFO () << " RESULTS !!!";
+   QLOG_INFO () << "nproche" << options->getNproche() ;
  
    int nmax = options->getNxm()*options->getNym()*options->getNzm();
    // calcul dimension des tenseurs surface
