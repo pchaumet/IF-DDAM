@@ -142,6 +142,7 @@ c     Creation des nouvelles variables
 c     variable pour avoir l'image a travers la lentille
       integer nquicklens,nlentille,nobjet,nfft2d,nfft2d2
       parameter (nfft2d=1024)
+      integer tabfft2(nfft2d)
       double precision kx,ky,kz,deltakx,deltaky,numaperref,numapertra
      $     ,deltax,gross,numaperinc,zlensr,zlenst
       double precision kxy(nfft2d),xy(nfft2d)
@@ -457,7 +458,7 @@ c     methodeit='QMRBICGSTAB2'
 
 
 c     Define the tolerance of the iterative method
-      tolinit=1.d-4
+      tolinit=1.d-10
 c*******************************************************
 c     End iterative method used
 c*******************************************************
@@ -636,7 +637,7 @@ c     taille double complex (3*nxm*nym*nzm,12)
 c     taille double complex (nfft2d,nfft2d,3)
      $     Ediffkzpos,Ediffkzneg,      
 c     taille entier (nxm*nym*nzm)
-     $     Tabdip,Tabmulti,Tabzn)
+     $     Tabdip,Tabmulti,Tabzn,Tabfft2)
 
       if (nstop.eq.0) then
          write(*,*) '***********************************************'

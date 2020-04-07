@@ -125,6 +125,7 @@ class Run
    int* getTabdip();
    int* getTabmulti();
    int* getTabzn();
+   int* getTabfft2();
 
    QString  getName();
    int      getObjectSubunits();
@@ -232,6 +233,7 @@ class Run
     dcmplx *b11, *b12, *b13, *b22, *b23, *b31, *b32, *b33;
     dcmplx *Ediffkzpos, *Ediffkzneg;
     int *Tabdip, *Tabmulti, *Tabzn;
+    int *Tabfft2;
 
     QString runname;
 

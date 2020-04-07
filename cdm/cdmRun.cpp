@@ -100,6 +100,7 @@ Run::Run(QString _runname)
   Tabdip  = NULL;
   Tabmulti = NULL;
   Tabzn = NULL;
+  Tabfft2 = NULL;  
 }
 Run::~Run() {
   cleanVectorsMemory();
@@ -809,6 +810,14 @@ Run::allocateVectorsMemory(int nmax, int ntheta, int nphi, int nfft2d, int obj_n
   }
   memset(Tabzn,0,sizeof(int)*nmax);
   mem_used+= sizeof(int)*nmax/ 1000000L;
+
+  Tabfft2 = (int*) malloc(sizeof(int)*nfft2d);
+  if (Tabfft2 == NULL) {
+    QLOG_FATAL() << "Run::allocateVectorsMemory::Memory allocation failed";
+  return -1;
+  }
+  memset(Tabfft2,0,sizeof(int)*nfft2d);
+  mem_used+= sizeof(int)*nfft2d/ 1000000L;  
   
   return mem_used;
 }
@@ -914,6 +923,7 @@ Run::cleanVectorsMemory() {
   if (Tabdip) {free(Tabdip); Tabdip = NULL;}
   if (Tabmulti) {free(Tabmulti); Tabmulti = NULL;}
   if (Tabzn) {free(Tabzn); Tabzn = NULL;}
+  if (Tabfft2) {free(Tabfft2); Tabfft2 = NULL;}  
 }
 double* 
 Run::getIncidentField(){
@@ -1292,6 +1302,11 @@ Run::getTabmulti() {
 int*
 Run::getTabzn() {
   return (int*)Tabzn;
+}
+
+int*
+Run::getTabfft2() {
+  return (int*)Tabfft2;
 }
 
 void 

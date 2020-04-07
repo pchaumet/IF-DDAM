@@ -1,6 +1,6 @@
       subroutine diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym,nzm
-     $     ,nfft2d,nfft2dmax,k0,xs,ys,zs,aretecube,Eloinx,Eloiny,Eloinz
-     $     ,FF,imax,deltakx,deltaky,Ediffkzpos,Ediffkzneg,r,zz
+     $     ,nfft2d,nfft2dmax,tabfft2,k0,xs,ys,zs,aretecube,Eloinx,Eloiny
+     $     ,Eloinz ,FF,imax,deltakx,deltaky,Ediffkzpos,Ediffkzneg,r,zz
      $     ,numaperref,numapertra,nepsmax ,neps,dcouche,zcouche
      $     ,epscouche ,ncote,nstop ,infostr,planf)
 c On calcule le champ diffracté E(r) avec |r|=1
@@ -11,7 +11,7 @@ c On calcule le champ diffracté E(r) avec |r|=1
       double complex FF(3*nxm*nym*nzm),Ediffkzpos(nfft2dmax,nfft2dmax,3)
      $     ,Ediffkzneg(nfft2dmax,nfft2dmax,3)
 
-      integer nfft2d2,imax,i,j,k,tabfft2(4096),indice,kk,ii,jj
+      integer nfft2d2,imax,i,j,k,tabfft2(nfft2d),indice,kk,ii,jj
       double precision deltakx,deltaky,var1,var2,kx,ky,kz,fac,pi
       double complex ctmp,ctmp1,icomp,Eloinx(nfft2dmax*nfft2dmax)
      $     ,Eloiny(nfft2dmax*nfft2dmax),Eloinz(nfft2dmax*nfft2dmax)

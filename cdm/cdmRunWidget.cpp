@@ -589,7 +589,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
      }
    }
    QLOG_DEBUG () << "fftv:" << nfft2d;
-   if (nfft2d > 4096) {
+   if (nfft2d > 16384) {
      *infoMessage = QString("Meshsize too small");
      return;
    }
@@ -720,7 +720,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    dcmplx *FF, *FF0, *FFloc, *xr, *xi;
    dcmplx *wrk;
    dcmplx *Ediffkzpos, *Ediffkzneg;
-   int *Tabdip, *Tabmulti, *Tabzn;
+   int *Tabdip, *Tabmulti, *Tabzn, *Tabfft2;
    // Clean up memory
    run->cleanVectorsMemory();
    // Allocate memory
@@ -837,6 +837,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
    Tabdip = run->getTabdip();
    Tabmulti = run->getTabmulti();
    Tabzn = run->getTabzn();
+   Tabfft2 = run->getTabfft2();   
 
    QLOG_DEBUG() << "appel lib fortran" << __FILE__ << '@' << __LINE__;
    QLOG_DEBUG() << "beam:" << beam <<  __FILE__ << '@' << __LINE__;
@@ -906,7 +907,9 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
 //     taille double complex (nfft2d,nfft2d,3)
            (dcmplx*)Ediffkzpos,(dcmplx*)Ediffkzneg,
 //     taille entier (nxm*nym*nzm)
-           (int*)Tabdip, (int*)Tabmulti, (int*)Tabzn
+           (int*)Tabdip, (int*)Tabmulti, (int*)Tabzn,
+// taile nffft2d
+           (int*) Tabfft2
 	   );
    /*dcmplx *_epstest = run->getEpsilonField();
        for (int k = 0 ; k < nxm*nym*nzm*3*3; k++)

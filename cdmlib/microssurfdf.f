@@ -4,7 +4,7 @@
      $     ,a22,a23 ,a31 ,a32 ,a33 ,WRK,epscouche,zcouche,neps,nepsmax
      $     ,xs,ys,zs,nlar,ldabi,polarisa,epsilon ,methodeit ,nrig,ncote
      $     ,tolinit ,aretecube ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0
-     $     ,nfft2d ,nproche ,Eimagexpos ,Eimageypos ,Eimagezpos,
+     $     ,nfft2d,tabfft2,nproche ,Eimagexpos ,Eimageypos ,Eimagezpos,
      $     Eimageincxpos ,Eimageincypos ,Eimageinczpos, Efourierxpos,
      $     Efourierypos ,Efourierzpos, Efourierincxpos ,Efourierincypos,
      $     Efourierinczpos, Eimagexneg ,Eimageyneg ,Eimagezneg,
@@ -24,6 +24,7 @@
      $     ,ntotalm,nmax,nmatim,nlar,ldabi,nfft2d,nfft2d2,nstop,nmatf
      $     ,ntypemic,ipol,nbsphere3,ncompte,nloop,nproche,nfft2dtmp
       integer matindice(nplanm,nmatim) ,matindplan(nzm,nzm)
+     $     ,tabfft2(nfft2d)
       double complex a11(2*nxm,2*nym,nplanm),a12(2*nxm,2*nym,nplanm),
      $     a13(2*nxm,2*nym,nplanm),a22(2*nxm,2*nym,nplanm),a23(2*nxm,2
      $     *nym,nplanm),a31(2*nxm,2*nym,nplanm),a32(2*nxm,2*nym,nplanm)
@@ -179,7 +180,7 @@ c     calcul de deltak
       ideltam=max(int(2.d0*pi/deltatheta)+1,8)
       deltaky=deltakx
 
-      if (nfft2d.gt.4096) then
+      if (nfft2d.gt.16384) then
          nstop=1
          infostr='nfft2d too large'
          return
@@ -224,7 +225,7 @@ c     calcul puissance
       call irradiancesurf(P0,w0,E0,irra,epscouche(0))
       I0=cdabs(E0)**2
       niterii=0
-      write(*,*) 'npol',npol,npolainc
+       write(*,*) 'Magnitude for each plane wave:',E0
       do ipol=1,npol
          if (npolainc.eq.1) then
             ss=1.d0
@@ -387,7 +388,7 @@ c     dipole a partir champ local
                rloin=1.d0
 c               write(*,*) 'ff local',FF
                call diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym ,nzm
-     $              ,nfft2dtmp,nfft2d,k0,xs,ys,zs,aretecube
+     $              ,nfft2dtmp,nfft2d,tabfft2,k0,xs,ys,zs,aretecube
      $              ,Efourierxpos,Efourierypos,Efourierzpos,FF ,imaxk0
      $              ,deltakx,deltaky,Ediffkzpos,Ediffkzneg ,rloin,rloin
      $              ,numaperref,numapertra,nepsmax ,neps,dcouche,zcouche

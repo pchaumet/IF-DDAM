@@ -1,3 +1,15 @@
+	version 0.5.11
+
+	1) tabfft2 défini dans cdmlibsurf.f et .h, diffracte2surf et
+	lens,micro bf et df et cdmRunWidget.cpp ainsi que la list, la
+	limite 4096 change et cdmRun.h .cpp change.
+	2) mainsurf dans les verifs faits.
+	3) augmenté la precision pour test1.
+	4) magnitude ecrit dans df et bf.
+	5) changement nom version dans cdm et cdmlib.pro
+
+
+	--------------------------------------------------------------
 	version 0.5.10
 
 	1) Passe la gestion de nxmp=nymp=nzmp=0 dans le C++ et plus dans
@@ -10,9 +22,6 @@
 	nouvelles options.
 
 	tabfft2 a faire.
-
-
-
 
 	--------------------------------------------------------------
 	version 0.5.9

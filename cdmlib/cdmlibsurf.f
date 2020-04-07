@@ -65,9 +65,12 @@ c     taille double complex (3*nxm*nym*nzm,12)
      $     wrk,
 c     taille double complex (nfft2d,nfft2d,3)
      $     Ediffkzpos,Ediffkzneg,      
-c     taille entier (nxm*nym*nzm)
-     $     Tabdip,Tabmulti,Tabzn)
+c     taille entier (nxm*nakym*nzm)
+     $     Tabdip,Tabmulti,Tabzn,
+c     taille entier (nfft2d)
+     $     Tabfft2)
 
+      
 #ifdef USE_HDF5
       use HDF5
 #endif
@@ -174,7 +177,7 @@ c     Variables for the computation of the optical force and torque
       double complex Eder(3,3)
       
 c     computation of the cross section
-      integer imaxk0,nfft2d,nfft2dtmp
+      integer imaxk0,nfft2d,nfft2dtmp,tabfft2(nfft2d)
       double precision normal(3) ,deltatheta,deltaphi,Csca,Cscai,Cabs
      $     ,Cext,gasym,thetas,phis,MIECEXT,MIECABS,MIECSCA,GSCA
       double complex ctmp,masque(nfft2d,nfft2d),Ediffkzpos(nfft2d
@@ -315,8 +318,8 @@ c     convergee.
       write(*,*) 'Object           : ',trim(object)
       write(*,*) 'Isotropy         : ',trope
       write(*,*) 'Discretization   : ',nnnr
-      write(*,*) 'Iterative method : ',trim(methodeit),'tolerance asked'
-     $     ,tolinit
+      write(*,*) 'Iterative method : ',trim(methodeit)
+      write(*,*) 'Tolerance asked  :',tolinit
       write(*,*) 'Born or rigorous : ',nrig,':0 rigourous'
       write(*,*) 'Green s function : ',ninterp,':0 rigourous'
       write(*,*) 'Write mat file   : ',nmatf,':0 write mat file'
@@ -345,7 +348,6 @@ c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
       write(*,*) 'Number of layer  : ',neps
       write(*,*) 'Write  file      : ',nmatf
      $     ,':0 ascii file: 1 no file: 2 hdf5 file'
-      write(*,*) 'Use FFTW'
 
       if (nmatf.eq.2) then
          debug=1
@@ -3046,10 +3048,11 @@ c******************************************************************
          tmp=1.d0
          rloin=1.d0
          call diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym,nzm
-     $        ,nfft2dtmp,nfft2d,k0,xs,ys,zs,aretecube,Efourierxpos
-     $        ,Efourierypos,Efourierzpos,FF,imaxk0,deltakx,deltaky
-     $        ,Ediffkzpos,Ediffkzneg,rloin,rloin,tmp,tmp,nepsmax ,neps
-     $        ,dcouche,zcouche,epscouche,ncote ,nstop ,infostr,plan2f)
+     $        ,nfft2dtmp,nfft2d,tabfft2,k0,xs,ys,zs,aretecube
+     $        ,Efourierxpos ,Efourierypos,Efourierzpos,FF,imaxk0,deltakx
+     $        ,deltaky ,Ediffkzpos,Ediffkzneg,rloin,rloin,tmp,tmp
+     $        ,nepsmax ,neps ,dcouche,zcouche,epscouche,ncote ,nstop
+     $        ,infostr,plan2f)
          write(*,*) '******* END DIFFRACTED FIELD WITH FFT ***********'
          write(*,*) ' '
       endif
@@ -3871,18 +3874,19 @@ c     recalcul la polarisabilité qui a ete tuee par large field
      $           ,b13,a11,a12,a13 ,a22,a23 ,a31 ,a32 ,a33 ,WRK,epscouche
      $           ,zcouche,neps,nepsmax ,xs,ys,zs,nlar,ldabi,polarisa
      $           ,epsilon ,methodeit ,nrig,ncote,tolinit ,aretecube
-     $           ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d ,nproche
-     $           ,Eimagexpos ,Eimageypos ,Eimagezpos, Eimageincxpos
-     $           ,Eimageincypos ,Eimageinczpos, Efourierxpos,
-     $           Efourierypos ,Efourierzpos, Efourierincxpos
-     $           ,Efourierincypos, Efourierinczpos, Eimagexneg
-     $           ,Eimageyneg ,Eimagezneg, Eimageincxneg,Eimageincyneg
-     $           ,Eimageinczneg, Efourierxneg ,Efourieryneg,Efourierzneg
-     $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
-     $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref,numapertra
-     $           ,numaperinc,imaxk0,gross,zlensr,zlenst ,ntypemic ,
-     $           planf ,planb ,plan2f ,plan2b ,nmatf,file_id
-     $           ,group_idmic ,nstop ,infostr)
+     $           ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d,tabfft2
+     $           ,nproche ,Eimagexpos ,Eimageypos ,Eimagezpos,
+     $           Eimageincxpos ,Eimageincypos ,Eimageinczpos,
+     $           Efourierxpos, Efourierypos ,Efourierzpos,
+     $           Efourierincxpos ,Efourierincypos, Efourierinczpos,
+     $           Eimagexneg ,Eimageyneg ,Eimagezneg, Eimageincxneg
+     $           ,Eimageincyneg ,Eimageinczneg, Efourierxneg
+     $           ,Efourieryneg,Efourierzneg , Efourierincxneg
+     $           ,Efourierincyneg ,Efourierinczneg ,Ediffkzpos
+     $           ,Ediffkzneg, kxy ,xy,numaperref,numapertra ,numaperinc
+     $           ,imaxk0,gross,zlensr,zlenst ,ntypemic , planf ,planb
+     $           ,plan2f ,plan2b ,nmatf,file_id ,group_idmic ,nstop
+     $           ,infostr)
             
          elseif (ntypemic.eq.2) then
             npolainc=0
@@ -3892,18 +3896,19 @@ c     recalcul la polarisabilité qui a ete tuee par large field
      $           ,b13,a11,a12,a13 ,a22,a23 ,a31 ,a32 ,a33 ,WRK,epscouche
      $           ,zcouche,neps,nepsmax ,xs,ys,zs,nlar,ldabi,polarisa
      $           ,epsilon,methodeit ,nrig,ncote,tolinit ,aretecube
-     $           ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d ,nproche
-     $           ,Eimagexpos ,Eimageypos ,Eimagezpos, Eimageincxpos
-     $           ,Eimageincypos ,Eimageinczpos, Efourierxpos,
-     $           Efourierypos ,Efourierzpos, Efourierincxpos
-     $           ,Efourierincypos, Efourierinczpos, Eimagexneg
-     $           ,Eimageyneg ,Eimagezneg, Eimageincxneg,Eimageincyneg
-     $           ,Eimageinczneg, Efourierxneg ,Efourieryneg,Efourierzneg
-     $           , Efourierincxneg ,Efourierincyneg ,Efourierinczneg
-     $           ,Ediffkzpos,Ediffkzneg, kxy ,xy,numaperref,numapertra
-     $           ,numaperinc,imaxk0,gross,zlensr,zlenst,ntypemic,planf
-     $           ,planb ,plan2f,plan2b ,nmatf,file_id ,group_idmic
-     $           ,nstop ,infostr)
+     $           ,npolainc ,nquicklens ,eps0,k0 ,P0 ,w0 ,nfft2d,tabfft2
+     $           ,nproche ,Eimagexpos ,Eimageypos ,Eimagezpos,
+     $           Eimageincxpos ,Eimageincypos ,Eimageinczpos,
+     $           Efourierxpos, Efourierypos ,Efourierzpos,
+     $           Efourierincxpos ,Efourierincypos, Efourierinczpos,
+     $           Eimagexneg ,Eimageyneg ,Eimagezneg, Eimageincxneg
+     $           ,Eimageincyneg ,Eimageinczneg, Efourierxneg
+     $           ,Efourieryneg,Efourierzneg , Efourierincxneg
+     $           ,Efourierincyneg ,Efourierinczneg ,Ediffkzpos
+     $           ,Ediffkzneg, kxy ,xy,numaperref,numapertra ,numaperinc
+     $           ,imaxk0,gross,zlensr,zlenst,ntypemic,planf ,planb
+     $           ,plan2f,plan2b ,nmatf,file_id ,group_idmic ,nstop
+     $           ,infostr)
          else
             write(*,*) 'holographic microscopy'
             call cpu_time(t1)

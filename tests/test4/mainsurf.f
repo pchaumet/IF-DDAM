@@ -142,6 +142,7 @@ c     Creation des nouvelles variables
 c     variable pour avoir l'image a travers la lentille
       integer nquicklens,nlentille,nobjet,nfft2d,nfft2d2
       parameter (nfft2d=512)
+      integer tabfft2(nfft2d)
       double precision kx,ky,kz,deltakx,deltaky,numaperref,numapertra
      $     ,deltax,gross,numaperinc,zlensr,zlenst
       double precision kxy(nfft2d),xy(nfft2d)
@@ -636,7 +637,7 @@ c     taille double complex (3*nxm*nym*nzm,12)
 c     taille double complex (nfft2d,nfft2d,3)
      $     Ediffkzpos,Ediffkzneg,      
 c     taille entier (nxm*nym*nzm)
-     $     Tabdip,Tabmulti,Tabzn)
+     $     Tabdip,Tabmulti,Tabzn,tabfft2)
 
       if (nstop.eq.0) then
          write(*,*) '***********************************************'

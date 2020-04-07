@@ -28,7 +28,7 @@ Options::Options()
 
   polarizabilityList = (QStringList() << "RR" <<  "GB" << "LA" << "LR" << "CM" << "PS");
 
-  nfft2dList = (QStringList() << "128" << "256" <<  "512"  << "768" << "1024" << "1536" << "2048" << "3072" << "4096");
+  nfft2dList = (QStringList() << "128" << "256" <<  "512"  << "768" << "1024" << "1536" << "2048" << "3072" << "4096" << "8192" << "16384");
 
   nsideList = (QStringList() << "Side kz<0"  <<  "Both side" << "Side kz>0");
   

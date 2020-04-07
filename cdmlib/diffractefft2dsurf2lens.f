@@ -1,14 +1,14 @@
       subroutine diffractefft2dsurf2lens(nbsphere,nx,ny,nz,nxm,nym,nzm
-     $     ,nfft2d,nfft2dmax,k0,xs,ys,zs,aretecube,Eloinx,Eloiny,Eloinz
-     $     ,FF,imax,deltakx,deltaky,Ediffkzpos,NA,nepsmax ,neps ,dcouche
-     $     ,zcouche ,epscouche,signe,nstop ,infostr,planf)
+     $     ,nfft2d,nfft2dmax,tabfft2,k0,xs,ys,zs,aretecube,Eloinx,Eloiny
+     $     ,Eloinz ,FF,imax,deltakx,deltaky,Ediffkzpos,NA,nepsmax ,neps
+     $     ,dcouche ,zcouche ,epscouche,signe,nstop ,infostr,planf)
       implicit none
       integer nx,ny,nz,nxm,nym,nzm,nfft2dmax,nfft2d,nstop
       double precision xs(nxm*nym*nzm),ys(nxm*nym*nzm),zs(nxm*nym*nzm)
      $     ,aretecube,k0,zz,za,NA,signe
       double complex FF(3*nxm*nym*nzm),Ediffkzpos(nfft2dmax,nfft2dmax,3)
 
-      integer nfft2d2,imax,i,j,k,tabfft2(1024),indice,kk,ii,jj
+      integer nfft2d2,imax,i,j,k,tabfft2(nfft2d),indice,kk,ii,jj
       double precision deltakx,deltaky,var1,var2,kx,ky,kz,fac,pi
       double complex ctmp,ctmp1,icomp,Eloinx(nfft2dmax*nfft2dmax)
      $     ,Eloiny(nfft2dmax*nfft2dmax),Eloinz(nfft2dmax*nfft2dmax)
