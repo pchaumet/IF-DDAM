@@ -1,3 +1,29 @@
+	version 0.5.12
+
+	1) ajout de ximage et yimage dans doc.
+	2) ajout de kxincident et kyincident pour bf et df dans doc.
+	3) remet la memoire ecrit pour savoir ce qu'on utilise et supprime
+	les logs qui servaient pas.
+	4)  if (minz == maxz) {
+	minz=minz*0.5;
+	maxz=maxz*1.5;
+	if (minz == maxz) {
+	minz=-1;
+	maxz=1;
+	}
+	}
+	pour rangez pour définir en même temps la colorbar. et evite le
+	cas aussi ou les deux vallent zero.
+	5) remet les INFO pour la memoire utilisee et en enleve certains.
+	6) changement nom version
+	7) debut ecriture chapitre sur les tests pas activé car ecriture
+	en cours.
+
+	vérifier doc
+	faire qmake avec choix?
+	enlever output 99
+
+	--------------------------------------------------------------
 	version 0.5.11
 
 	1) tabfft2 défini dans cdmlibsurf.f et .h, diffracte2surf et

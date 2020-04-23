@@ -739,7 +739,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
      return;
     }
    else
-     QLOG_DEBUG() << "Memory used=" << needed_mem << "MB (available memory="
+     QLOG_INFO() << "Memory used=" << needed_mem << "MB (available memory="
                  << available_mem << "MB)";
     
    incidentfield = run->getIncidentField();
@@ -959,8 +959,8 @@ RunWidget::displayFinishedBox()
 void 
 RunWidget::displayResults()
 {
-   QLOG_INFO () << " RESULTS !!!";
-   QLOG_INFO () << "nproche" << options->getNproche() ;
+   QLOG_INFO () << " RESULTS ";
+   QLOG_DEBUG () << "nproche" << options->getNproche() ;
  
    int nmax = options->getNxm()*options->getNym()*options->getNzm();
    // calcul dimension des tenseurs surface

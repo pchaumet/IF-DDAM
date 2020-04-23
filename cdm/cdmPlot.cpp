@@ -248,11 +248,14 @@ PlotRaster::PlotRaster( QWidget *parent , QVector<QwtPoint3D> *_data,
     QwtInterval rangex = QwtInterval(minx,maxx);
     QwtInterval rangey = QwtInterval(miny,maxy);
     QwtInterval rangez;
-    if (minz == maxz) 
-    // if ( (maxz-minz)/maxz<1.0E-12)
-       rangez = QwtInterval(minz*0.5,maxz*1.5);
-    else
-       rangez = QwtInterval(minz,maxz);
+    if (minz == maxz) {
+      minz=minz*0.5;
+      maxz=maxz*1.5;
+      if (minz == maxz) {
+	minz=-1;
+	maxz=1;
+      }
+    }
     rasterdata->setInterval( Qt::XAxis, rangex );
     rasterdata->setInterval( Qt::YAxis, rangey );
     rasterdata->setInterval( Qt::ZAxis, rangez );
@@ -555,7 +558,7 @@ Plot::Plot( QVector<QwtPoint3D> *_data, QVector<double> *_colormap, QString _tit
        if ( colormap->at(i) < mincolormap)
           mincolormap = colormap->at(i);
       }
-      QLOG_INFO() << "Plot::Plot> maxcolormap=" << QString::number(maxcolormap);
+      QLOG_DEBUG() << "Plot::Plot> maxcolormap=" << QString::number(maxcolormap);
       for (int i = 0 ; i < data->size() ; i++ ) {
          if (colormap->at(i) == 1) continue;
          if (title == "Dipoles")

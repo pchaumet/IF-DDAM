@@ -125,12 +125,12 @@ Run::checkAvailableMemorySize() {
 int
 Run::allocateVectorsMemory(int nmax, int ntheta, int nphi, int nfft2d, int obj_num, int n1m, int nplanm, int nmatim, int nbs, int nxm, int nym, int nzm) {
   
-  QLOG_INFO() << "Run::allocateVectorsMemory> "; 
+  QLOG_DEBUG() << "Run::allocateVectorsMemory> "; 
 
   int mem_used = 0;
 
-  QLOG_INFO() << "Run::allocateVectorsMemory::Memory allocation dcmplx:" << (int)sizeof(dcmplx);
-  QLOG_INFO() << "Run::allocateVectorsMemory::Memory allocation double:" << (int)sizeof(double);
+  QLOG_DEBUG() << "Run::allocateVectorsMemory::Memory allocation dcmplx:" << (int)sizeof(dcmplx);
+  QLOG_DEBUG() << "Run::allocateVectorsMemory::Memory allocation double:" << (int)sizeof(double);
   xc = (double*) malloc(sizeof(double)*nmax);
   if (xc == NULL) { 
     QLOG_FATAL() << "Run::allocateVectorsMemory::Memory allocation failed";
