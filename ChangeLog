@@ -1,3 +1,22 @@
+	version 0.5.13
+
+	1) erreur dans objet arbitrary sur la mise en memoire des x,y,z
+	2) Dans ifdda.m changement des titres pour etre en relatif, champ
+	local macroscopique et microscopie.
+	3) rajoute unité dans faisceau ecriture.
+	4) refait qqs ecritures pour etre plus clair.
+	5) erreur dans 1 corrigé nmat en nmatf.
+	6) erreur dans writehdf5farfield, non prise en compte des indices.
+	7) correction avec le 6 dans ifdda.m pour na
+	8) correction dans le write hdf5 des options du croisement des
+	indices.
+	9)correction dans le inputmatlab des indices croisés la aussi.	
+	10) Ecrit ds ifdda.m quel type de fichier on utilise.
+	11) mis en if nmatf.eq.0 de l'ouverture des fichiers matlab, evite
+	des ouvertures de fichiers vides dans cdmlib.f et tous les
+	fichiers qui crées les objets.
+
+	--------------------------------------------------------------	
 	version 0.5.12
 
 	1) ajout de ximage et yimage dans doc.

@@ -91,14 +91,16 @@ c     Initialization
       yg=yg*1.d-9
       zg=zg*1.d-9
 
+      if (nmatf.eq.0) then
 c     mesh 
-      open(20,file='x.mat')
-      open(21,file='y.mat')
-      open(22,file='z.mat')  
+         open(20,file='x.mat')
+         open(21,file='y.mat')
+         open(22,file='z.mat')  
 c     discretization of the object under study
-      open(10,file='xc.mat')
-      open(11,file='yc.mat')
-      open(12,file='zc.mat')  
+         open(10,file='xc.mat')
+         open(11,file='yc.mat')
+         open(12,file='zc.mat')  
+      endif
 
       rayon=rayon*1.d-9
 

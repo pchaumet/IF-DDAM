@@ -66,13 +66,15 @@ c     Initialization
       inv=1
       
 c     mesh 
-      open(20,file='x.mat')
-      open(21,file='y.mat')
-      open(22,file='z.mat')  
+      if (nmatf.eq.0) then
+         open(20,file='x.mat')
+         open(21,file='y.mat')
+         open(22,file='z.mat')  
 c     discretization of the object under study
-      open(10,file='xc.mat')
-      open(11,file='yc.mat')
-      open(12,file='zc.mat')  
+         open(10,file='xc.mat')
+         open(11,file='yc.mat')
+         open(12,file='zc.mat')  
+      endif
 
       side=side*1.d-9
       write(*,*) 'objetcube::side=',side

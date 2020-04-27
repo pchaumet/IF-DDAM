@@ -353,8 +353,8 @@ c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
          debug=1
 #ifdef USE_HDF5
          call hdf5create(h5file, file_id)
-         write(*,*) 'h5 file created :',h5file
-         write(*,*) 'file_id         :', file_id
+         write(*,*) 'h5 file created  : ',h5file
+         write(*,*) 'file_id          : ', file_id
          call h5gcreate_f(file_id,"Option", group_idopt, error)
          call h5gcreate_f(file_id,"Object", group_iddip, error)
          call h5gcreate_f(file_id,"Far Field", group_idff, error)
@@ -509,104 +509,105 @@ c     open the output file:
       open(99,file='output')
       write(99,*) '************* OUTPUT FILE ***************'
 
+      if (nmatf.eq.0) then
 c     Intensity of the incident field
-      open(36,file='incidentfieldx.mat')
-      open(37,file='incidentfieldy.mat')
-      open(38,file='incidentfieldz.mat')
-      open(39,file='incidentfield.mat')
+         open(36,file='incidentfieldx.mat')
+         open(37,file='incidentfieldy.mat')
+         open(38,file='incidentfieldz.mat')
+         open(39,file='incidentfield.mat')
 c     Intensity of the local field
-      open(40,file='localfieldx.mat')
-      open(41,file='localfieldy.mat')
-      open(42,file='localfieldz.mat')
-      open(43,file='localfield.mat')
+         open(40,file='localfieldx.mat')
+         open(41,file='localfieldy.mat')
+         open(42,file='localfieldz.mat')
+         open(43,file='localfield.mat')
 c     Intensity of the macroscopic field
-      open(44,file='macroscopicfieldx.mat')
-      open(45,file='macroscopicfieldy.mat')
-      open(46,file='macroscopicfieldz.mat')
-      open(47,file='macroscopicfield.mat')
+         open(44,file='macroscopicfieldx.mat')
+         open(45,file='macroscopicfieldy.mat')
+         open(46,file='macroscopicfieldz.mat')
+         open(47,file='macroscopicfield.mat')
 c     Intensity of the incident field
-      open(136,file='incidentfieldxwf.mat')
-      open(137,file='incidentfieldywf.mat')
-      open(138,file='incidentfieldzwf.mat')
-      open(139,file='incidentfieldwf.mat')
+         open(136,file='incidentfieldxwf.mat')
+         open(137,file='incidentfieldywf.mat')
+         open(138,file='incidentfieldzwf.mat')
+         open(139,file='incidentfieldwf.mat')
 c     Intensity of the local field
-      open(140,file='localfieldxwf.mat')
-      open(141,file='localfieldywf.mat')
-      open(142,file='localfieldzwf.mat')
-      open(143,file='localfieldwf.mat')
+         open(140,file='localfieldxwf.mat')
+         open(141,file='localfieldywf.mat')
+         open(142,file='localfieldzwf.mat')
+         open(143,file='localfieldwf.mat')
 c     Intensity of the macroscopic field
-      open(144,file='macroscopicfieldxwf.mat')
-      open(145,file='macroscopicfieldywf.mat')
-      open(146,file='macroscopicfieldzwf.mat')
-      open(147,file='macroscopicfieldwf.mat')
+         open(144,file='macroscopicfieldxwf.mat')
+         open(145,file='macroscopicfieldywf.mat')
+         open(146,file='macroscopicfieldzwf.mat')
+         open(147,file='macroscopicfieldwf.mat')
 c     Far field discretization
-      open(67,file='xwf.mat')
-      open(68,file='ywf.mat')
-      open(69,file='zwf.mat')
+         open(67,file='xwf.mat')
+         open(68,file='ywf.mat')
+         open(69,file='zwf.mat')
 c     save the Poynting vecteur
-      open(50,file='poynting.mat')
-      open(51,file='theta.mat')
-      open(52,file='phi.mat')
-
-      
+         open(50,file='poynting.mat')
+         open(51,file='theta.mat')
+         open(52,file='phi.mat')
+         
+         
 c     save the diffracted field in kx,ky and the total field
-      open(500,file='Ediffkposx.mat')
-      open(501,file='Ediffkposy.mat')
-      open(502,file='Ediffkposz.mat')
-      
-      open(506,file='Ediffknegx.mat')
-      open(507,file='Ediffknegy.mat')
-      open(508,file='Ediffknegz.mat')
-      
-      open(53,file='poyntingpos.mat')
-      open(54,file='poyntingneg.mat')
-
-      open(600,file='fourierposinc.mat')
-      open(601,file='fourierposincx.mat')
-      open(602,file='fourierposincy.mat')
-      open(603,file='fourierposincz.mat')
-      
-      open(604,file='fourierneginc.mat')   
-      open(605,file='fouriernegincx.mat')
-      open(606,file='fouriernegincy.mat')
-      open(607,file='fouriernegincz.mat')
-
-      open(608,file='fourierpos.mat')
-      open(609,file='fourierposx.mat')
-      open(610,file='fourierposy.mat')
-      open(611,file='fourierposz.mat')
-      
-      open(612,file='fourierneg.mat')   
-      open(613,file='fouriernegx.mat')
-      open(614,file='fouriernegy.mat')
-      open(615,file='fouriernegz.mat')
-
-      open(616,file='imageposinc.mat')
-      open(617,file='imageposincx.mat')
-      open(618,file='imageposincy.mat')
-      open(619,file='imageposincz.mat')
-      
-      open(620,file='imageneginc.mat')   
-      open(621,file='imagenegincx.mat')
-      open(622,file='imagenegincy.mat')
-      open(623,file='imagenegincz.mat')
-
-      open(624,file='imagepos.mat')
-      open(625,file='imageposx.mat')
-      open(626,file='imageposy.mat')
-      open(627,file='imageposz.mat')
-      
-      open(628,file='imageneg.mat')   
-      open(629,file='imagenegx.mat')
-      open(630,file='imagenegy.mat')
-      open(631,file='imagenegz.mat')
-
-      
-      open(650,file='kxfourier.mat')
-      open(651,file='kyfourier.mat')
-
-      open(520,file='kx.mat')
-      open(521,file='ky.mat')
+         open(500,file='Ediffkposx.mat')
+         open(501,file='Ediffkposy.mat')
+         open(502,file='Ediffkposz.mat')
+         
+         open(506,file='Ediffknegx.mat')
+         open(507,file='Ediffknegy.mat')
+         open(508,file='Ediffknegz.mat')
+         
+         open(53,file='poyntingpos.mat')
+         open(54,file='poyntingneg.mat')
+         
+         open(600,file='fourierposinc.mat')
+         open(601,file='fourierposincx.mat')
+         open(602,file='fourierposincy.mat')
+         open(603,file='fourierposincz.mat')
+         
+         open(604,file='fourierneginc.mat')   
+         open(605,file='fouriernegincx.mat')
+         open(606,file='fouriernegincy.mat')
+         open(607,file='fouriernegincz.mat')
+         
+         open(608,file='fourierpos.mat')
+         open(609,file='fourierposx.mat')
+         open(610,file='fourierposy.mat')
+         open(611,file='fourierposz.mat')
+         
+         open(612,file='fourierneg.mat')   
+         open(613,file='fouriernegx.mat')
+         open(614,file='fouriernegy.mat')
+         open(615,file='fouriernegz.mat')
+         
+         open(616,file='imageposinc.mat')
+         open(617,file='imageposincx.mat')
+         open(618,file='imageposincy.mat')
+         open(619,file='imageposincz.mat')
+         
+         open(620,file='imageneginc.mat')   
+         open(621,file='imagenegincx.mat')
+         open(622,file='imagenegincy.mat')
+         open(623,file='imagenegincz.mat')
+         
+         open(624,file='imagepos.mat')
+         open(625,file='imageposx.mat')
+         open(626,file='imageposy.mat')
+         open(627,file='imageposz.mat')
+         
+         open(628,file='imageneg.mat')   
+         open(629,file='imagenegx.mat')
+         open(630,file='imagenegy.mat')
+         open(631,file='imagenegz.mat')
+         
+         
+         open(650,file='kxfourier.mat')
+         open(651,file='kyfourier.mat')
+         
+         open(520,file='kx.mat')
+         open(521,file='ky.mat')
 c     save the density of the optical force
 c      open(60,file='forcex.mat')
 c      open(61,file='forcey.mat')
@@ -616,7 +617,8 @@ c      open(63,file='torquex.mat')
 c      open(64,file='torquey.mat')
 c      open(65,file='torquez.mat')
 c     save epsilon
-      open(66,file='epsilon.mat')
+         open(66,file='epsilon.mat')
+      endif
 c     initialization of the data
       icomp=(0.d0,1.d0)
       uncomp=(1.d0,0.d0)
@@ -722,6 +724,7 @@ c     epsilon of the layers
 
       indice0=dsqrt(dreal(epscouche(0)))
       indicen=dsqrt(dreal(epscouche(neps+1)))
+
       if (nenergie+nlentille+ndiffracte.ge.1) then
          
          if (ncote.eq.0.or.ncote.eq.1) then
@@ -735,6 +738,7 @@ c     epsilon of the layers
                nstop=-1
                return
             endif
+            write(*,*) 'Index upper : ',indicen
             indicem=indicen
             numapertra=numapertra/indicen
          endif
@@ -750,6 +754,7 @@ c     epsilon of the layers
                nstop=-1
                return
             endif
+            write(*,*) 'Index lower : ',indice0
             indicem=indice0
             numaperinc=numaperinc/indice0
             numaperref=numaperref/indice0
@@ -1272,7 +1277,7 @@ c     Changement angle si microscopy
       endif
 
 c     cré le fichier de data pour connaitre les options pour matlab
-
+      write(*,*) 'create the option file for mat file'
       open(900,file='inputmatlab.mat')
       write(900,*) nproche
       write(900,*) nlocal
@@ -1297,13 +1302,14 @@ c     cré le fichier de data pour connaitre les options pour matlab
       write(900,*) nprochefft
       write(900,*) nobjet
       write(900,*) ncote
-      write(900,*) indicen
       write(900,*) indice0
+      write(900,*) indicen
       write(900,*) ntypemic
       write(900,*) nmatf
       write(900,*) numaperinc
       close(900)
       if (nmatf.eq.2) then
+         write(*,*) 'create the option file for hdf5 file'
          open(901,file='filenameh5')
          write(901,*) h5file
          close(901)
@@ -1428,10 +1434,10 @@ c     ne fait que l'objet
          write(99,*) 'pol2=',ss
 c     compute E0
          call irradiancesurf(P0,w0,E0,irra,epscouche(0))
-         write(*,*) 'Power     :',P0
-         write(*,*) 'Waist     :',w0
-         write(*,*) 'Field     :',E0
-         write(*,*) 'Irradiance:',irra
+         write(*,*) 'Power     :',P0,'W'
+         write(*,*) 'Waist     :',w0,'m'
+         write(*,*) 'Field     :',E0,'V/m'
+         write(*,*) 'Irradiance:',irra,'W/m2'
          I0=cdabs(E0)**2
 c     write(*,*) 'champ',epscouche,zcouche,neps,nepsmax,k0,E0,ss,pp
 c     $        ,theta,phi
@@ -2192,10 +2198,10 @@ c     compte the size and edge of the box
          enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL          
-         write(*,*) 'xmin     =',xmin
-         write(*,*) 'ymin     =',ymin
-         write(*,*) 'zmin     =',zmin
-         write(*,*) 'meshsize = ',aretecube
+         write(*,*) 'xmin     =',xmin,'m'
+         write(*,*) 'ymin     =',ymin,'m'
+         write(*,*) 'zmin     =',zmin,'m'
+         write(*,*) 'meshsize = ',aretecube,'m'
 c     compute new position of computation, dipole and incident field at
 c     the new grid
        
@@ -2357,7 +2363,7 @@ c     Far field discretization
          close(67)
          close(68)
          close(69)
-         write(*,*) 'sub',subunit,nmaxpp
+         write(*,*) 'subunits =',subunit,nmaxpp
          
 c     compute the incident field in the larger box in the case of the
 c     gaussian beam as all the points are computed in one shot.
@@ -3392,7 +3398,7 @@ c     ecriture en kx,ky du champ diffracte
                         if (k0*k0*indicen*indicen-kx*kx-ky*ky.gt.0.d0)
      $                       then 
 
-c     write(*,*) 'dessus diff',ncote
+                        
                            write(500,*) dreal(Ediffkzpos(ii,jj,1))
      $                          ,dimag(Ediffkzpos(ii,jj,1))
                            write(501,*) dreal(Ediffkzpos(ii,jj,2))
@@ -3970,8 +3976,8 @@ c     passe le champ diffracte lointain en amplitude e(k||)
          deltakx=2.d0*pi/(dble(nfft2d)*deltax)
          if (nstop.eq.1) return
 
-         write(*,*) 'NA                       :',numaperref*indice0
-     $        ,numapertra*indicen
+         write(*,*) 'NA in reflexion          :',numaperref*indice0
+         write(*,*) 'NA in transmission       :',numaperref*indicen
          write(*,*) 'Focal point reflexion    :',zlensr,'m'
          write(*,*) 'Focal point transmission :',zlenst,'m'
          write(*,*) 'Number of point in NA    :',2*imaxk0+1

@@ -41,7 +41,7 @@
                kx=dble(i)*deltakx
                ky=dble(j)*deltaky
                k=k+1
-               if (k0*k0-kx*kx-ky*ky.gt.0.d0) then                      
+               if (k0*k0*indicen*indicen-kx*kx-ky*ky.gt.0.d0) then                      
                   ii=imaxk0+i+1
                   jj=imaxk0+j+1
                   Eimagexpos(k)=Ediffkzpos(ii,jj,1)
@@ -85,7 +85,7 @@
                kx=dble(i)*deltakx
                ky=dble(j)*deltaky
                k=k+1
-               if (k0*k0-kx*kx-ky*ky.gt.0.d0) then                      
+               if (k0*k0*indice0*indice0-kx*kx-ky*ky.gt.0.d0) then                      
                   ii=imaxk0+i+1
                   jj=imaxk0+j+1
                   Eimagexpos(k)=Ediffkzneg(ii,jj,1)

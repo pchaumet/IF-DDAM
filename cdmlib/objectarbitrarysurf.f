@@ -40,13 +40,15 @@ c     Initialization
       dddis=1
       inv=1
 c     mesh 
-      open(20,file='x.mat')
-      open(21,file='y.mat')
-      open(22,file='z.mat')  
+      if (nmatf.eq.0) then
+         open(20,file='x.mat')
+         open(21,file='y.mat')
+         open(22,file='z.mat')  
 c     discretization of the object under study
-      open(10,file='xc.mat')
-      open(11,file='yc.mat')
-      open(12,file='zc.mat')  
+         open(10,file='xc.mat')
+         open(11,file='yc.mat')
+         open(12,file='zc.mat')  
+      endif
 c     read the input file
       open(15,file=namefile,status='old',iostat=ierror)
       if (ierror.ne.0) then
@@ -123,9 +125,12 @@ c     compute the position of down subunit
                z=zmin+dble(i-1)*aretecube+zg+aretecube/2.d0
                
 
-               if (j.eq.1.and.k.eq.1.and.nmatf.eq.0) write(22,*) z
-               if (i.eq.1.and.k.eq.1.and.nmatf.eq.0) write(21,*) y
-               if (j.eq.1.and.i.eq.1.and.nmatf.eq.0) write(20,*) x
+               if (j.eq.1.and.k.eq.1.and.nmatf.ne.1) write(22,*) zs(1)
+     $              +dble(i-1)*aretecube
+               if (i.eq.1.and.k.eq.1.and.nmatf.ne.1) write(21,*) ys(1)
+     $              +dble(j-1)*aretecube
+               if (j.eq.1.and.i.eq.1.and.nmatf.ne.1) write(20,*) xs(1)
+     $              +dble(k-1)*aretecube
 
                ndipole=ndipole+1
                nbsphere=nbsphere+1
