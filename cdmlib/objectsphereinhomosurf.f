@@ -51,7 +51,10 @@
          return
       endif
       
-      write(*,*) 'inhomogenous sphere',eps,hc,lc,ng,rayon,nnnr
+      write(*,*) 'inhomogenous sphere: radius:',rayon,'nm'
+      write(*,*) 'standard deviation         :',hc
+      write(*,*) 'coherent length            :',lc,'nm'
+
 c     Initialization
       nbsphere=0
       ndipole=0
@@ -109,9 +112,6 @@ c     discretization of the object under study
          infostr='object sphere: radius=0!'
          return
       endif
-      write (*,*) 'na = ',na
-      write (*,*) 'nnnr = ',nnnr
-      write (*,*) 'pola = ',methode
       
 c     verfie si on est bien multiple de 2 3 5 pour la discretisation,
 c     car ma FFT est basee sur une decomposition en nombre premier de 2
@@ -128,7 +128,7 @@ c     test si l'objet est sur une couche ou plusieurs
       zmin=zg-rayon
       nminc=numerocouche(zmin,neps,nepsmax,zcouche)
       nmaxc=numerocouche(zmax,neps,nepsmax,zcouche)
-      write(*,*) 'obj',zmin,zmax,nminc,nmaxc,zcouche
+
       if (nmaxc-nminc.ge.1) then
 c     shift the layers
          do k=nminc,nmaxc-1           
@@ -141,7 +141,6 @@ c     shift the layers
          enddo
       endif
 
-      write(*,*) 'obj2',nminc,nmaxc,zg
       lx=dble(nx)*aretecube
       ly=dble(ny)*aretecube
       lz=dble(nz)*aretecube
@@ -209,7 +208,6 @@ c     Profil des hauteurs
       moyenne=moyenne/dble(nk)
       ecartype=ecartype/dble(nk)
     
-      write(*,*) 'moyenne',moyenne,ecartype
       if (na.eq.-1) then
          do i=1,nnnr         
             do j=1,nnnr              
@@ -343,9 +341,12 @@ c     write (*,*) 'nbsphere = ', nbsphere
       close(20)
       close(21)
       close(22)
+      write (*,*) ' SEED',ng
+      write (*,*) 'Average obtained',moyenne
+      write (*,*) 'Standard deviation obtained',dsqrt(ecartype-moyenne
+     $     *moyenne)
+      
       write (*,*) ' OBJECT SPHERE INHOMOGENEOUS FINISHED'
-      write (*,*) ' SEED',ng,'Average',moyenne,'Standard deviation'
-     $     ,dsqrt(ecartype-moyenne*moyenne)
 
       write(99,*) ' SEED',ng
       write(99,*) 'Average',moyenne

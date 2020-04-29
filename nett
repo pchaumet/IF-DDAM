@@ -52,3 +52,11 @@ rm */*.o
 rm */a.out
 rm */main
 rm cdmlib/lib/libcdmlibsurf.so*
+rm doc/*.aux
+rm doc/*.dvi
+rm doc/*.lof
+rm doc/*.maf
+rm doc/*.mtc*
+rm doc/*.out
+rm doc/*.toc
+rm bin/*.eps

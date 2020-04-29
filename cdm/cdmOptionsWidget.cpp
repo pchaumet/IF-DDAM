@@ -281,7 +281,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   zlenst->setFixedWidth(60);
   zlenstLabel = new QLabel("Position focal plane transmission (nm):");
 
-
+  emptyntypemicLabel = new QLabel(" ");
   ntypemicLabel = new QLabel("Type of Microscope:");
   ntypemic      = new QComboBox();
   ntypemic->addItems(options->ntypemicList);
@@ -299,6 +299,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   connect(nside , SIGNAL(currentIndexChanged(int)),this,
 	SLOT(handleSideSelectionChanged(int)));
   
+  studymicroscopylayout->addWidget(emptyntypemicLabel,0,0,Qt::AlignLeft);
   studymicroscopylayout->addWidget(ntypemicLabel,0,1,Qt::AlignLeft);
   studymicroscopylayout->addWidget(ntypemic,0,2,Qt::AlignLeft);  
   studymicroscopylayout->addWidget(emptymicroscopyFFTLabel,1,0,Qt::AlignLeft);
@@ -894,6 +895,7 @@ if (state == Qt::Checked) {
    microscopyFFT->show();
    grossLabel->show();
    gross->show();
+   emptyntypemicLabel->show();
    ntypemicLabel->show();
    ntypemic->show();
    if ( ntypemic->currentText() == "Holographic" )  {
@@ -956,6 +958,7 @@ if (state == Qt::Checked) {
    zlenst->hide();
    naincLabel->hide();
    nainc->hide();
+   emptyntypemicLabel->hide();
    ntypemicLabel->hide();
    ntypemic->hide();
    nsideLabel->hide();

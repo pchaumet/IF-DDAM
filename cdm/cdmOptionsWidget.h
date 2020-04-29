@@ -115,7 +115,7 @@ class OptionsWidget : public QWidget
     QFormLayout     *layout;
     QPushButton     *executeButton, *saveButton;
     QLabel          *emptynenergieLabel;
-    QLabel          *emptycrosssectionLabel, *emptycrosssectionpoyntingLabel;
+    QLabel          *emptycrosssectionLabel, *emptycrosssectionpoyntingLabel, *emptyntypemicLabel;
     QLabel          *emptylocalfieldLabel, *emptymacroscopicfieldLabel, *emptyrangeofstudyLabel;
     QLabel          *emptyopticalforceLabel, *emptyopticalforcedensityLabel;
     QLabel          *emptyopticaltorqueLabel, *emptyopticaltorquedensityLabel;

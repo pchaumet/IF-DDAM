@@ -13,12 +13,13 @@ voir toutes les options en action.
 \section{Test1}
 
 Le but du test1 est de tester un cas simple mais avec une précision
-importante et de nombreuses options du code afin de les valider. La
-Fig.~\ref{test1conf} montre la configuration choisie.
+importante pour l'inversion du système d'équations linéaires 
+(tolérance=$10^{-9}$) et de nombreuses options du code afin de les valider.
+La Fig.~\ref{test1conf} montre les options de la configuration choisie.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{center}
   \includegraphics*[width=15.0cm,draft=false]{test1conf.eps}
 \end{center}
@@ -27,26 +28,112 @@ Fig.~\ref{test1conf} montre la configuration choisie.
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-La Fig.~\ref{test1res} montre les résultats obtenus. Les tracés sont
-effectués avec Matlab, mais peuvent bien sûr être réalisés avec
-l'interface graphique intégré.
+Les Figs.~\ref{test1res1}-\ref{test1res3} montrent les résultats
+obtenus.  Les tracés sont effectués avec Matlab, mais peuvent bien sûr
+être réalisés avec l'interface graphique intégrée.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{center}
-  \includegraphics*[width=15.0cm,draft=false]{test1conf.eps}
+  \includegraphics*[width=15.0cm,draft=false]{test1champlocalmacro.eps}
 \end{center}
-\caption{Test1: résultats.}
-\label{test1res}
+\caption{Module du champ local et macroscopique dans le plan $(x,y)$
+  pour un $z$ donnée passant au centre de la sphère.}
+\label{test1res1}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Le champ incident étant polarisé suivant la composante $y$ (TE), il
+est clair que la composante $y$ du champ à l'intérieur de la sphère
+est la plus forte.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{test1champtransmis.eps}
+\end{center}
+\caption{Intensité en transmission pour un microscope holographique:
+  champ de Fourier, champ image sans et avec le champ incident.}
+\label{test1res2}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[h]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{test1champreflechis.eps}
+\end{center}
+\caption{Intensité en réflexion pour un microscope holographique:
+  champ de Fourier, champ image sans et avec le champ incident.}
+\label{test1res3}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Test2}
+
+Le but du test2 est de tester un cas plus compliqué avec une sphère 
+présentant une distribution inhomogène de permittivité.  La Fig.~
+\ref{test2conf} montre les options de la configuration choisie.
 
 
-\section{test2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{test2conf.eps}
+\end{center}
+\caption{Test2: configuration choisie.}
+\label{test2conf}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{test3}
+La permittivité relative de la sphère est donc inhomogène, et 
+l'éclairement est réalisé par un faisceau Gaussien polarisé suivant $x$
+et $z$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{test2incident.eps}
+\end{center}
+\caption{Relative permittivité et champ incident pour le test 2.}
+\label{test2inc}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{test4}
+Les Figs.~\ref{test2res1}-\ref{test2res3} montrent les résultats
+obtenus.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{test2champlocalmacro.eps}
+\end{center}
+\caption{Module du champ local et macroscopique dans le plan $(x,y)$
+  pour un $z$ donnée passant au centre de la sphère.}
+\label{test2res1}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Le champ incident est un faisceau Gaussien incliné à 30 degrés et
+polarisé suivant la direction  $x$ (il y a donc une composant $z$).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{test2champtransmis.eps}
+\end{center}
+\caption{Module du champ en transmission pour un microscope
+  holographique: champ de Fourier, champ image sans et avec le champ
+  incident.}
+\label{test2res2}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[h]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{test2champreflechis.eps}
+\end{center}
+\caption{Module en réflexion pour un microscope holographique: champ
+  de Fourier, champ image sans et avec le champ incident.}
+\label{test2res3}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\end{itemize}
+\section{Test3}
+
+\section{Test4}
+

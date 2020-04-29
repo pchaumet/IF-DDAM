@@ -699,11 +699,11 @@ c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
             epscouche(k)=(epr*uncomp+icomp*epi)
             write(99,*) 'Relative permittivity of the layer',k
      $           ,epscouche(k)
-            write(99,*) 'Relative permittivity of the layer'
-     $           ,epscouche(k),materiau(1:2),lambda
+            write(*,*) 'Relative permittivity of the layer',k
+            write(*,*) 'eps = ',epscouche(k)
          else
             write(*,*) 'Relative permittivity of the layer',k
-     $           ,epscouche(k)
+            write(*,*) 'eps = ',epscouche(k)
             write(99,*) 'Relative permittivity of the layer',k,eps
      $           couche(k)          
          endif
@@ -850,7 +850,7 @@ c     Built the object
      $        ,hc,ng ,localfieldx,neps,nepsmax,dcouche,zcouche,epscouche
      $        ,tabzn ,nmatf,file_id,group_iddip,infostr,nstop)
          localfieldx=0.d0
-         write(*,*) 'sphere',rayon,xg,yg,zg,lc,hc,ng
+
       elseif (object(1:13).eq.'inhomocuboid1') then
          numberobjet=1
          if (trope.ne.'iso') then
@@ -1523,7 +1523,7 @@ c     $        ,nmax,nfft2d,nfft2d
 c     write(*,*) 'champ',FF0
 c     remet tout a l'echelle pour respecter la consigne de la puissance
 c     incidente
-         write(*,*) 'Power',P0
+         write(*,*) 'Power',P0,'W'
          tmp=P0/fluxinc
 c     tmp=1.d0
          fluxref=fluxref*tmp
@@ -1531,7 +1531,8 @@ c     tmp=1.d0
          irra=irra*tmp
          tmp=dsqrt(tmp)
          E0=E0*tmp
-         write(*,*) 'Irradiance',irra,'field',E0
+         write(*,*) 'Irradiance',irra,'W/m2'
+         write(*,*) 'field',E0,'V/m'
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)         
          do i=1,nfft2d*nfft2d
@@ -1556,13 +1557,13 @@ c     tmp=1.d0
 !$OMP END PARALLEL
          
          fluxinc=P0
-         write(*,*) 'fluxinc',fluxinc,fluxref,fluxtrans,(fluxref
-     $        +fluxtrans)/fluxinc
-         write(*,*) 'irra',P0,w0,dsqrt(cdabs(FF0(1))**2+ cdabs(FF0(2))
-     $        **2+cdabs(FF0(3))**2),irra
-         write(*,*) 'irra',irra,'I0',cdabs(FF0(1))**2+ cdabs(FF0(2))**2
-     $        +cdabs(FF0(3))**2,'P02mu0c/S',8.d0*pi*1.d-7*299792458.d0
-     $        *P0/(w0*w0*pi)
+c         write(*,*) 'fluxinc',fluxinc,fluxref,fluxtrans,(fluxref
+c     $        +fluxtrans)/fluxinc
+c         write(*,*) 'irra',P0,w0,dsqrt(cdabs(FF0(1))**2+ cdabs(FF0(2))
+c     $        **2+cdabs(FF0(3))**2),irra
+c         write(*,*) 'irra',irra,'I0',cdabs(FF0(1))**2+ cdabs(FF0(2))**2
+c     $        +cdabs(FF0(3))**2,'P02mu0c/S',8.d0*pi*1.d-7*299792458.d0
+c     $        *P0/(w0*w0*pi)
          I0=(cdabs(FF0(1))**2+ cdabs(FF0(2)) **2+cdabs(FF0(3))**2)
       elseif  (beam(1:13).eq.'gwavecircular') then
          E0=1.d0

@@ -44,7 +44,7 @@
       FFTW_BACKWARD=+1
       FFTW_ESTIMATE=64
       
-      write(*,*) 'inhomogenous cuboid',eps,zg
+      write(*,*) 'inhomogenous cuboid'
 c     Initialization
       nbsphere=0
       ndipole=0
@@ -227,7 +227,6 @@ c     Profil des hauteurs
       moyenne=moyenne/dble(nk)
       ecartype=ecartype/dble(nk)
     
-c      write(*,*) 'moyenne',moyenne,ecartype
       do i=1,nz
          do j=1,ny
             do k=1,nx
@@ -298,11 +297,13 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
       close(20)
       close(21)
       close(22)
-      write (*,*) ' OBJECT SPHERE INHOMOGENEOUS FINISHED'
-      write (*,*) ' SEED',ng,'Average',moyenne,'Standard deviation'
-     $     ,dsqrt(ecartype-moyenne*moyenne)
+      write (*,*) ' SEED',ng
+      write (*,*) 'Average obtained',moyenne
+      write (*,*) 'Standard deviation obtained',dsqrt(ecartype-moyenne
+     $     *moyenne)
+      write (*,*) ' OBJECT CUBID INHOMOGENEOUS FINISHED'
 
-      write(99,*) ' SEED',ng
+      write(99,*) 'SEED',ng
       write(99,*) 'Average',moyenne
       write(99,*) 'Standard deviation',dsqrt(ecartype-moyenne*moyenne)
 

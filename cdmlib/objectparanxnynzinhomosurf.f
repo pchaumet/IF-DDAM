@@ -301,9 +301,11 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
       close(20)
       close(21)
       close(22)
+      write (*,*) ' SEED',ng
+      write (*,*) 'Average obtained',moyenne
+      write (*,*) 'Standard deviation obtained',dsqrt(ecartype-moyenne
+     $     *moyenne)
       write (*,*) ' OBJECT SPHERE INHOMOGENEOUS FINISHED'
-      write (*,*) ' SEED',ng,'Average',moyenne,'Standard deviation'
-     $     ,dsqrt(ecartype-moyenne*moyenne)
 
       write(99,*) ' SEED',ng
       write(99,*) 'Average',moyenne

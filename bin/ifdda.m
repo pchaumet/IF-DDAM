@@ -963,9 +963,6 @@ title('Density of optical torque')
 end;  
 %%%%%%%%%%%%%%%%%%%%% End  optical torque %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ntypemic
-nlentille
-
 %%%%%%%%%%%%%%%%%%%%%%%%%% Microscopy %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if nlentille == 1;
@@ -974,7 +971,7 @@ if (ntypemic ==0);
 
 
 %%%%%%%%%%%%%%%%%%%%%%% Lens for z>0 %%%%%%%%%%%%%%%%
-ncote
+
 if (ncote==0 || ncote ==1);
 
 
@@ -1120,19 +1117,18 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 
 
-
-
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.15 0.9 0.32 0.1],'String','Fourier plane scattered field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.65 0.92 0.15 0.05],'String','kz>0')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.85 0.35 0.035],'String','Numerical aperture:')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.85 0.05 0.035]);
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.86 0.32 0.033],'String','Numerical aperture:')
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.86 0.05 0.033]);
+
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
 'Callback',{@plotfourierpos,numapertra,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
 
-
+%print('-f400','fourierpos','-depsc')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Fourier +incident %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1167,8 +1163,8 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.15 0.9 0.32 0.1],'String','Fourier plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.65 0.92 0.15 0.05],'String','kz>0')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.85 0.35 0.035],'String','Numerical aperture:')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.85 0.05 0.035]);
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.86 0.32 0.033],'String','Numerical aperture:')
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.86 0.05 0.033]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
@@ -1395,8 +1391,8 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.15 0.9 0.32 0.1],'String','Fourier plane scattered field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.65 0.92 0.15 0.05],'String','kz<0')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.85 0.35 0.035],'String','Numerical aperture:')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.85 0.05 0.035]);
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.86 0.32 0.033],'String','Numerical aperture:')
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.86 0.05 0.033]);
 
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
@@ -1439,8 +1435,8 @@ ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.15 0.9 0.32 0.1],'String','Fourier plane total field:')
 uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized','Position',[0.65 0.92 0.15 0.05],'String','kz<0')
-uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.85 0.35 0.035],'String','Numerical aperture:')
-uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.85 0.05 0.035]);
+uicontrol('Style','text','Fontsize',12,'Fontweight','bold','units','normalized','Position',[0.20 0.86 0.32 0.033],'String','Numerical aperture:')
+uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(numapertra),'units','normalized','Position',[0.5 0.86 0.05 0.033]);
 
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...

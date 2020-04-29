@@ -256,6 +256,9 @@ PlotRaster::PlotRaster( QWidget *parent , QVector<QwtPoint3D> *_data,
 	maxz=1;
       }
     }
+    rangez = QwtInterval(minz,maxz);
+
+
     rasterdata->setInterval( Qt::XAxis, rangex );
     rasterdata->setInterval( Qt::YAxis, rangey );
     rasterdata->setInterval( Qt::ZAxis, rangez );

@@ -55,7 +55,6 @@ c     fluxinc=1/(2mu0c) *4*pi²/k0 *Int[ |A(k||)|² kz dk|| ]
       integer*8 planb
 
 
-      write(*,*) 'nstop',nstop
 c     changement unite angle, psi =0 defini pol p
       FFTW_BACKWARD=+1
       pi=dacos(-1.d0)
@@ -93,8 +92,8 @@ c       y0=yy0
       endif
   
       const=dexp(-deltak*deltak*waist*waist/2.d0)
-      write(*,*) 'const',const,2.d0*pi/dsqrt(-dlog(0.5d0)/waist/waist
-     $     *2.d0)/aretecube
+c      write(*,*) 'const',const,2.d0*pi/dsqrt(-dlog(0.5d0)/waist/waist
+c     $     *2.d0)/aretecube
       if (const.le.0.5d0) then
          infostr='size of FFT too small of the Gaussian beam'
          write(*,*) 'nfft nminimum',2.d0*pi/dsqrt(-dlog(0.5d0)/waist
@@ -384,9 +383,9 @@ c     calcul du fluxinc: somme des fluxinc de chacunes des ondes planes
       fluxref=fluxref*irra
       fluxtrans=fluxtrans*irra
 
-      write(*,*) 'Incident flux',fluxinc
-      write(*,*) 'Reflected flux',fluxref
-      write(*,*) 'Transmitted flux',fluxtrans
+      write(*,*) 'Incident flux',fluxinc/fluxinc
+      write(*,*) 'Reflected flux',fluxref/fluxinc,'%'
+      write(*,*) 'Transmitted flux',fluxtrans/fluxinc,'%'
       write(*,*) 'Conservation',(fluxref+fluxtrans)/fluxinc
 
       irra=fluxinc/pi/waist/waist

@@ -1,3 +1,15 @@
+	version 0.5.14
+
+	1) test1 fait dans chaptest pour le userguide en francais.
+	2) modifie l'alignement par un emptyntypemic Label.
+	3) arrange ecriture du faisceau gaussian
+	4) arrange ecriture sphere inhomogene.
+	5) arrange ecriture cuboid inhomogene side et nnnr.
+	6) rangez corrigé ds cdmPlot.cpp: rangez = QwtInterval(minz,maxz);
+	7) test2 fait dans chaptest pour le userguide en francais.
+	8) changement nett pour tuer les fichiers latex auxiliaires. 
+	
+	----------------------------------------------------------------
 	version 0.5.13
 
 	1) erreur dans objet arbitrary sur la mise en memoire des x,y,z
