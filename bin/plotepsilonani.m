@@ -1,4 +1,4 @@
-function plotepsilonani(hObject,event,nx,ny,nz,x,y,z,matepsilonrxx,matepsilonixx,matepsilonrxy,matepsilonixy,matepsilonrxz,matepsilonixz,matepsilonryx,matepsiloniyx,matepsilonryy,matepsiloniyy,matepsilonryz,matepsiloniyz,matepsilonrzx,matepsilonizx,matepsilonrzy,matepsilonizy,matepsilonrzz,matepsilonizz)
+function plotepsilonani(hObject,event,nx,ny,nz,x,y,z,matepsilonrxx,matepsilonixx,matepsilonrxy,matepsilonixy,matepsilonrxz,matepsilonixz,matepsilonryx,matepsiloniyx,matepsilonryy,matepsiloniyy,matepsilonryz,matepsiloniyz,matepsilonrzx,matepsilonizx,matepsilonrzy,matepsilonizy,matepsilonrzz,matepsilonizz,nprint)
 
 val = get(hObject,'Value')
 
@@ -479,3 +479,7 @@ uicontrol('Style', 'slider', 'Min',1,'Max', nz,...
 
 
 end;
+
+if (nprint == 1)
+print('-f2','epsilon','-depsc')
+end

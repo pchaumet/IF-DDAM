@@ -1,4 +1,4 @@
-function plotimageincposreal(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc)
+function plotimageincposreal(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc,nprint)
 
 val = get(hlocal,'Value');
 
@@ -136,3 +136,7 @@ xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 
 end;
+
+if (nprint == 1)
+print('-f550','imageincposwf','-depsc')
+end

@@ -112,6 +112,10 @@ end;
 
 icomp=complex(0,1);
 
+nprint = input('Print figure in eps (yes=1)')
+
+
+
 if (ntypefile == 0);
 load x.mat -ascii
 load y.mat -ascii
@@ -182,6 +186,10 @@ ylabel('y')
 zlabel('z')  
 title('Position of the dipoles')
 
+if (nprint == 1)
+print('-f1','dipolepos','-depsc')
+end
+
 if nobjet == 1; return ;end;
 
  else
@@ -222,6 +230,10 @@ zlabel('z')
 title({'Position of the dipoles' 'without background'})
 end;
 
+if (nprint == 1)
+print('-f1','dipolepos','-depsc')
+end
+
 else
 
 figure(1)
@@ -242,6 +254,11 @@ xlabel('x')
 ylabel('y')
 zlabel('z')  
 title('Position of the dipoles (anisotropic object)')
+
+if (nprint == 1)
+print('-f1','dipolepos','-depsc')
+end
+
 if nobjet == 1; return ;end;
 end;
 %%%%%%%%%%%%%%%% End plot dipole %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -273,7 +290,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold',...
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'2D-view cutting planes','(x,y)-plane','(x,z)-plane','(y,z)-plane'},...
 'units','normalized','Position', [0.4 0.85 0.2 0.05],...
-'Callback',{@plotepsilon,nx,ny,nz,x,y,z,matxyepsilonr,matxyepsiloni});
+	  'Callback',{@plotepsilon,nx,ny,nz,x,y,z,matxyepsilonr,matxyepsiloni,nprint});
+
+if (nprint == 1)
+print('-f2','epsilon','-depsc')
+end
 
 else
 
@@ -314,8 +335,13 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[300 440 3
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 	  {'xx','xy','xz','yx','yy','yz','zx','zy','zz'},...
 'Position',[490 425 40 40],...
-	  'Callback',{@plotepsilonani,nx,ny,nz,x,y,z,matepsilonrxx,matepsilonixx,matepsilonrxy,matepsilonixy,matepsilonrxz,matepsilonixz,matepsilonryx,matepsiloniyx,matepsilonryy,matepsiloniyy,matepsilonryz,matepsiloniyz,matepsilonrzx,matepsilonizx,matepsilonrzy,matepsilonizy,matepsilonrzz,matepsilonizz});
+	  'Callback',{@plotepsilonani,nx,ny,nz,x,y,z,matepsilonrxx,matepsilonixx,matepsilonrxy,matepsilonixy,matepsilonrxz,matepsilonixz,matepsilonryx,matepsiloniyx,matepsilonryy,matepsiloniyy,matepsilonryz,matepsiloniyz,matepsilonrzx,matepsilonizx,matepsilonrzy,matepsilonizy,matepsilonrzz,matepsilonizz,nprint});
 		   
+if (nprint == 1)
+print('-f2','epsilon','-depsc')
+end
+
+
 end;
 %%%%%%%%%%%%%%%% End plot epsilon %%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -366,7 +392,12 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[400 570 2
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'2D-view cutting planes','(x,y)-plane','(x,z)-plane','(y,z)-plane'},...
 'Position', [420 500 170 50],...
-'Callback',{@plotincifield,nx,ny,nz,x,y,z,matxyincifield,matxyincifieldx,matxyincifieldy,matxyincifieldz});
+	  'Callback',{@plotincifield,nx,ny,nz,x,y,z,matxyincifield,matxyincifieldx,matxyincifieldy,matxyincifieldz,nprint});
+
+if (nprint == 1)
+print('-f10','incident','-depsc')
+end
+
 
  else
 
@@ -434,7 +465,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','Position',[400 570 2
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'2D-view cutting planes','(x,y)-plane','(x,z)-plane','(y,z)-plane'},...
 'Position', [420 500 170 50],...
-'Callback',{@plotincifield,nx,ny,nz,x,y,z,matxyincifield,matxyincifieldx,matxyincifieldy,matxyincifieldz});
+	  'Callback',{@plotincifield,nx,ny,nz,x,y,z,matxyincifield,matxyincifieldx,matxyincifieldy,matxyincifieldz,nprint});
+
+if (nprint == 1)
+print('-f10','incident','-depsc')
+end
 
 end;
 
@@ -491,8 +526,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold',...
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'2D-view cutting planes','(x,y)-plane','(x,z)-plane','(y,z)-plane'},...
 'units','normalized','Position', [0.4 0.65 0.2 0.05],...
-'Callback',{@plotlocalfield,nx,ny,nz,x,y,z,matxylocalfield,matxylocalfieldx,matxylocalfieldy,matxylocalfieldz});
+	  'Callback',{@plotlocalfield,nx,ny,nz,x,y,z,matxylocalfield,matxylocalfieldx,matxylocalfieldy,matxylocalfieldz,nprint});
 
+if (nprint == 1)
+print('-f20','local','-depsc')
+end
 
  else
    
@@ -559,8 +597,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold',...
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'2D-view cutting planes','(x,y)-plane','(x,z)-plane','(y,z)-plane'},...
 'units','normalized','Position', [0.4 0.65 0.2 0.05],...
-'Callback',{@plotlocalfield,nxm,nym,nzm,xwf,ywf,zwf,matxylocalfield,matxylocalfieldx,matxylocalfieldy,matxylocalfieldz});
+	  'Callback',{@plotlocalfield,nxm,nym,nzm,xwf,ywf,zwf,matxylocalfield,matxylocalfieldx,matxylocalfieldy,matxylocalfieldz,nprint});
 
+if (nprint == 1)
+print('-f20','local','-depsc')
+end
 
 end;
 
@@ -617,7 +658,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold',...
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'2D-view cutting planes','(x,y)-plane','(x,z)-plane','(y,z)-plane'},...
 'units','normalized','Position', [0.4 0.65 0.2 0.05],...
-'Callback',{@plotmacrofield,nx,ny,nz,x,y,z,matxymacrofield,matxymacrofieldx,matxymacrofieldy,matxymacrofieldz});
+	  'Callback',{@plotmacrofield,nx,ny,nz,x,y,z,matxymacrofield,matxymacrofieldx,matxymacrofieldy,matxymacrofieldz,nprint});
+
+if (nprint == 1)
+print('-f30','macroscopic','-depsc')
+end
 
  else
 
@@ -678,7 +723,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold',...
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'2D-view cutting planes','(x,y)-plane','(x,z)-plane','(y,z)-plane'},...
 'units','normalized','Position', [0.4 0.65 0.2 0.05],...
-'Callback',{@plotmacrofield,nxm,nym,nzm,xwf,ywf,zwf,matxymacrofield,matxymacrofieldx,matxymacrofieldy,matxymacrofieldz});
+	  'Callback',{@plotmacrofield,nxm,nym,nzm,xwf,ywf,zwf,matxymacrofield,matxymacrofieldx,matxymacrofieldy,matxymacrofieldz,nprint});
+
+if (nprint == 1)
+print('-f30','macroscopic','-depsc')
+end
 
 end;
 
@@ -728,6 +777,9 @@ xlabel('x')
 ylabel('y')
 zlabel('z')
 
+if (nprint == 1)
+print('-f100','poynting3d','-depsc')
+end
 
 else
 
@@ -768,7 +820,9 @@ xlabel('$x$','Interpreter','latex','Fontsize',18)
 ylabel('$y$','Interpreter','latex','Fontsize',18)
 zlabel('$z$','Interpreter','latex','Fontsize',18)
 
-
+if (nprint == 1)
+print('-f100','poynting3d','-depsc')
+end
 
 
 if (ntypefile ==0)
@@ -832,7 +886,11 @@ xlabel('$k_x/k_0$','Interpreter','latex','Fontsize',18)
 ylabel('$k_y/k_0$','Interpreter','latex','Fontsize',18)
 
 colorbar
-  
+
+if (nprint == 1)
+print('-f101','poynting2d','-depsc')
+end
+
 end;
 
 end;
@@ -1126,9 +1184,11 @@ uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(n
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotfourierpos,numapertra,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
+	  'Callback',{@plotfourierpos,numapertra,kxfourier,fourierm,fourierxc,fourieryc,fourierzc,nprint});
 
-%print('-f400','fourierpos','-depsc')
+if (nprint == 1)
+print('-f400','fourierpos','-depsc')
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Fourier +incident %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1169,9 +1229,11 @@ uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(n
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotfourierincpos,numapertra,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
+	  'Callback',{@plotfourierincpos,numapertra,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc,nprint});
 
-
+if (nprint == 1)
+print('-f450','fourierincpos','-depsc')
+end
 
 %%%%%%%%%%%%%%%%% Image  %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1205,7 +1267,13 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimagepos,ximage,imagem,imagexc,imageyc,imagezc});
+	  'Callback',{@plotimagepos,ximage,imagem,imagexc,imageyc,imagezc,nprint});
+
+if (nprint == 1)
+print('-f500','imagepos','-depsc')
+end
+
+
 
 %%%%%%%%%%%%%%%%% Image + incident %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1240,7 +1308,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageincpos,ximage,imageincm,imageincxc,imageincyc,imageinczc});
+	  'Callback',{@plotimageincpos,ximage,imageincm,imageincxc,imageincyc,imageinczc,nprint});
+
+if (nprint == 1)
+print('-f550','imageincpos','-depsc')
+end
 
 end;
 
@@ -1398,9 +1470,11 @@ uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(n
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotfourierneg,numaperref,kxfourier,fourierm,fourierxc,fourieryc,fourierzc});
+	  'Callback',{@plotfourierneg,numaperref,kxfourier,fourierm,fourierxc,fourieryc,fourierzc,nprint});
 
-
+if (nprint == 1)
+print('-f600','fourierneg','-depsc')
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Fourier +incident %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1441,9 +1515,11 @@ uicontrol('Style', 'text','Fontsize',12,'Fontweight','bold', 'String', num2str(n
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotfourierincneg,numaperref,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc});
+	  'Callback',{@plotfourierincneg,numaperref,kxfourier,fourierincm,fourierincxc,fourierincyc,fourierinczc,nprint});
 
-
+if (nprint == 1)
+print('-f650','fourierincneg','-depsc')
+end
 
 %%%%%%%%%%%%%%%%% Image  %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1477,7 +1553,12 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageneg,ximage,imagem,imagexc,imageyc,imagezc});
+	  'Callback',{@plotimageneg,ximage,imagem,imagexc,imageyc,imagezc,nprint});
+
+
+if (nprint == 1)
+print('-f700','imageneg','-depsc')
+end
 
 %%%%%%%%%%%%%%%%% Image + incident %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1512,7 +1593,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageincneg,ximage,imageincm,imageincxc,imageincyc,imageinczc});
+	  'Callback',{@plotimageincneg,ximage,imageincm,imageincxc,imageincyc,imageinczc,nprint});
+
+if (nprint == 1)
+print('-f750','imageincneg','-depsc')
+end
 
 end;
 	
@@ -1611,7 +1696,12 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageposreal,ximage,imagem,imagexc,imageyc,imagezc});
+	  'Callback',{@plotimageposreal,ximage,imagem,imagexc,imageyc,imagezc,nprint});
+
+if (nprint == 1)
+print('-f500','imageposwf','-depsc')
+end
+
 
 %%%%%%%%%%%%%%%%% Image + incident %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1646,7 +1736,12 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageincposreal,ximage,imageincm,imageincxc,imageincyc,imageinczc});
+	  'Callback',{@plotimageincposreal,ximage,imageincm,imageincxc,imageincyc,imageinczc,nprint});
+
+if (nprint == 1)
+print('-f550','imageincposwf','-depsc')
+end
+
 
 end;
 
@@ -1739,7 +1834,12 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimagenegreal,ximage,imagem,imagexc,imageyc,imagezc});
+	  'Callback',{@plotimagenegreal,ximage,imagem,imagexc,imageyc,imagezc,nprint});
+
+if (nprint == 1)
+print('-f700','imagenegwf','-depsc')
+end
+
 
 %%%%%%%%%%%%%%%%% Image + incident %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1774,7 +1874,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageincnegreal,ximage,imageincm,imageincxc,imageincyc,imageinczc});
+	  'Callback',{@plotimageincnegreal,ximage,imageincm,imageincxc,imageincyc,imageinczc,nprint});
+
+if (nprint == 1)
+print('-f750','imageincnegwf','-depsc')
+end
 
 end;
 
@@ -1807,6 +1911,9 @@ axis image
 hold on
 rectangle('Position',[-numaperinc -numaperinc 2*numaperinc 2*numaperinc],'Curvature',[1 1],'linewidth',2,'edgecolor','red')
 
+if (nprint == 1)
+print('-f800','angleincbf','-depsc')
+end
 
 elseif (ntypemic ==2);
 
@@ -1902,7 +2009,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageposreal,ximage,imagem,imagexc,imageyc,imagezc});
+	  'Callback',{@plotimageposreal,ximage,imagem,imagexc,imageyc,imagezc,nprint});
+
+if (nprint == 1)
+print('-f500','imageposwf','-depsc')
+end
 
 %%%%%%%%%%%%%%%%% Image + incident %%%%%%%%%%%%%%%%%%%%%%
 
@@ -1937,7 +2048,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageincposreal,ximage,imageincm,imageincxc,imageincyc,imageinczc});
+	  'Callback',{@plotimageincposreal,ximage,imageincm,imageincxc,imageincyc,imageinczc,nprint});
+
+if (nprint == 1)
+print('-f550','imageincposwf','-depsc')
+end
 
 end;
 
@@ -2032,7 +2147,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimagenegreal,ximage,imagem,imagexc,imageyc,imagezc});
+	  'Callback',{@plotimagenegreal,ximage,imagem,imagexc,imageyc,imagezc,nprint});
+
+if (nprint == 1)
+print('-f700','imagenegwf','-depsc')
+end
 
 %%%%%%%%%%%%%%%%% Image + incident %%%%%%%%%%%%%%%%%%%%%%
 
@@ -2067,7 +2186,11 @@ uicontrol('Style','text','Fontsize',16,'Fontweight','bold','units','normalized',
 uicontrol('Style', 'popupmenu','Fontsize',12,'String',...
 {'Intensity','Modulus','x-component','y-component','z-component'},...
 'units','normalized','Position',[0.5 0.92 0.15 0.05],...
-'Callback',{@plotimageincnegreal,ximage,imageincm,imageincxc,imageincyc,imageinczc});
+	  'Callback',{@plotimageincnegreal,ximage,imageincm,imageincxc,imageincyc,imageinczc,nprint});
+
+if (nprint == 1)
+print('-f750','imageincnegwf','-depsc')
+end
 
 end;
 
@@ -2101,6 +2224,9 @@ axis image
 hold on
 rectangle('Position',[-numaperinc -numaperinc 2*numaperinc 2*numaperinc],'Curvature',[1 1],'linewidth',1,'edgecolor','red')
 
+if (nprint == 1)
+print('-f800','angleincdf','-depsc')
+end
 
 end;
 end;

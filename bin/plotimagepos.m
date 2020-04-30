@@ -1,4 +1,4 @@
-function plotimagepos(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc)
+function plotimagepos(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc,nprint)
 
 val = get(hlocal,'Value');
 
@@ -189,3 +189,9 @@ title('Phase Angle','Interpreter','latex','Fontsize',18)
 
 
 end;
+
+
+if (nprint == 1)
+print('-f500','imagepos','-depsc')
+end
+

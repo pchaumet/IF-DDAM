@@ -1,4 +1,4 @@
-function plotimageincneg(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc)
+function plotimageincneg(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc,nprint)
 
 val = get(hlocal,'Value');
 
@@ -191,3 +191,7 @@ title('Phase Angle','Interpreter','latex','Fontsize',18)
 
 
 end;
+
+if (nprint == 1)
+print('-f750','imageincneg','-depsc')
+end
