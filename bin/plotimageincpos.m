@@ -1,4 +1,4 @@
-function plotimageincpos(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc;nprint)
+function plotimageincpos(hlocal,event,ximage,imagem,imagexc,imageyc,imagezc,nprint)
 
 val = get(hlocal,'Value');
 

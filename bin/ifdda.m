@@ -112,7 +112,7 @@ end;
 
 icomp=complex(0,1);
 
-nprint = input('Print figure in eps (yes=1)')
+nprint = input('Print figures in eps (yes=1) : ');
 
 
 

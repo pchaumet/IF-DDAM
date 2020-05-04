@@ -1,3 +1,12 @@
+	version 0.5.16
+
+	1) correction erreur dans nprint pour un plot.
+	2) fini tous les tests pour le userguide francais.
+
+
+	
+
+	--------------------------------------------------------------
 	version 0.5.15
 
 	1) Mise en place de l'option dans ifdda.m pour imprimer les
