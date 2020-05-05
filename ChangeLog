@@ -1,10 +1,21 @@
+	version 0.5.17
+
+	1) Correction des tests dans userguide en francais, ajout de
+	figure sur les incidents.
+	2) cdmOptionsWindow gère la sauvegare du fichier de
+	configuration. Amélioration et corrections.
+	3) dans cdmOptionsWindow rajoute multiple sphere oublie et corrige
+	spheres concentriques.
+	4) rajoute emissivity dans cdmOptionsWindow.cpp
+	5) rajoute quickFFT pour microscopie
+	6) Remise en forme de cdmOptionsWindow.cpp.
+	7) changement de nett pour nettoyer les .opt dans le bin.
+	   
+	--------------------------------------------------------------
 	version 0.5.16
 
 	1) correction erreur dans nprint pour un plot.
 	2) fini tous les tests pour le userguide francais.
-
-
-	
 
 	--------------------------------------------------------------
 	version 0.5.15

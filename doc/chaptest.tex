@@ -7,7 +7,7 @@
 
 Dans bin/tests est disposé un fichier options.db3. Si on le copie un
 directory en dessous ``cp options.db3 ../.'', quand on lance le code
-après un load il apparaît quatre configurations test qui permettent de
+après un load il apparaît quatre configurations tests qui permettent de
 voir toutes les options en action.
 
 \section{Test1}
@@ -30,8 +30,9 @@ La Fig.~\ref{test1conf} montre les options de la configuration choisie.
 
 Les Figures suivantes montrent les résultats obtenus.  Les tracés sont
 effectués avec Matlab et ce sont directement les fichiers eps tirés du
-script ifdda.m qui sont utilisés, mais ceux-ci peuvent bien sûr être 
-réalisés avec l'interface graphique intégrée.
+script ifdda.m qui sont utilisés, mais ceux-ci peuvent bien sûr être r
+éalisés avec l'interface graphique intégrée. L'avantage de matlab dans
+ce cas est de donner toutes les figures d'un seul coup.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[H]
 \begin{center}
@@ -100,10 +101,12 @@ est la plus forte.
 
 \section{Test2}
 
-Le but du test2 est de tester un cas plus compliqué avec une sphère 
-présentant une distribution inhomogène de permittivité avec un é
-clairement en faisceau Gaussian.  La Fig.~\ref{test2conf} montre les
-options de la configuration choisie.
+Le but du test2 est de tester un cas plus compliqué avec une sphère
+d'un rayon de 500~nm présentant une distribution inhomogène de
+permittivité (distribution gaussianne avec $l_c=100$~nm et
+$\sigma=0.1$) avec un éclairement en faisceau Gaussian avec un waist
+$w_0=\lambda$.  La Fig.~ \ref{test2conf} montre les options de la
+configuration choisie.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -122,7 +125,7 @@ options de la configuration choisie.
 \end{center}
 \caption{Test2: Permittivité relative. Partie réelle (gauche) et
   partie imaginaire(droite)..}
-\label{test2conf}
+%\label{test2conf}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Les Figures suivantes montrent les résultats obtenus. 
@@ -197,9 +200,9 @@ est la plus forte.
 
 \section{Test3}
 
-Le but du test3 est de tester le cas du microscope brightfield.
-
-
+Le but du test3 est de tester le cas du microscope brightfield. Une
+sphère de 500~nm de rayon ayant une permittivité de 1.1 est posée sur
+un substrat en verre ($\varepsilon=2.25$). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[H]
@@ -211,6 +214,15 @@ Le but du test3 est de tester le cas du microscope brightfield.
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=8.0cm,draft=false]{test3angleincbf.eps}
+\end{center}
+\caption{Test3: Incidents utilisés pour faire le microsocpe.}
+%\label{test3conf}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[H]
@@ -232,7 +244,9 @@ Le but du test3 est de tester le cas du microscope brightfield.
 
 
 Le but du test4 est de tester le cas du microscope champ sombre et
-microscope de phase.
+microscope de phase. Une sphère de 500~nm de rayon ayant une
+permittivité de 1.1 est posée sur un substrat en verre
+($\varepsilon=2.25$).
 
 
 
@@ -242,10 +256,18 @@ microscope de phase.
   \includegraphics*[width=15.0cm,draft=false]{test4conf.eps}
 \end{center}
 \caption{Test3: configuration choisie.}
-\label{test3conf}
+%\label{test3conf}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=8.0cm,draft=false]{test4angleincdf.eps}
+\end{center}
+\caption{Test4: Incidents utilisés pour faire le microscope.}
+%\label{test3conf}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[H]

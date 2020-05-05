@@ -60,3 +60,4 @@ rm doc/*.mtc*
 rm doc/*.out
 rm doc/*.toc
 rm bin/*.eps
+rm bin/*.opt

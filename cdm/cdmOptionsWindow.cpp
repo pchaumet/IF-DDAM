@@ -182,13 +182,13 @@ OptionsWindow::tofile(){
      return;
   QTextStream opt(&optfile);
   // Fill ASCII options here
-  opt << "calculation options [0=Rigorous, 1=Renormalized Born], 2=Born, 3=Born order 1:" << options->getNrig() << endl;
-  opt << "illumination properties options:" << endl;
-  opt << " wavelength:" << options->getWavelength() << endl;
+  opt << "Calculation options [0=Rigorous, 1=Renormalized Born], 2=Born, 3=Born order 1:" << options->getNrig() << endl;
+  opt << "Illumination properties options:" << endl;
+  opt << " Wavelength:" << options->getWavelength() << endl;
   opt << " P0:" << options->getP0() << endl;
-  opt << " W0:" << options->getW0() << endl;
-  opt << " beam:" << options->getBeam() << endl;
-  opt << "Green function [0=Rigorous, 1=Level 1, 2=Level 2, 3=Level 3, 4=Level 4]:" << options->getNinterp() << endl;
+  opt << " W0:" << options->getW0() << endl; 
+  opt << " Green function [0=Rigorous, 1=Level 1, 2=Level 2, 3=Level 3, 4=Level 4]:" << options->getNinterp() << endl;
+  opt << " Beam:" << options->getBeam() << endl;
   if (options->getBeam() == "Circular plane wave") {
     opt << "  incidence angle (theta with respect to z):" << options->getIncidenceangle_theta_z() << endl;
     opt << "  incidence angle (phi with respect to x):" << options->getIncidenceangle_phi_x() << endl;
@@ -213,7 +213,8 @@ OptionsWindow::tofile(){
     opt << "  polarization TM (1) TE (0):" << options->getPolarizationTM() << endl;
     opt << "  gaussian X:" << options->getXgaus() << endl;
     opt << "  gaussian Y:" << options->getYgaus() << endl;
-    opt << "  gaussian Z:" << options->getZgaus() << endl;}
+    opt << "  gaussian Z:" << options->getZgaus() << endl;
+  }
   else if (options->getBeam() == "Speckle"  ) {
     opt << "  polarization TM (1) TE (0):" << options->getPolarizationTM() << endl;
     opt << "  Seed :" << options->getSpeckseed() << endl;
@@ -221,29 +222,38 @@ OptionsWindow::tofile(){
     opt << "  gaussian Y:" << options->getYgaus() << endl;
     opt << "  gaussian Z:" << options->getZgaus() << endl;
   }
+  else if (options->getBeam() == "Multiple wave"  ) {
+    for (int i = 0 ; i < options->getWaveMultiNumber(); i++) {
+      opt << "  incidence angle (theta with respect to z):" << options->getThetam().at(i) << endl;
+      opt << "  incidence angle (phi with respect to x):" << options->getPhim().at(i) << endl;
+      opt << "  polarization TM (1) TE (0):" << options->getPpm().at(i) << endl;
+      opt << "  Magnitude field real:" << (real(options->getE0m().at(i))) << endl;
+      opt << "  Magnitude field imag:" << (imag(options->getE0m().at(i))) << endl;
+    }
+  }
   
-  opt << "object properties options:" << endl;
+  opt << "Object properties options:" << endl;
   for (int i = 0 ; i < options->getObjectNumber(); i++) {
-    opt << " object" << i << ":" << options->getObject() << endl;
+    opt << " object : " << i << " : " << options->getObject() << endl;
     if (options->getObject() == "sphere" || options->getObject() == "multiple spheres") {
-      opt << "  radius:" << options->getSphereradius().at(i) << endl;
-      opt << "  position X:" << options->getPositionx().at(i) << endl;
-      opt << "  position Y:" << options->getPositiony().at(i) << endl;
-      opt << "  position Z:" << options->getPositionz().at(i) << endl;
+      opt << " radius:" << options->getSphereradius().at(i) << endl;
+      opt << " position X:" << options->getPositionx().at(i) << endl;
+      opt << " position Y:" << options->getPositiony().at(i) << endl;
+      opt << " position Z:" << options->getPositionz().at(i) << endl;
     }
     else if (options->getObject() == "inhomogeneous sphere") {
-      opt << "  radius:" << options->getSphereradius().at(i) << endl;
-      opt << "  seed:" << options->getSphereseed() << endl;
-      opt << "  coherence length:" << options->getSpherecoherencelength() << endl;
-      opt << "  standard deviation:" << options->getSpherestandardev() << endl;
+      opt << " radius:" << options->getSphereradius().at(i) << endl;
+      opt << " seed:" << options->getSphereseed() << endl;
+      opt << " coherence length:" << options->getSpherecoherencelength() << endl;
+      opt << " standard deviation:" << options->getSpherestandardev() << endl;
     }
     else if (options->getObject() == "concentric spheres") {
-      opt << " radius:" << options->getSphereradius().at(i) << endl;
       if (i == 0) {
         opt << " position X:" << options->getPositionx().at(i) << endl;
         opt << " position Y:" << options->getPositiony().at(i) << endl;
         opt << " position Z:" << options->getPositionz().at(i) << endl;
       }
+      opt << " radius:" << options->getSphereradius().at(i) << endl;
     }
     else if (options->getObject() == "cube") {
       opt << " cube side:" << options->getCubeside() << endl;
@@ -258,9 +268,9 @@ OptionsWindow::tofile(){
       opt << " position X:" << options->getPositionx().at(i) << endl;
       opt << " position Y:" << options->getPositiony().at(i) << endl;
       opt << " position Z:" << options->getPositionz().at(i) << endl;
-      opt << "  seed:" << options->getSphereseed() << endl;
-      opt << "  coherence length:" << options->getSpherecoherencelength() << endl;
-      opt << "  standard deviation:" << options->getSpherestandardev() << endl;
+      opt << " seed:" << options->getSphereseed() << endl;
+      opt << " coherence length:" << options->getSpherecoherencelength() << endl;
+      opt << " standard deviation:" << options->getSpherestandardev() << endl;
     }
     else if (options->getObject() == "inhomogeneous cuboid (meshsize)") {
       opt << " position X:" << options->getPositionx().at(i) << endl;
@@ -270,9 +280,9 @@ OptionsWindow::tofile(){
       opt << " number of subunit Y:" << options->getNyy() << endl;
       opt << " number of subunit Z:" << options->getNzz() << endl;
       opt << " meshsize:" << options->getMeshsize() << endl;
-      opt << "  seed:" << options->getSphereseed() << endl;
-      opt << "  coherence length:" << options->getSpherecoherencelength() << endl;
-      opt << "  standard deviation:" << options->getSpherestandardev() << endl;
+      opt << " seed:" << options->getSphereseed() << endl;
+      opt << " coherence length:" << options->getSpherecoherencelength() << endl;
+      opt << " standard deviation:" << options->getSpherestandardev() << endl;
     }
     else if (options->getObject() == "cuboid (length)") {
       opt << " cube side X:" << options->getCubesidex() << endl;
@@ -334,6 +344,12 @@ OptionsWindow::tofile(){
       opt << " theta:" << options->getThetaobj() << endl;
       opt << " phi:" << options->getPhiobj() << endl;
     }
+    else if (options->getObject() == "multiple spheres") {
+      opt << " radius:" << options->getSphereradius().at(i) << endl;
+      opt << " position X:" << options->getPositionx().at(i) << endl;
+      opt << " position Y:" << options->getPositiony().at(i) << endl;
+      opt << " position Z:" << options->getPositionz().at(i) << endl;
+    }
   }
     opt << " anisotropy:" << options->getAnisotropy() << endl;
   for (int i = 0 ; i < options->getObjectNumber(); i++) {
@@ -363,42 +379,44 @@ OptionsWindow::tofile(){
       opt << "  epsilon33 imag:" << QString::number(imag(options->getEpsilon33().at(i))) << endl;
     }
   }
-  opt << "study options:" << endl;
-  opt << " dipole/epsilon checked:" << options->getDipolepsilon() << endl;
-  opt << " farfield checked:" << options->getFarfield() << endl;
+  opt << "Study options:" << endl;
+  opt << "Dipole/epsilon checked:" << options->getDipolepsilon() << endl;
+  opt << "Farfield checked:" << options->getFarfield() << endl;
   if ( options->getFarfield() ) {
-    opt << "  cross section checked:" << options->getCrosssection() << endl;
-    opt << "  cross section + poynting checked:" << options->getCrosssectionpoynting() << endl;
-    opt << "  quick computation:" << options->getQuickdiffract() << endl;
-    opt << "   ntheta:" << options->getNtheta() << endl;
-    opt << "   nphi:" << options->getNphi() << endl;   
+    opt << " cross section checked:" << options->getCrosssection() << endl;
+    opt << " cross section + poynting checked:" << options->getCrosssectionpoynting() << endl;
+    opt << " quick computation:" << options->getQuickdiffract() << endl;
+    opt << " ntheta:" << options->getNtheta() << endl;
+    opt << " nphi:" << options->getNphi() << endl;   
+    opt << " Emissivity:" << options->getNenergie() << endl;   
   }
 
- opt << " microscopy checked:" << options->getMicroscopy() << endl;
+ opt << "Microscopy checked:" << options->getMicroscopy() << endl;
   if ( options->getMicroscopy() ) {
-    opt << " numerical aperture:" << options->getNAR() << endl;
-    opt << " numerical aperture:" << options->getNAT() << endl;
-    opt << " numerical aperture:" << options->getNAinc() << endl;
-    opt << " magnification:" << options->getGross() << endl;
-    opt << " side [0=Side kz<0, 1=Both side (NA=1), 2=Side kz<0]:" << options->getNside() << endl;
-    opt << " Type fo microscopy:" << options->getNtypemic() << endl;
+    opt << " Numerical aperture in reflexion:" << options->getNAR() << endl;
+    opt << " Numerical aperture in transmission:" << options->getNAT() << endl;
+    opt << " Numerical aperture for condenser:" << options->getNAinc() << endl;
+    opt << " Magnification:" << options->getGross() << endl;
+    opt << " Side [0=Side kz<0, 1=Both side (NA=1), 2=Side kz<0]:" << options->getNside() << endl;
+    opt << " Type of microscopy:" << options->getNtypemic() << endl;
+    opt << " Quick with FFT:" << options->getMicroscopyFFT() << endl;
     opt << " Focal plane ref:" << options->getZlensr() << endl;
     opt << " Focal plane trans:" << options->getZlenst() << endl;
   }
   
-  opt << " force checked:" << options->getForce() << endl;
+  opt << "Force checked:" << options->getForce() << endl;
   if ( options->getForce() ) {
     opt << "  optical force checked:" << options->getOpticalforce() << endl;
     opt << "  optical force density checked:" << options->getOpticalforcedensity() << endl;
     opt << "  optical torque checked:" << options->getOpticaltorque() << endl;
     opt << "  optical torque density checked:" << options->getOpticaltorquedensity() << endl;
   }
-  opt << " nearfield checked:" << options->getNearfield() << endl;
+  opt << "Nearfield checked:" << options->getNearfield() << endl;
   if ( options->getNearfield() ) {
-    opt << "  local field checked:" << options->getLocalfield() << endl;
-    opt << "  macroscopic field checked:" << options->getMacroscopicfield() << endl;
+    opt << " local field checked:" << options->getLocalfield() << endl;
+    opt << " macroscopic field checked:" << options->getMacroscopicfield() << endl;
     int nproche = options->getNproche();
-    opt << "  range of study (-0,1,2):" << nproche << endl;
+    opt << " range of study (-0,1,2):" << nproche << endl;
     opt << " nxm:" << options->getNxm() << endl;
     opt << " nym:" << options->getNym() << endl;
     opt << " nzm:" << options->getNzm() << endl;
@@ -406,10 +424,10 @@ OptionsWindow::tofile(){
     opt << " nymp:" << options->getNymp() << endl;
     opt << " nzmp:" << options->getNzmp() << endl;
   }
-  opt << "numerical parameters options:" << endl;
-  opt << " tolerance:" << options->getTolerance() << endl;
-  opt << " methode:" << options->getMethodeit() << endl;  
-  opt << " polarizability:" << options->getPolarizability() << endl;
+  opt << "Numerical parameters options:" << endl;
+  opt << " Tolerance:" << options->getTolerance() << endl;
+  opt << " Methode:" << options->getMethodeit() << endl;  
+  opt << " Polarizability:" << options->getPolarizability() << endl;
   opt << " FFT:" << options->getnfft2d() << endl;
   optfile.close();
   initOptionsTbl();
