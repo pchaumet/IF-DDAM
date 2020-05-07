@@ -183,6 +183,11 @@ OptionsWindow::tofile(){
   QTextStream opt(&optfile);
   // Fill ASCII options here
   opt << "Calculation options [0=Rigorous, 1=Renormalized Born], 2=Born, 3=Born order 1:" << options->getNrig() << endl;
+  opt << "Reread from a file: " << options->getNread() << endl;
+  opt << "Database file: " << options->getNmatlab() << endl;
+  opt << "H5 file used: " << options->getH5File() << endl;
+  opt << "Advanced interface used: " << options->getAdvancedinterface() << endl;
+  opt << "------------------------------------------" << endl;
   opt << "Illumination properties options:" << endl;
   opt << " Wavelength:" << options->getWavelength() << endl;
   opt << " P0:" << options->getP0() << endl;
@@ -231,7 +236,7 @@ OptionsWindow::tofile(){
       opt << "  Magnitude field imag:" << (imag(options->getE0m().at(i))) << endl;
     }
   }
-  
+  opt << "------------------------------------------" << endl;  
   opt << "Object properties options:" << endl;
   for (int i = 0 ; i < options->getObjectNumber(); i++) {
     opt << " object : " << i << " : " << options->getObject() << endl;
@@ -379,6 +384,7 @@ OptionsWindow::tofile(){
       opt << "  epsilon33 imag:" << QString::number(imag(options->getEpsilon33().at(i))) << endl;
     }
   }
+  opt << "------------------------------------------" << endl;
   opt << "Study options:" << endl;
   opt << "Dipole/epsilon checked:" << options->getDipolepsilon() << endl;
   opt << "Farfield checked:" << options->getFarfield() << endl;
@@ -416,7 +422,8 @@ OptionsWindow::tofile(){
     opt << " local field checked:" << options->getLocalfield() << endl;
     opt << " macroscopic field checked:" << options->getMacroscopicfield() << endl;
     int nproche = options->getNproche();
-    opt << " range of study (-0,1,2):" << nproche << endl;
+    opt << " range of study (0,1,2):" << options->getNproche() << endl;
+    opt << "  Discretization: " << options->getDiscretization() << endl;
     opt << " nxm:" << options->getNxm() << endl;
     opt << " nym:" << options->getNym() << endl;
     opt << " nzm:" << options->getNzm() << endl;
@@ -424,6 +431,7 @@ OptionsWindow::tofile(){
     opt << " nymp:" << options->getNymp() << endl;
     opt << " nzmp:" << options->getNzmp() << endl;
   }
+  opt << "------------------------------------------" << endl;
   opt << "Numerical parameters options:" << endl;
   opt << " Tolerance:" << options->getTolerance() << endl;
   opt << " Methode:" << options->getMethodeit() << endl;  

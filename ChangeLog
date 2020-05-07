@@ -1,3 +1,11 @@
+	version 0.5.18
+
+   	1) remet en forme cdmOptionsWindow.cpp + toutes les options sont
+	maintenant mises.
+	2) chaptest pour l'anglais ajoute.
+
+	
+	--------------------------------------------------------------
 	version 0.5.17
 
 	1) Correction des tests dans userguide en francais, ajout de
