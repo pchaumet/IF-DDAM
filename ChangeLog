@@ -1,9 +1,27 @@
+	version 0.5.19
+
+	1) il restait des 4096 dans certaines routines.
+	2) Ecrit une entete pour expliquer les routines diffracte2dsurf*.f
+	3) corrige passagefourierimagegross, oublie de indiceopt dans le
+	cas selon l'axe.
+	4) corrige passagefourier pour mettre indiceopt
+	5) Ecrit entête pour passagefouriergross.f et sans gross.
+	6) correction passagefouriergross2.f sur indiceopt comme 3.
+	7) correction passagefourierg2.f sur indiceopt comme 4.
+	8) Ecrit entête pour passagefouriergross2.f et sans gross.
+	9) dans microssurfbf.f erreur sur indicen dans
+	passagefourierimagegross2, j'avais mis indice0 pour nside=1.
+	10) Meme erreur que 9 mais sur microssurfdf.f.
+	11) changement nom version 0.5.19.
+	12) change nett pour tuer bbl et blg ds doc.
+
+	
+	--------------------------------------------------------------	
 	version 0.5.18
 
    	1) remet en forme cdmOptionsWindow.cpp + toutes les options sont
 	maintenant mises.
 	2) chaptest pour l'anglais ajoute.
-
 	
 	--------------------------------------------------------------
 	version 0.5.17

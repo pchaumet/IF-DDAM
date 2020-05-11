@@ -1,3 +1,8 @@
+c     Cette routine calcul le champ image à partir du cgamp de Fourier
+c     pour un grossessment donné. Attention le champ de Fourier est
+c     rentré dans E(x,y,z) et le champ image est sorti dans le même
+c     tableau.
+
       subroutine passagefourierimagegross2(Ex,Ey,Ez,nfft2d,nfftmax
      $     ,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planf,planb)
       implicit none
@@ -52,11 +57,14 @@
                u2=-u(1)*v(3)+u(3)*v(1)
                costmp=u(1)*v(1)+u(2)*v(2)+u(3)*v(3)
                sintmp=dsqrt(u1*u1+u2*u2)
-
-               if (sintmp.ne.0.d0) then
+               if (sintmp.eq.0.d0) then
+                  Ex(indice)=Ex(indice)*dsqrt(indiceopt)
+                  Ey(indice)=Ey(indice)*dsqrt(indiceopt)
+                  Ez(indice)=Ez(indice)*dsqrt(indiceopt)
+               else
                   u1=u1/sintmp
                   u2=u2/sintmp
-                  tmp=dsqrt(u(3)/v(3)*k0n/k0)
+                  tmp=dsqrt(u(3)/v(3)*indiceopt)
                   tmpx=Ex(indice)
                   tmpy=Ey(indice)
                   tmpz=Ez(indice)

@@ -59,5 +59,8 @@ rm doc/*.maf
 rm doc/*.mtc*
 rm doc/*.out
 rm doc/*.toc
+rm doc/*.bbl
+rm doc/*.blg
 rm bin/*.eps
 rm bin/*.opt
+

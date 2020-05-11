@@ -1,3 +1,8 @@
+c     Cette routine calcul le champ diffracté à partir des dipoles.  On
+c     rentre les dipôles en FF et les champs diffractés par FFT sont
+c     sortis dans Ediffkzpos pour kz>0 et Ediffkzneg pour kz<0. Eloin
+c     tableaux temporaires.
+
       subroutine diffractefft2dsurf2(nbsphere,nx,ny,nz,nxm,nym,nzm
      $     ,nfft2d,nfft2dmax,tabfft2,k0,xs,ys,zs,aretecube,Eloinx,Eloiny
      $     ,Eloinz ,FF,imax,deltakx,deltaky,Ediffkzpos,Ediffkzneg,r,zz
@@ -40,7 +45,7 @@ c     Info string
       var1=(xs(1)+dble(nfft2d2)*aretecube)*deltakx
       var2=(ys(1)+dble(nfft2d2)*aretecube)*deltaky
 
-      if (nfft2d.gt.4096) then
+      if (nfft2d.gt.16384) then
          nstop=1
          infostr='nfft2d too large'
          return

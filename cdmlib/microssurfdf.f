@@ -585,10 +585,10 @@ c     $           ,jkyinc
                   
                   call passagefourierimage2(Efourierincxneg
      $                 ,Efourierincyneg,Efourierinczneg ,nfft2d ,nfft2d
-     $                 ,imaxk0,deltakx ,deltax ,plan2b)
+     $                 ,imaxk0,indice0,deltakx ,deltax ,plan2b)
                   call passagefourierimage2(Efourierxneg ,Efourieryneg
-     $                 ,Efourierzneg,nfft2d,nfft2d ,imaxk0 ,deltakx
-     $                 ,deltax,plan2b)
+     $                 ,Efourierzneg,nfft2d,nfft2d ,imaxk0,indice0
+     $                 ,deltakx ,deltax,plan2b)
                   
                else
                   sidemic=-1.d0
@@ -670,19 +670,19 @@ c     ajoute onde plane
                if (gross.eq.-1.d0) then
                   call passagefourierimage2(Efourierincxpos
      $                 ,Efourierincypos,Efourierinczpos,nfft2d ,nfft2d
-     $                 ,imaxk0 ,deltakx ,deltax ,plan2b)
+     $                 ,imaxk0,indicen ,deltakx ,deltax ,plan2b)
                   call passagefourierimage2(Efourierxpos ,Efourierypos
-     $                 ,Efourierzpos,nfft2d,nfft2d ,imaxk0 ,deltakx
-     $                 ,deltax,plan2b)
+     $                 ,Efourierzpos,nfft2d,nfft2d ,imaxk0,indicen
+     $                 ,deltakx ,deltax,plan2b)
                else
                   sidemic=1.d0
                   call passagefourierimagegross2(Efourierincxpos
      $                 ,Efourierincypos,Efourierinczpos ,nfft2d ,nfft2d
-     $                 ,imaxk0 ,deltakx,deltax ,gross,k0 ,indice0
+     $                 ,imaxk0 ,deltakx,deltax ,gross,k0 ,indicen
      $                 ,sidemic,plan2f,plan2b)
                   call passagefourierimagegross2(Efourierxpos
      $                 ,Efourierypos,Efourierzpos,nfft2d,nfft2d ,imaxk0
-     $                 ,deltakx,deltax ,gross,k0,indice0,sidemic,plan2f
+     $                 ,deltakx,deltax ,gross,k0,indicen,sidemic,plan2f
      $                 ,plan2b)
                endif
             endif

@@ -1,9 +1,15 @@
+c     Cette routine calcule le champ image à partir du champ de Fourier
+c     pour un grossissement de -1 (pas d'inversion de l'image). Le champ
+c     de Fourier est rentré dans E(x,y,z) et est préservé et le champ
+c     image est sorti dans Eim(x,y,z)
+
       subroutine passagefourierimage(Ex,Ey,Ez,Eimx,Eimy,Eimz,nfft2d
-     $     ,nfftmax,imaxk0,deltakx,deltax,planb)
+     $     ,nfftmax,imaxk0,indiceopt,deltakx,deltax,planb)
       implicit none
       integer nfft2d,nfft2d2,nfftmax,i,j,kk,indicex,indicey,indeicez
      $     ,indice,imaxk0
-      double precision fac,deltakx,deltaky,deltax,pi
+      double precision fac,deltakx,deltaky,deltax,pi,indiceopt
+     $     ,indiceoptrac
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
      $     *nfftmax),Eimx(nfftmax*nfftmax),Eimy(nfftmax*nfftmax)
      $     ,Eimz(nfftmax*nfftmax),tmpx,tmpy ,tmpz
@@ -12,7 +18,7 @@
       FFTW_BACKWARD=+1
       pi=dacos(-1.d0)
       
-   
+      indiceoptrac=dsqrt(indiceopt)
       deltaky=deltakx
       deltax=2.d0*pi/dble(nfft2d)/deltakx
       fac=deltakx*deltaky
@@ -47,9 +53,9 @@ c         do j=-nfft2d2,nfft2d2-1
             endif
             indice=indicex+nfft2d*(indicey-1)
             kk=i+nfft2d2+1+nfft2d*(j+nfft2d2)
-            Eimx(indice)=Ex(kk)
-            Eimy(indice)=Ey(kk)
-            Eimz(indice)=Ez(kk)    
+            Eimx(indice)=Ex(kk)*indiceoptrac
+            Eimy(indice)=Ey(kk)*indiceoptrac
+            Eimz(indice)=Ez(kk)*indiceoptrac   
          enddo
       enddo
 !$OMP ENDDO 

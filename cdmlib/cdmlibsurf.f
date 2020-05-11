@@ -4079,11 +4079,11 @@ c     enddo
                
                call passagefourierimage(Efourierincxneg ,Efourierincyneg
      $              ,Efourierinczneg,Eimageincxneg ,Eimageincyneg
-     $              ,Eimageinczneg,nfft2d,nfft2d,imaxk0,deltakx ,deltax
-     $              ,plan2b)
+     $              ,Eimageinczneg,nfft2d,nfft2d,imaxk0,indice0,deltakx
+     $              ,deltax ,plan2b)
                call passagefourierimage(Efourierxneg,Efourieryneg
      $              ,Efourierzneg,Eimagexneg,Eimageyneg,Eimagezneg
-     $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax,plan2b)
+     $              ,nfft2d,nfft2d,imaxk0,indice0,deltakx,deltax,plan2b)
             else
                write(*,*) 'Magnification',gross
                sidemic=-1.d0
@@ -4186,13 +4186,13 @@ c     sauve le champ dans le plan de image.
          if (ncote.eq.0.or.ncote.eq.1) then
 
             if (gross.eq.-1.d0) then
-               call passagefourierimage(Efourierincxpos
-     $              ,Efourierincypos,Efourierinczpos,Eimageincxpos
-     $              ,Eimageincypos,Eimageinczpos,nfft2d,nfft2d,imaxk0
-     $              ,deltakx,deltax,plan2b)
+               call passagefourierimage(Efourierincxpos ,Efourierincypos
+     $              ,Efourierinczpos,Eimageincxpos ,Eimageincypos
+     $              ,Eimageinczpos,nfft2d,nfft2d,imaxk0,indicen,deltakx
+     $              ,deltax,plan2b)
                call passagefourierimage(Efourierxpos,Efourierypos
      $              ,Efourierzpos,Eimagexpos,Eimageypos,Eimagezpos
-     $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax,plan2b)
+     $              ,nfft2d,nfft2d,imaxk0,indicen,deltakx,deltax,plan2b)
             else
                sidemic=1.d0
                call passagefourierimagegross(Efourierincxpos

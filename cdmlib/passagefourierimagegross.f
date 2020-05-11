@@ -1,3 +1,8 @@
+c     Cette routine calcule le champ image à partir du champ de Fourier
+c     pour un grossissement donné. Le champ de Fourier est rentré dans
+c     E(x,y,z) et est préservé et le champ image est sorti dans
+c     Eim(x,y,z)
+
       subroutine passagefourierimagegross(Ex,Ey,Ez,Eimx,Eimy,Eimz,nfft2d
      $     ,nfftmax,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planf
      $     ,planb)
@@ -66,9 +71,9 @@
                sintmp=dsqrt(u1*u1+u2*u2)
 
                if (sintmp.eq.0.d0) then
-                  Eimx(indice)=Ex(kk)
-                  Eimy(indice)=Ey(kk)
-                  Eimz(indice)=Ez(kk)
+                  Eimx(indice)=Ex(kk)*dsqrt(indiceopt)
+                  Eimy(indice)=Ey(kk)*dsqrt(indiceopt)
+                  Eimz(indice)=Ez(kk)*dsqrt(indiceopt)
                else
                   u1=u1/sintmp
                   u2=u2/sintmp

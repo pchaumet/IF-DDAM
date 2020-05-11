@@ -1,9 +1,15 @@
+c     Cette routine calcul le champ image à partir du cgamp de Fourier
+c     pour un grossessment de -1. Attention le champ de Fourier est
+c     rentré dans E(x,y,z) et le champ image est sorti dans le même
+c     tableau.
+
       subroutine passagefourierimage2(Ex,Ey,Ez,nfft2d,nfftmax,imaxk0
-     $     ,deltakx,deltax,planb)
+     $     ,indiceopt,deltakx,deltax,planb)
       implicit none
       integer nfft2d,nfft2d2,nfftmax,i,j,kk,indicex,indicey,indeicez
      $     ,indice,imaxk0
-      double precision fac,deltakx,deltaky,deltax,pi
+      double precision fac,deltakx,deltaky,deltax,pi,indiceopt
+     $     ,indiceoptrac
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
      $     *nfftmax),tmpx,tmpy ,tmpz
       integer FFTW_BACKWARD
@@ -11,7 +17,7 @@
       FFTW_BACKWARD=+1
       pi=dacos(-1.d0)
       
-   
+      indiceoptrac=dsqrt(indiceopt)
       deltaky=deltakx
       deltax=2.d0*pi/dble(nfft2d)/deltakx
       fac=deltakx*deltaky
@@ -63,9 +69,9 @@
             Ex(kk)=Ex(indice)*fac
             Ey(kk)=Ey(indice)*fac
             Ez(kk)=Ez(indice)*fac
-            Ex(indice)=tmpx
-            Ey(indice)=tmpy
-            Ez(indice)=tmpz
+            Ex(indice)=tmpx*indiceoptrac
+            Ey(indice)=tmpy*indiceoptrac
+            Ez(indice)=tmpz*indiceoptrac
          enddo
       enddo
 !$OMP ENDDO 

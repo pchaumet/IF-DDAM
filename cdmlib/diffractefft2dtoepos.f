@@ -1,3 +1,8 @@
+c     Cette routine calcul le champ dans l'espace de Fourier à partir du
+c     champ lointain. Nous avons donc Efourier=Elointain(-2 i pi gamma).
+c     Le rangement de Efourier pour une sortie visible dans l'espace de
+c     Fourier.
+
       subroutine diffractefft2dtoepos(Ediffkzpos,Ediffkzneg,Efourierxpos
      $     ,Efourierypos,Efourierzpos,Efourierxneg,Efourieryneg
      $     ,Efourierzneg,epscouche,nepsmax,neps,numaperref ,numapertra
@@ -36,7 +41,7 @@ c     Info string
 !$OMP ENDDO 
 !$OMP END PARALLEL
       
-       if (nfft2d.gt.4096) then
+       if (nfft2d.gt.16384) then
          nstop=1
          infostr='nfft2d too large'
          return
