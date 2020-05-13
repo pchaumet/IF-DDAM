@@ -35,7 +35,7 @@ InterfaceConfigDialog::InterfaceConfigDialog(QWidget *parent,Qt::WindowFlags fl,
        epsilonlayout->addWidget(epsilonr.at(i));
        epsilonlayout->addWidget(epsiloni.at(i));
        epsilonlayout->addWidget(materiallayer.at(i));
-       layout->addRow("<html><body>Last medium (highest z: &epsilon; <sub>+<\sub> ):</body></html>",epsilonlayout);
+       layout->addRow("<html><body>Last   medium (highest z: &epsilon; <sub>+</sub> ):</body></html>",epsilonlayout);
      }
      else {
        epsilonlayout->addWidget(epsilonr.at(i));

@@ -427,13 +427,19 @@ c     arret de suite si pas assez de place pour propa
          write(*,*) 'code compute the diffracted field for both side'
       endif
       
-      if (nlentille.eq.1) nenergie=1
-
+      if (nlentille.eq.1) then
+         nenergie=1
+         if (dabs(gross).lt.1.d0) then
+            infostr='Manifying factor smaller than one!' 
+            nstop = -1
+            return
+         endif
+      endif
 c      if (nenergie.eq.1.and.nquickdiffracte.eq.1) then
 c         ndiffracte=1
 c      endif
     
-
+  
 
 
       materiau = materiaumulti(1)
@@ -4090,12 +4096,12 @@ c     enddo
                call passagefourierimagegross(Efourierincxneg
      $              ,Efourierincyneg,Efourierinczneg,Eimageincxneg
      $              ,Eimageincyneg,Eimageinczneg,nfft2d,nfft2d ,imaxk0
-     $              ,deltakx,deltax,gross,k0,indice0,sidemic,plan2f
-     $              ,plan2b)
+     $              ,deltakx,deltax,gross,k0,indice0,numaperref,sidemic
+     $              ,plan2f ,plan2b)
                call passagefourierimagegross(Efourierxneg ,Efourieryneg
      $              ,Efourierzneg,Eimagexneg,Eimageyneg ,Eimagezneg
      $              ,nfft2d,nfft2d,imaxk0,deltakx,deltax ,gross,k0
-     $              ,indice0,sidemic,plan2f,plan2b)
+     $              ,indice0,numaperref,sidemic,plan2f,plan2b)
             endif
 
 c            write(*,*) 'Number of point in NA',imaxk0*2+1
@@ -4198,12 +4204,24 @@ c     sauve le champ dans le plan de image.
                call passagefourierimagegross(Efourierincxpos
      $              ,Efourierincypos,Efourierinczpos,Eimageincxpos
      $              ,Eimageincypos,Eimageinczpos,nfft2d,nfft2d,imaxk0
-     $              ,deltakx,deltax,gross,k0,indicen,sidemic,plan2f
-     $              ,plan2b)
+     $              ,deltakx,deltax,gross,k0,indicen,numapertra,sidemic
+     $              ,plan2f ,plan2b)
+c               do i=1,nfft2d*nfft2d
+c                  write(*,*) 'Efourier1',Efourierypos(i),i
+c               enddo
                call passagefourierimagegross(Efourierxpos ,Efourierypos
      $              ,Efourierzpos,Eimagexpos,Eimageypos ,Eimagezpos
      $              ,nfft2d,nfft2d,imaxk0,deltakx ,deltax ,gross,k0
-     $              ,indicen,sidemic,plan2f,plan2b)
+     $              ,indicen,numapertra,sidemic,plan2f,plan2b)
+               
+c               call passageimagefouriergross(Efourierxpos ,Efourierypos
+c     $              ,Efourierzpos,Eimagexpos,Eimageypos ,Eimagezpos
+c     $              ,nfft2d ,nfft2d,imaxk0,deltakx ,deltax,gross,k0
+c     $              ,indicen,numapertra,sidemic,plan2f,plan2b)
+c               do i=1,nfft2d*nfft2d
+c                  write(*,*) 'Efourier2',Efourierypos(i),i
+c               enddo
+
             endif
             if (nmatf.eq.0) then
                do j=-imaxk0,imaxk0

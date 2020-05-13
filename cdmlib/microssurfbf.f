@@ -619,11 +619,11 @@ c     passe le champ diffracte lointain en amplitude e(k||)
                         call passagefourierimagegross2(Efourierincxneg
      $                       ,Efourierincyneg,Efourierinczneg,nfft2d
      $                       ,nfft2d ,imaxk0 ,deltakx,deltax ,gross,k0
-     $                       ,indice0,sidemic,plan2f,plan2b)
+     $                       ,indice0,numaperref,sidemic,plan2f,plan2b)
                         call passagefourierimagegross2(Efourierxneg
      $                       ,Efourieryneg,Efourierzneg,nfft2d,nfft2d
      $                       ,imaxk0,deltakx,deltax ,gross,k0,indice0
-     $                       ,sidemic,plan2f,plan2b)
+     $                       ,numaperref,sidemic,plan2f,plan2b)
                      endif
                   endif
 
@@ -711,11 +711,11 @@ c     ajoute onde plane
                         call passagefourierimagegross2(Efourierincxpos
      $                       ,Efourierincypos,Efourierinczpos ,nfft2d
      $                       ,nfft2d ,imaxk0 ,deltakx,deltax ,gross,k0
-     $                       ,indicen,sidemic,plan2f,plan2b)
+     $                       ,indicen,numapertra,sidemic,plan2f,plan2b)
                         call passagefourierimagegross2(Efourierxpos
      $                       ,Efourierypos,Efourierzpos,nfft2d,nfft2d
      $                       ,imaxk0,deltakx,deltax ,gross,k0,indicen
-     $                       ,sidemic,plan2f,plan2b)
+     $                       ,numapertra,sidemic,plan2f,plan2b)
                      endif
                   endif
 c     sommation de toutes les images incohérentes.

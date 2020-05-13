@@ -4,13 +4,13 @@ c     E(x,y,z) et est préservé et le champ image est sorti dans
 c     Eim(x,y,z)
 
       subroutine passagefourierimagegross(Ex,Ey,Ez,Eimx,Eimy,Eimz,nfft2d
-     $     ,nfftmax,imaxk0,deltakx,deltax,gross,k0,indiceopt,side,planf
-     $     ,planb)
+     $     ,nfftmax,imaxk0,deltakx,deltax,gross,k0,indiceopt,numaper
+     $     ,side,planf ,planb)
       implicit none
       integer nfft2d,nfft2d2,nfftmax,i,j,kk,indicex,indicey
      $     ,indice,imaxk0
       double precision tmp,deltakx,deltaky,deltax,pi,u(3) ,gross,v(3),kx
-     $     ,ky,k0,k0n,indiceopt,fac,side,u1,u2,costmp,sintmp
+     $     ,ky,k0,k0n,indiceopt,fac,side,u1,u2,costmp,sintmp,numaper
       double complex Ex(nfftmax*nfftmax),Ey(nfftmax*nfftmax),Ez(nfftmax
      $     *nfftmax),Eimx(nfftmax*nfftmax),Eimy(nfftmax*nfftmax)
      $     ,Eimz(nfftmax*nfftmax),tmpx,tmpy ,tmpz,ctmp
@@ -53,7 +53,7 @@ c     Eim(x,y,z)
             else
                indicey=nfft2d+j+1
             endif
-            if (kx*kx+ky*ky.le.k0n*k0n) then
+            if (kx*kx+ky*ky.le.k0n*k0n*numaper*numaper) then
 
                u(1)=kx/k0n
                u(2)=ky/k0n

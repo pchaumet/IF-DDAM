@@ -594,12 +594,12 @@ c     $           ,jkyinc
                   sidemic=-1.d0
                   call passagefourierimagegross2(Efourierincxneg
      $                 ,Efourierincyneg,Efourierinczneg,nfft2d ,nfft2d
-     $                 ,imaxk0 ,deltakx,deltax,gross,k0,indice0,sidemic
-     $                 ,plan2f,plan2b)
+     $                 ,imaxk0 ,deltakx,deltax,gross,k0,indice0
+     $                 ,numaperref,sidemic ,plan2f,plan2b)
                   call passagefourierimagegross2(Efourierxneg
      $                 ,Efourieryneg,Efourierzneg,nfft2d,nfft2d ,imaxk0
-     $                 ,deltakx,deltax ,gross,k0,indice0,sidemic,plan2f
-     $                 ,plan2b)
+     $                 ,deltakx,deltax ,gross,k0,indice0,numaperref
+     $                 ,sidemic,plan2f ,plan2b)
                endif
             endif
             if (ncote.eq.0.or.ncote.eq.1) then
@@ -679,11 +679,11 @@ c     ajoute onde plane
                   call passagefourierimagegross2(Efourierincxpos
      $                 ,Efourierincypos,Efourierinczpos ,nfft2d ,nfft2d
      $                 ,imaxk0 ,deltakx,deltax ,gross,k0 ,indicen
-     $                 ,sidemic,plan2f,plan2b)
+     $                 ,numapertra ,sidemic,plan2f,plan2b)
                   call passagefourierimagegross2(Efourierxpos
      $                 ,Efourierypos,Efourierzpos,nfft2d,nfft2d ,imaxk0
-     $                 ,deltakx,deltax ,gross,k0,indicen,sidemic,plan2f
-     $                 ,plan2b)
+     $                 ,deltakx,deltax ,gross,k0,indicen,numapertra
+     $                 ,sidemic,plan2f ,plan2b)
                endif
             endif
 c     sommation de toutes les images incohérentes.

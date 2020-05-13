@@ -68,7 +68,7 @@ c     Info string
          indicem=indice0
       endif
       
-      if (nfft2d.gt.1024) then
+      if (nfft2d.gt.16384) then
          nstop=-1
          infostr='FFT for the diffracted field too large'
          return
@@ -120,7 +120,7 @@ c      imax=nint(NA*k0*indice0/deltakx)+1
             Eloinz(i)=0.d0
          enddo
 !$OMP ENDDO 
-!$OMP END PARALLEL
+!$OMP END PARALLEL  
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i,j,kk,indice)   
 !$OMP DO SCHEDULE(STATIC) COLLAPSE(2) 
@@ -136,10 +136,10 @@ c      imax=nint(NA*k0*indice0/deltakx)+1
 !$OMP ENDDO 
 !$OMP END PARALLEL  
 
-#ifdef USE_FFTW   
+#ifdef USE_FFTW
          call dfftw_execute_dft(planf,Eloinx,Eloinx)
          call dfftw_execute_dft(planf,Eloiny,Eloiny)
-         call dfftw_execute_dft(planf,Eloinz,Eloinz)
+         call dfftw_execute_dft(planf,Eloinz,Eloinz)  
 #else
 !$OMP PARALLEL DEFAULT(SHARED)
 !$OMP SECTIONS 
@@ -151,8 +151,8 @@ c      imax=nint(NA*k0*indice0/deltakx)+1
          call fftsingletonz2d(Eloinz,nfft2d,nfft2d,FFTW_FORWARD)
 !$OMP END SECTIONS
 !$OMP END PARALLEL
-#endif 
-         
+#endif         
+
          kk=1+nx*ny*(k-1)
 
 !$OMP PARALLEL DEFAULT(SHARED) 
@@ -175,7 +175,7 @@ c     en champ lointain : E(r)=-2*pi*icomp*kz*e(k||) *exp(ik0r)/r
 c
 c 
                   ctmp1=cdexp(-icomp*(var1*dble(i)+var2*dble(j)))/(-2.d0
-     $                 *pi*icomp*kz)
+     $                 *pi*icomp*dabs(kz))
 c                  ctmp1=cdexp(-icomp*(var1*dble(i)+var2*dble(j)))
 
 

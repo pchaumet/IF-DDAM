@@ -116,6 +116,7 @@ SOURCES		+= aleatoire.f \
                 objectparanxnynzinhomosurf.f \
 		passagefourierimage.f \
 		passagefourierimagegross.f \
+		passageimagefouriergross.f \
 		pimzbicgstab.f \
 		polaepstenscomp.f \
 		polarisabilitecomp.f \

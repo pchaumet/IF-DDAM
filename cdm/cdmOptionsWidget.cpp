@@ -63,7 +63,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   nmatlab->addItems(options->nmatlabList);
   nmatlab->setCurrentIndex(options->getNmatlab());
   nmatlab->setFixedWidth(200);
-  fileh5Label= new QLabel("Name h5 file");
+  fileh5Label= new QLabel("Name HDF5 file");
   fileh5 = new QLineEdit(options->getH5File());
   fileh5->setFixedWidth(120);
   advancedinterfaceLabel = new QLabel("Advanced interface");
@@ -75,11 +75,11 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   wavelength = new QLineEdit(QString::number(options->getWavelength()));
   wavelength->setFixedWidth(120);
   
-  P0Label = new QLabel("P0 (W)");
+  P0Label = new QLabel("Power (W)");
   P0 = new QLineEdit(QString::number(options->getP0()));
   P0->setFixedWidth(120);
 
-  W0Label = new QLabel("W0 (nm)");
+  W0Label = new QLabel("Waist (nm)");
   W0 = new QLineEdit(QString::number(options->getW0()));
   W0->setFixedWidth(120);
   
@@ -162,7 +162,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   polarizability->setCurrentIndex(polarizability->findText(options->getPolarizability()));
   polarizability->setFixedWidth(120);
 
-  nfft2dLabel = new QLabel("FFT");
+  nfft2dLabel = new QLabel("Size of FFT");
   nfft2d      = new QComboBox();
   nfft2d->addItems(options->nfft2dList);
   nfft2d->setCurrentIndex(nfft2d->findText(QString::number(options->getnfft2d())));

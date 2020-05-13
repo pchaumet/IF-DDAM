@@ -1026,7 +1026,7 @@ RunWidget::displayResults()
       QLabel *extinctioncrosssection = new 
       QLabel(QString::number(run->getExtinctionCrossection()),this);
       QLabel *extinctionLabel = 
-	new QLabel("<html><body>Extinction cross section [m<dipolespsup>2</sup>]:</body></html>",this);
+	new QLabel("<html><body>Extinction cross section [m<sup>2</sup>]:</body></html>",this);
       outputlayout->addRow(extinctionLabel, extinctioncrosssection);
       QLabel *absorbingcrosssection = new 
       QLabel(QString::number(run->getAbsorbingCrossection()),this);
