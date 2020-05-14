@@ -63,6 +63,9 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   nmatlab->addItems(options->nmatlabList);
   nmatlab->setCurrentIndex(options->getNmatlab());
   nmatlab->setFixedWidth(200);
+  connect(nmatlab, SIGNAL(currentIndexChanged(int)),this,
+	  SLOT(nmatlabStateChanged(int)));
+
   fileh5Label= new QLabel("Name HDF5 file");
   fileh5 = new QLineEdit(options->getH5File());
   fileh5->setFixedWidth(120);
@@ -162,7 +165,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   polarizability->setCurrentIndex(polarizability->findText(options->getPolarizability()));
   polarizability->setFixedWidth(120);
 
-  nfft2dLabel = new QLabel("Size of FFT");
+  nfft2dLabel = new QLabel("Size of FFT for far field");
   nfft2d      = new QComboBox();
   nfft2d->addItems(options->nfft2dList);
   nfft2d->setCurrentIndex(nfft2d->findText(QString::number(options->getnfft2d())));
@@ -787,8 +790,14 @@ OptionsWidget::advancedinterfaceCheckBoxStateChanged(int state) {
     nmatlabLabel->show();
     nmatlab->show();
 #ifdef USE_HDF5
-    fileh5Label->show();
-    fileh5->show();
+    if ( nmatlab->currentText() == "Save in HDF5 file" )  {
+     fileh5Label->show();
+     fileh5->show();
+    }
+    else {
+      fileh5Label->hide();
+      fileh5->hide();
+    }
 #else
     fileh5Label->hide();
     fileh5->hide();
@@ -967,6 +976,17 @@ if (state == Qt::Checked) {
 }
 void 
 OptionsWidget::microscopyFFTCheckBoxStateChanged(int state) {
+}
+void 
+OptionsWidget::nmatlabStateChanged(int state) {
+  if ( nmatlab->currentText() == "Save in HDF5 file" )  {
+    fileh5Label->show();
+    fileh5->show();
+  }
+  else {
+    fileh5Label->hide();
+    fileh5->hide();
+  }  
 }
 void 
 OptionsWidget::forceCheckBoxStateChanged(int state) {

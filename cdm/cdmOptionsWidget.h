@@ -93,6 +93,7 @@ class OptionsWidget : public QWidget
       void configureEpsilon();
       void nreadCheckBoxStateChanged(int state);
       void advancedinterfaceCheckBoxStateChanged(int state);
+      void nmatlabStateChanged(int state);
       void farfieldCheckBoxStateChanged(int state);
       void nenergieCheckBoxStateChanged(int state);
       void crosssectionCheckBoxStateChanged(int state);
