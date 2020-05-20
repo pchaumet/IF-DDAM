@@ -36,11 +36,13 @@ RCC_DIR         = resources
 
 QMAKE_CXXFLAGS_RELEASE  -= -O2
 
-QMAKE_CXXFLAGS 	+= -mcmodel=large -Warray-bounds -g -O3 
+QMAKE_CXXFLAGS 	+= -O3 
 
-#QMAKE_CFLAGS    += -Warray-bounds -fcray-pointer -w -cpp -g
+QMAKE_CC        =       gfortran
 
-#QMAKE_LFLAGS    = -mcmodel=large -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -cpp -g -fcheck=all -fbacktrace -fopenmp
+QMAKE_CFLAGS    += -Warray-bounds -fcray-pointer -w  -mcmodel=large -fopenmp
+
+QMAKE_LFLAGS    = -mcmodel=large
 
 HEADERS 	+= 	cdmMain.h \
 			cdmOptions.h \

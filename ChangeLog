@@ -1,3 +1,12 @@
+	version 0.5.22
+
+	1) Correction bug sur le make file, pour que la version sans fftw
+	fonctionne et sans openMP.
+	2) supression des options -g ds la compilation.
+	3) verification entre FFTW et singleton faite: OK
+	
+	
+	--------------------------------------------------------
 	version 0.5.21
 
 	1) lecture du fichier HDF5 et affichage que quand l'option est
