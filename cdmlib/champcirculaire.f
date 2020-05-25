@@ -130,13 +130,6 @@ c     on eclaire par en dessous.
 
          Ex=E0x/dsqrt(2.d0)
          Ey=E0x*icomp*dsign(us,s)
-         if (dsqrt(x*x+y*y).le.1.d-9) then
-            write(*,*) 'rrrrrrrrrrrr'
-            write(*,*) z
-            write(*,*) E0x,datan2(dimag(E0x),dreal(E0x))
-            write(*,*) Ex,datan2(dimag(Ex),dreal(Ex))
-            write(*,*) Ey,datan2(dimag(Ey),dreal(Ey))
-         endif
          Ez=0.d0
          goto 999
       endif

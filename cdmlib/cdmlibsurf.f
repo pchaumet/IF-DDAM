@@ -512,8 +512,6 @@ c     return
 c     endif
   
 c     open the output file:
-      open(99,file='output')
-      write(99,*) '************* OUTPUT FILE ***************'
 
       if (nmatf.eq.0) then
 c     Intensity of the incident field
@@ -647,9 +645,9 @@ c     check the potision of the layers
          if (zcouche(i).le.zcouche(i-1)) then
             nstop=1
             infostr='problem with the position of the layers'
-            write(99,*) 'problem with the position of the layers'
-            write(99,*) 'zcouche',zcouche(i-1),i-1
-            write(99,*) 'zcouche',zcouche(i),i
+            write(*,*) 'problem with the position of the layers'
+            write(*,*) 'zcouche',zcouche(i-1),i-1
+            write(*,*) 'zcouche',zcouche(i),i
          endif
       enddo
       if (w0.le.0.d0) then
@@ -674,19 +672,16 @@ c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
             call interpdielec(lambda,materiau,epr,epi,infostr,nstop)
             if (nstop.eq.1) return
             epsmulti(k)=(epr*uncomp+icomp*epi)
-            write(99,*) 'Object relative permittivity',eps
-            write(99,*) 'Object relative permittivity',eps,materiau(1:2)
+            write(*,*) 'Object relative permittivity',eps
+            write(*,*) 'Object relative permittivity',eps,materiau(1:2)
      $           ,lambda
          else
             if (trope(1:3).eq.'iso') then
                write(*,*) 'Object relative permittivity',eps
-               write(99,*) 'Object relative permittivity',eps
             else 
                do i=1,3
                   do j=1,3
                      write(*,*) 'Object relative permittivity',epsani(i
-     $                    ,j),i,j
-                     write(99,*) 'Object relative permittivity',epsani(i
      $                    ,j),i,j
                   enddo
                enddo
@@ -703,15 +698,11 @@ c     write(*,*) 'Relative permittivity',eps,materiau(1:2),lambda
             call interpdielec(lambda,materiau,epr,epi,infostr,nstop)
             if (nstop.eq.1) return
             epscouche(k)=(epr*uncomp+icomp*epi)
-            write(99,*) 'Relative permittivity of the layer',k
-     $           ,epscouche(k)
             write(*,*) 'Relative permittivity of the layer',k
             write(*,*) 'eps = ',epscouche(k)
          else
             write(*,*) 'Relative permittivity of the layer',k
             write(*,*) 'eps = ',epscouche(k)
-            write(99,*) 'Relative permittivity of the layer',k,eps
-     $           couche(k)          
          endif
       enddo
 
@@ -840,13 +831,13 @@ c     Built the object
      $        ,polarizability ,nproche,epsilon,polarisa,rayon,xg,yg,zg
      $        ,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn,nmatf
      $        ,file_id,group_iddip,infostr ,nstop)
-         write(99,*) 'sphere',rayon
+
       elseif (object(1:12).eq.'inhomosphere') then
          numberobjet=1
          if (trope.ne.'iso') then
             nstop=1
             infostr='Permittivity not scalar for inhomogenous sphere'
-            write(99,*)
+            write(*,*)
      $           'Permittivity not scalar for inhomogenous sphere'
             return
          endif
@@ -862,7 +853,7 @@ c     Built the object
          if (trope.ne.'iso') then
             nstop=1
             infostr='Permittivity not scalar for inhomogenous cuboid'
-            write(99,*)
+            write(*,*)
      $           'Permittivity not scalar for inhomogenous cuboid'
             return
          endif
@@ -874,13 +865,12 @@ c     Built the object
      $        ,file_id,group_iddip,infostr,nstop)
 
          localfieldx=0.d0
-         write(99,*) 'cuboid',sidex,sidey,sidez
       elseif (object(1:13).eq.'inhomocuboid2') then
          numberobjet=1
          if (trope.ne.'iso') then
             nstop=1
             infostr='Permittivity not scalar for inhomogenous cuboid'
-            write(99,*)
+            write(*,*)
      $           'Permittivity not scalar for inhomogenous cuboid'
             return
          endif
@@ -891,9 +881,7 @@ c     Built the object
      $        ,localfieldx,neps ,nepsmax ,dcouche ,zcouche ,epscouche
      $        ,tabzn ,nmatf,file_id,group_iddip,infostr ,nstop)
          localfieldx=0.d0
-         write(99,*) 'cuboid',sidex,sidey,sidez
       elseif (object(1:4).eq.'cube') then
-         write(99,*) 'cube:side',side
          numberobjet=1
          call objetcubesurf(trope,eps,epsani ,eps0,xs,ys,zs,xswf,yswf
      $        ,zswf,k0,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny
@@ -902,7 +890,6 @@ c     Built the object
      $        ,group_iddip,infostr ,nstop)
 
       elseif(object(1:7).eq.'cuboid1') then
-         write(99,*) 'cuboid:sidex,sidey,sizez ',sidex,sidey,sidez
          numberobjet=1
          call objetparasurf(trope,eps,epsani,eps0,xs,ys,zs,xswf,yswf
      $        ,zswf,k0,aretecube,tabdip,nnnr,nmax,nbsphere,ndipole,nx,ny
@@ -910,7 +897,6 @@ c     Built the object
      $        ,sidey,sidez,xg ,yg,zg ,phiobj,thetaobj,psiobj,nproche
      $        ,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn,nmatf
      $        ,file_id,group_iddip,infostr ,nstop)
-         write(99,*) 'side',sidex,sidey,sidez,nx,ny,nz
        
        
       elseif(object(1:7).eq.'cuboid2') then
@@ -922,7 +908,7 @@ c     Built the object
      $        ,epsilon ,polarisa ,sidex,sidey,sidez,xg,yg,zg,nproche
      $        ,neps ,nepsmax ,dcouche,zcouche ,epscouche,tabzn,nmatf
      $        ,file_id,group_iddip,infostr ,nstop)
-         write(99,*) 'side',sidex,sidey,sidez,nx,ny,nz
+
       elseif(object(1:9).eq.'ellipsoid') then
          numberobjet=1
          call objetellipsesurf(trope,eps,epsani,eps0,xs,ys,zs,xswf,yswf
@@ -931,7 +917,7 @@ c     Built the object
      $        ,demiaxea,demiaxeb ,demiaxec,xg,yg,zg,phiobj,thetaobj
      $        ,psiobj,neps,nepsmax ,dcouche ,zcouche,epscouche,tabzn
      $        ,nmatf,file_id,group_iddip,infostr,nstop)
-         write(99,*) 'ellipse',nbsphere,ndipole,nx,ny,nz
+
       elseif(object(1:8).eq.'nspheres') then
          call objetnspheressurf(trope,epsmulti,epsanimulti,numberobjet
      $        ,numberobjetmax,xgmulti,ygmulti,zgmulti,rayonmulti,eps0,xs
@@ -939,7 +925,7 @@ c     Built the object
      $        ,nmax,nbsphere ,ndipole,nx,ny,nz,polarizability,nproche
      $        ,epsilon ,polarisa,neps,nepsmax,dcouche ,zcouche,epscouche
      $        ,tabzn,nmatf,file_id,group_iddip,infostr ,nstop)
-         write(99,*) 'multisphere',nbsphere,ndipole,nx,ny,nz
+
       elseif(object(1:8).eq.'cylinder') then
          numberobjet=1
 
@@ -949,7 +935,7 @@ c     Built the object
      $        ,rayon ,hauteur,xg ,yg,zg,phiobj,thetaobj,psiobj,neps
      $        ,nepsmax ,dcouche ,zcouche ,epscouche,tabzn,nmatf,file_id
      $        ,group_iddip,infostr ,nstop)
-         write(99,*) 'cylindre',nbsphere,ndipole,nx,ny,nz
+
       elseif(object(1:16).eq.'concentricsphere') then
          write(*,*) epsmulti,numberobjet
          call objetsphereconcentricsurf(trope,epsmulti,epsanimulti
@@ -958,7 +944,7 @@ c     Built the object
      $        ,nbsphere ,ndipole,nx,ny,nz,polarizability,nproche,epsilon
      $        ,polarisa,neps ,nepsmax,dcouche ,zcouche ,epscouche,tabzn
      $        ,nmatf,file_id,group_iddip,infostr,nstop)
-         write(99,*) 'concentricsphere',nbsphere,ndipole,nx,ny,nz
+
       elseif(object(1:9).eq.'arbitrary') then
          numberobjet=1
          call objetarbitrarysurf(trope,eps,epsani,eps0,xs,ys,zs,xswf
@@ -966,9 +952,8 @@ c     Built the object
      $        ,nx,ny,nz,polarizability,namefileobj,nproche,epsilon
      $        ,polarisa,neps,nepsmax ,dcouche,zcouche,epscouche,tabzn
      $        ,nmatf,file_id,group_iddip,infostr,nstop)
-         write(99,*) 'arbitrary',nbsphere,ndipole,nx,ny,nz
+
       else
-         write(99,*) 'Object unknown'
          write(*,*) 'object',trim(object)
          infostr='Object unknown'
          nstop=1
@@ -995,7 +980,7 @@ c     Built the object
       if (nx.gt.nxm.or.ny.gt.nym.or.nz.gt.nzm) then
          nstop=1
          infostr='Dimension Problem of the Box'
-         write(99,*) 'dimension Problem',nx,nxm,ny,nym,nz,nzm
+         write(*,*) 'dimension Problem',nx,nxm,ny,nym,nz,nzm
          return
       endif
       if (nstop.eq.1) return
@@ -1210,7 +1195,7 @@ c     calcul le imaxk0 et le deltakx et deltax pour energy, microscopy etc...
                return
             endif
             if (2*imaxk0+1.lt.7) then
-               write(99,*) '2*imax+1',imaxk0,2*imaxk0+1,nfft2d
+               write(*,*) '2*imax+1',2*imaxk0+1,nfft2d
                infostr='In FFT diffract nfft2d too small'
                nstop = 1
                return
@@ -1251,31 +1236,18 @@ c     Changement angle si microscopy
 
 
 
-      write(99,*) 'number of subunit for the object',nbsphere
-      write(99,*) 'number of subunit for the mesh ',ndipole
-      write(99,*) 'mesh size',aretecube
-      write(99,*) 'lambda/(10n)',lambda/10.d0/cdabs(cdsqrt(eps))
+      write(*,*) 'number of subunit for the object',nbsphere
+      write(*,*) 'number of subunit for the mesh ',ndipole
+      write(*,*) 'mesh size',aretecube
+      write(*,*) 'lambda/(10n)',lambda/10.d0/cdabs(cdsqrt(eps))
 
 
-      if (beam(1:11).eq.'pwavelinear') then
-         write(99,*) 'Beam pwavelinear'
-      elseif (beam(1:13).eq.'pwavecircular') then
-         write(99,*) 'Beam pwavecircular'
-      elseif (beam(1:15).eq.'wavelinearmulti') then
-         write(99,*) 'Beam wavelinearmulti' 
-      elseif (beam(1:11).eq.'gwavelinear') then
-         write(99,*) 'Beam gwavelinear'    
-      elseif (beam(1:13).eq.'gwavecircular') then
-         write(99,*) 'Beam gwavecircular'
-      elseif (beam(1:8).eq.'gwaveiso') then
-         write(99,*) 'Beam isofocus'    
-      elseif (beam(1:7).eq.'speckle') then
-         write(99,*) 'Beam speckle'    
-      elseif (beam(1:9).eq.'arbitrary') then
-         write(99,*) 'Beam arbitrary'    
-      else
-         write(99,*) 'Beam unknown'
-         write(*,*) 'beam',trim(beam)
+      if (beam(1:11).ne.'pwavelinear'.and.beam(1:13).ne.'pwavecircular'
+     $     .and.beam(1:15).eq.'wavelinearmulti'.and.beam(1:11).ne
+     $     .'gwavelinear'.and.beam(1:13).ne.'gwavecircular'.and.beam(1:8
+     $     ).ne.'gwaveiso'.and.beam(1:7).ne.'speckle'.and .beam(1:9).ne.
+     $     'arbitrary') then
+         write(*,*) 'Beam unknown',trim(beam)
          write(*,*) 'object',trim(object)
          infostr='Beam unknown'
          nstop=1
@@ -1401,9 +1373,7 @@ c     ne fait que l'objet
       write(*,*) '************** BEGIN INCIDENT FIELD *************'
       write(*,*) '*************************************************'
       write(*,*) 'Beam used  : ',trim(beam)
-      write(99,*) '******* Compute the incident field *******'
-      write(99,*) 'Beam used',trim(beam)
-      write(99,*) 'k0=',k0     
+      write(*,*) 'k0=',k0     
       subunit=0
       write(*,*) 'Initialize plan for FFT'
 
@@ -1434,10 +1404,6 @@ c     ne fait que l'objet
             ss=-1.d0
          endif
          
-         write(99,*) 'theta=',theta
-         write(99,*) 'phi=',phi
-         write(99,*) 'pol1=',pp
-         write(99,*) 'pol2=',ss
 c     compute E0
          call irradiancesurf(P0,w0,E0,irra,epscouche(0))
          write(*,*) 'Power     :',P0,'W'
@@ -1459,9 +1425,6 @@ c     $        ,theta,phi
          if (nstop.eq.1) return
          
       elseif (beam(1:13).eq.'pwavecircular') then
-         write(99,*) 'theta=',theta
-         write(99,*) 'phi=',phi
-         write(99,*) 'pol=',ss
 c     compute E0
          call irradiancesurf(P0,w0,E0,irra,epscouche(0))
          write(*,*) 'Power     :',P0
@@ -1485,10 +1448,9 @@ c            write(*,*) 'FF0',FF0(3*i -2),FF0(3*i-1) ,FF0(3*i)
          
       elseif (beam(1:15).eq.'wavelinearmulti') then
          do i=1,nbinc
-            write(99,*) 'theta=',thetam(i),i,nbinc
-            write(99,*) 'phi=',phim(i)
-            write(99,*) 'pol1=',ppm(i)
-            write(99,*) 'pol2=',ssm(i)
+            write(*,*) 'theta=',thetam(i),i,nbinc
+            write(*,*) 'phi=',phim(i)
+            write(*,*) 'pola=',ppm(i)
          enddo
 
 c     compute E0
@@ -1816,7 +1778,6 @@ c     close Intensity of the incident field
       close(38)
       close(39)
 
-      write(99,*) 'Field modulus',cdabs(E0)
       if (nstop.eq.1) return
       if (nstop == -1) then
          infostr = 'Calculation cancelled after incident field'
@@ -2001,7 +1962,6 @@ c     Compute the incident field at each subunit of the object
          write(*,*) '************* SOLVE LINEAR SYSTEM ***************'
          write(*,*) '*************************************************'
          
-         write(99,*) '***** Solve the linear system *****'
 c     Compute the local field at each subunit position by solving Ax=b
          
 c     as an initial guess the incident field
@@ -2034,17 +1994,10 @@ c            write(*,*) 'opt'
          endif      
          if (nstop.eq.1) return
          
-         write(99,*) 'methode',methodeit
-         write(99,*) 'Tolerance asked for the iterative method',tolinit
-         write(99,*) 'Tolerance obtained for the iterative method',tol1
-         write(99,*) 'Number of product Ax for the iterative method'
-     $        ,ncompte,nloop
-
          if (tol1.ge.tolinit) then
             nstop=1
             infostr='Converge do not reach'
             write(*,*) tol1,tolinit
-            write(99,*) tol1,tolinit
             return
          endif
 
@@ -2174,7 +2127,6 @@ c     dipole a partir champ local
 !$OMP ENDDO 
 !$OMP END PARALLEL  
       
-      write(99,*) 'End of the iterative method'
 c     ******************************************************
 c     compute the near field with FFT
 c     ******************************************************
@@ -3015,15 +2967,6 @@ c     compute the scattering cross section
             write(*,*) 'Cabs = ',Cabs
          endif
          
-         
-         write(99,*) 'extinction cross section',Cext
-         write(99,*) 'absorbing cross section ',Cabs
-         if (Cabs.le.Cext*1.d-12) then
-            Cabs=0.d0
-            write(99,*) 'absorbing cross section ',Cabs
-         else
-            write(99,*) 'absorbing cross section ',Cabs
-         endif
          if (nstop == -1) then
             infostr = 'Calculation cancelled after cross section'
             return
@@ -3416,8 +3359,6 @@ c     ecriture en kx,ky du champ diffracte
      $                          +cdabs(Ediffkzpos(ii,jj,2))**2
      $                          +cdabs(Ediffkzpos(ii,jj,3))**2
                            write(53,*) Emod*c/8/pi*quatpieps0
-                           write(9000,*) Emod*c/8/pi*quatpieps0,i,j
-     $                          ,dsqrt((kx*kx+ky*ky)/K0/k0)
                         else
                            write(500,*) 0.d0,0.d0
                            write(501,*) 0.d0,0.d0

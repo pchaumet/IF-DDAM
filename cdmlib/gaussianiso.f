@@ -56,11 +56,7 @@ c     fluxinc=1/(2mu0c) *4*pi²/k0 *Int[ |A(k||)|² kz dk|| ]
       integer*8 planb
       
       FFTW_BACKWARD=+1
-      write(*,*) 'info',infostr
-      infostr='tt'
-      write(*,*) 'info',infostr
       na=1.d0
-      write(*,*) 'nstop',nstop
 c     changement unite angle, psi =0 defini pol p (suivant x)
       pi=dacos(-1.d0)
     
@@ -73,7 +69,6 @@ c     calcul du pas de discretisationen delta k
       fluxinc=0.d0
       fluxref=0.d0
       fluxtrans=0.d0
-      write(*,*) 'ddd',deltak,kmax,k0,waist,xx0,yy0 ,zz0,psit,E0
 c      var1=(xs(1)+dble(nfft2d2)*aretecube)*deltak
 c      var2=(ys(1)+dble(nfft2d2)*aretecube)*deltak
       
@@ -82,7 +77,7 @@ c     pour le premier indice en -N/2dx et -N/2dy.
       x0=xx0-(xs(1)+dble(nfft2d2)*aretecube)
       y0=yy0-(ys(1)+dble(nfft2d2)*aretecube)
       z0=zz0
-      write(*,*) 'xxxx',xx0,yy0,zz0,waist
+
       if (nx.ge.nfft2d) then
          nstop=1
          infostr='object larger than the FFT box along x'
@@ -91,22 +86,13 @@ c     pour le premier indice en -N/2dx et -N/2dy.
          nstop=1
          infostr='object larger than the FFT box along y'
       endif
-      write(*,*) 'infi',infostr,deltak,waist,deltak*deltak*waist*waist
-     $     /2.d0
       const=dexp(-deltak*deltak*waist*waist/2.d0)
-      write(*,*) 'const',const,2.d0*pi/dsqrt(-dlog(0.5d0)/waist/waist
-     $     *2.d0)/aretecube
-      write(*,*) infostr
       if (const.le.0.5d0) then
-         write(*,*) 'coucou',infostr
          infostr='Size of FFT too small for the Iso beam'
          write(*,*) infostr
-         write(*,*) 'nfft nminimum',2.d0*pi/dsqrt(-dlog(0.5d0)/waist
-     $        /waist*2.d0)/aretecube
          nstop=1
          return
       endif
-      write(*,*) 'nmasque',nmasque
 
 c     creation du masque
       if (nmasque.eq.1) then
@@ -132,8 +118,6 @@ c     creation du masque
          infostr='bad mask' 
       endif
 
-      write(*,*) 'coucou',nstop,infostr
-      
       if (nstop.eq.1) return
 
 
@@ -216,8 +200,7 @@ c     changement de base pour retourner dans la base de la surface
                   E0x=Ax
                   E0y=Ay
                   E0z=Az
-                  write(*,*) 'E000',cdabs(E0x)**2+cdabs(E0y)**2
-     $                 +cdabs(E0z)**2,nkx,nky
+
 c     appele du multicouche pour avoir le champ a l'origine (x=y=0)
                   call champmultifft(eps,zcouche,neps,nepsmax,zs(kk) ,k0
      $                 ,E0x,E0y,E0z,kx,ky,infostr,nstop,Ex,Ey,Ez,Arx
@@ -285,9 +268,6 @@ c     write(*,*) 'nnn2',nnn,nx,ny,ii,jj,k
                FF0(kkk+2)=Egausyref(indice)*fac
                FF0(kkk+3)=Egauszref(indice)*fac
 
-               write(*,*) 'FF0',(cdabs(FF0(kkk+1))**2+cdabs(FF0(kkk+2))
-     $              **2+cdabs(FF0(kkk+3))**2)/deltak/deltak/deltak
-     $              /deltak ,zs(kk)
             enddo
          enddo
 
@@ -384,9 +364,8 @@ c     calcul du fluxinc: somme des fluxinc de chacunes des ondes planes
             endif
          enddo
       enddo
-      write(*,*) 'fluxinc',fluxinc,i,fac
+
       irra=fac/(8.d0*pi*1.d-7*299792458.d0)/k0*4.d0*pi*pi
-c      irra=fac/(4.d0*pi*1.d-7*299792458.d0)/k0*4.d0*pi*pi
       fluxinc=fluxinc*irra
       fluxref=fluxref*irra
       fluxtrans=fluxtrans*irra

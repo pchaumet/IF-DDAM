@@ -740,7 +740,7 @@ c     compute the Residue
 !$OMP END PARALLEL
          tol1=dsqrt(tol1)/NORM   
       else
-         write(99,*) 'Iterative method not correct'
+         write(*,*) 'Iterative method not correct'
          nstop=1
          infostr='Iterative method not correct'
          return         

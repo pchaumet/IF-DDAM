@@ -138,7 +138,6 @@ c     3 5. Si on utilisait FFTW ceci disparaitrait.
       if (nx.gt.nxm.or.ny.gt.nym.or.nz.gt.nzm) then
          nstop=1
          infostr='Dimension Problem of the Box : Box too small!'
-         write(99,*) 'dimension Problem',nx,nxm,ny,nym,nz,nzm
          write(*,*) 'dimension Problem',nx,nxm,ny,nym,nz,nzm
          return
       endif
@@ -306,9 +305,5 @@ c     $                    ,zswf(ndipole),ndipole,nbsphere,zg
       write (*,*) 'Standard deviation obtained',dsqrt(ecartype-moyenne
      $     *moyenne)
       write (*,*) ' OBJECT SPHERE INHOMOGENEOUS FINISHED'
-
-      write(99,*) ' SEED',ng
-      write(99,*) 'Average',moyenne
-      write(99,*) 'Standard deviation',dsqrt(ecartype-moyenne*moyenne)
 
       end

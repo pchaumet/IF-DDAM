@@ -300,8 +300,10 @@ c     calcul du fluxinc: somme des fluxinc de chacunes des ondes planes
       fluxref=fluxref*irra
       fluxtrans=fluxtrans*irra
 
-      write(*,*) 'fluxxx',fluxinc,fluxref,fluxtrans,(fluxref+fluxtrans)
-     $     /fluxinc
+      write(*,*) 'Incident flux',fluxinc/fluxinc
+      write(*,*) 'Reflected flux',fluxref/fluxinc,'%'
+      write(*,*) 'Transmitted flux',fluxtrans/fluxinc,'%'
+      write(*,*) 'Conservation',(fluxref+fluxtrans)/fluxinc
 
       irra=0.d0
       

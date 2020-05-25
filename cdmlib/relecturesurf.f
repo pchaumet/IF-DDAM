@@ -539,11 +539,9 @@ c*************************************************************
             if (test.ne.0) goto 1000
             read(1000) tmp
             call comparaisonreel(tmp,theta,test)
-            write(*,*) '6',tmp,theta,test
             if (test.ne.0) goto 1000
             read(1000) tmp
             call comparaisonreel(tmp,phi,test)
-            write(*,*) '7',tmp,phi,test
             if (test.ne.0) goto 1000
          elseif (Beam(1:13).eq.'pwavecircular') then           
             read(1000) tmp
@@ -617,21 +615,16 @@ c*************************************************************
             enddo
          elseif (Beam(1:7).eq.'speckle') then
             read(1000) tmp
-            write(*,*) 'r',tmp,pp
             call comparaisonreel(tmp,pp,test)
             if (test.ne.0) goto 1000
             read(1000) ntmp
-            write(*,*) 'r',ntmp,IR
             if (ntmp.ne.IR) goto 1000
             read(1000) tmp
-             write(*,*) 'r',tmp,xgaus
             call comparaisonreel(tmp,xgaus,test)
             if (test.ne.0) goto 1000
             read(1000) tmp
-            write(*,*) 'r',tmp,ygaus
             call comparaisonreel(tmp,ygaus,test)
             if (test.ne.0) goto 1000
-            write(*,*) 'r',tmp,zgaus
             read(1000) tmp
             call comparaisonreel(tmp,zgaus,test)
             if (test.ne.0) goto 1000
@@ -650,35 +643,28 @@ c*************************************************************
          endif
 
          read(1000) ntmp
-c     write(*,*) '8',ntmp,nnnr
          if (ntmp.ne.nnnr) goto 1000
          read(1000) Object
 
          if (object(1:6).eq.'sphere') then
             read(1000) tmp
             call comparaisonreel(tmp,rayon,test)
-c     write(*,*) '9',tmp,rayon,test
             if (test.ne.0) goto 1000
             read(1000) tmp
             call comparaisonreel(tmp,xg,test)
-c     write(*,*) '10',tmp,xg,test
             if (test.ne.0) goto 1000
             read(1000) tmp
             call comparaisonreel(tmp,yg,test)
-c     write(*,*) '11',tmp,yg,test
             if (test.ne.0) goto 1000
             read(1000) tmp
             call comparaisonreel(tmp,zg,test)
-c     write(*,*) '11',tmp,zg,test
             if (test.ne.0) goto 1000
             read(1000) chatmp
-c     write(*,*) '12',chatmp,trope
             if (chatmp.ne.trope) goto 1000
 
             if (trope.eq.'iso') then
                read(1000) ctmp
                call comparaisoncomplexe(ctmp,eps,test)
-c     write(*,*) '13',ctmp,eps
                if (test.ne.0) goto 1000
             else
                do ii=1,3

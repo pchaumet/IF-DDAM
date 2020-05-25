@@ -1,3 +1,12 @@
+	version 0.5.23
+
+	1) supression d'un write(9000)
+	2) début supression des write 99 ds cdmlibsurf.f
+	3) arrange un peu l'interface.
+	4) arrange l'affichage de nread pour etre plus clair.
+	5) supression de tous les 99 et de output
+	
+	--------------------------------------------------------
 	version 0.5.22
 
 	1) Correction bug sur le make file, pour que la version sans fftw

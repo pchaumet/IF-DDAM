@@ -182,7 +182,7 @@ OptionsWindow::tofile(){
      return;
   QTextStream opt(&optfile);
   // Fill ASCII options here
-  opt << "Calculation options [0=Rigorous, 1=Renormalized Born], 2=Born, 3=Born order 1:" << options->getNrig() << endl;
+  opt << "Computation of the near field [0=Rigorous, 1=Renormalized Born], 2=Born, 3=Born order 1:" << options->getNrig() << endl;
   opt << "Reread from a file: " << options->getNread() << endl;
   opt << "Database file: " << options->getNmatlab() << endl;
   opt << "H5 file used: " << options->getH5File() << endl;
