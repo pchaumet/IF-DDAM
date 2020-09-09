@@ -1,3 +1,10 @@
+	version 0.5.24
+
+	1) tabfft2d chgt dimension de nfft2d a nfft2dmax ds
+	diffracte2dsurf.f
+	2) changement de TRUE en true.
+
+	------------------------------------------------
 	version 0.5.23
 
 	1) supression d'un write(9000)
@@ -5,7 +12,7 @@
 	3) arrange un peu l'interface.
 	4) arrange l'affichage de nread pour etre plus clair.
 	5) supression de tous les 99 et de output
-	
+
 	--------------------------------------------------------
 	version 0.5.22
 
@@ -13,8 +20,7 @@
 	fonctionne et sans openMP.
 	2) supression des options -g ds la compilation.
 	3) verification entre FFTW et singleton faite: OK
-	
-	
+
 	--------------------------------------------------------
 	version 0.5.21
 
@@ -26,7 +32,6 @@
 	5) chagement "size of FFT for far field" plus clair.
 	6) changement nom version.
 
-	
 	--------------------------------------------------------
 	version 0.5.20
 
@@ -45,7 +50,7 @@
 	7) Size of FFT au lieu de FFT dans options avancées.
 	8) ecriture de power et waist au lieu de P0 et W0.
 	9) Name HDF5 file au lieu de h5
-	
+
 	--------------------------------------------------------
 	version 0.5.19
 
@@ -64,14 +69,14 @@
 	11) changement nom version 0.5.19.
 	12) change nett pour tuer bbl et blg ds doc.
 
-	
-	--------------------------------------------------------------	
+
+	--------------------------------------------------------------
 	version 0.5.18
 
    	1) remet en forme cdmOptionsWindow.cpp + toutes les options sont
 	maintenant mises.
 	2) chaptest pour l'anglais ajoute.
-	
+
 	--------------------------------------------------------------
 	version 0.5.17
 

@@ -424,7 +424,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   layout->addRow(hsep0);
 
   QLabel* title1 = new QLabel("Illumination properties");
-  title1->setFont(QFont( "Helvetica", 14, QFont::Bold, TRUE ) );
+  title1->setFont(QFont( "Helvetica", 14, QFont::Bold, true ) );
   layout->addRow(title1);
 
   layout->addRow(hsep00);
@@ -442,7 +442,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   layout->addRow(hsepmediaprop0);
   
   QLabel* title2 = new QLabel("Multilayer properties");
-  title2->setFont(QFont( "Helvetica", 14, QFont::Bold, TRUE ) );
+  title2->setFont(QFont( "Helvetica", 14, QFont::Bold, true ) );
   layout->addRow(title2);
 
   layout->addRow(hsepmediaprop1);
@@ -456,7 +456,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   layout->addRow(hsep01);
 
   QLabel* title3 = new QLabel("Object properties");
-  title3->setFont(QFont( "Helvetica", 14, QFont::Bold, TRUE ) );
+  title3->setFont(QFont( "Helvetica", 14, QFont::Bold, true ) );
   layout->addRow(title3);
 
   layout->addRow(hsep001);
@@ -473,7 +473,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   layout->addRow(hsep02);
   
   QLabel* title4 = new QLabel("Study");
-  title4->setFont(QFont( "Helvetica", 14, QFont::Bold, TRUE ) );
+  title4->setFont(QFont( "Helvetica", 14, QFont::Bold, true ) );
   layout->addRow(title4);
   
   layout->addRow(hsep002);
@@ -481,13 +481,13 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   connect(dipolepsilon, SIGNAL(stateChanged(int)),this,
 	SLOT(dipolepsilonCheckBoxStateChanged(int)));
   QLabel* subtitle1 = new QLabel("Only dipoles");
-  subtitle1->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
+  subtitle1->setFont(QFont( "Helvetica", 12, QFont::Bold, true ) );
   layout->addRow(subtitle1,dipolepsilon);
   farfield = new QCheckBox(this);
   connect(farfield , SIGNAL(stateChanged(int)),this,
 	SLOT(farfieldCheckBoxStateChanged(int)));
   QLabel* subtitle2 = new QLabel("Far field");
-  subtitle2->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
+  subtitle2->setFont(QFont( "Helvetica", 12, QFont::Bold, true ) );
   layout->addRow(subtitle2,farfield);
   layout->addRow(studyfarfieldlayout);
 
@@ -498,7 +498,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
 
   
 QLabel* subtitle5 = new QLabel("Microscopy");
-subtitle5->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
+subtitle5->setFont(QFont( "Helvetica", 12, QFont::Bold, true ) );
   layout->addRow(subtitle5,microscopy);
   layout->addRow(studymicroscopylayout);
 
@@ -507,14 +507,14 @@ subtitle5->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
   connect(force , SIGNAL(stateChanged(int)),this,
 	SLOT(forceCheckBoxStateChanged(int)));
   //QLabel* subtitle3 = new QLabel("Optical Force");
-  // subtitle3->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
+  // subtitle3->setFont(QFont( "Helvetica", 12, QFont::Bold, true ) );
   //  layout->addRow(subtitle3,force);
 
   nearfield = new QCheckBox(this);
   connect(nearfield , SIGNAL(stateChanged(int)),this,
 	SLOT(nearfieldCheckBoxStateChanged(int)));
   QLabel* subtitle4 = new QLabel("Near field");
-  subtitle4->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
+  subtitle4->setFont(QFont( "Helvetica", 12, QFont::Bold, true ) );
   layout->addRow(subtitle4,nearfield);
   layout->addRow(studynearfieldlayout);
   QFrame *hsep1 = new QFrame(this);
@@ -525,7 +525,7 @@ subtitle5->setFont(QFont( "Helvetica", 12, QFont::Bold, TRUE ) );
   hsep2->setFrameShadow(QFrame::Sunken);
   layout->addRow(hsep1);
   QLabel* title5 = new QLabel("Numerical parameters");
-  title5->setFont(QFont( "Helvetica", 14, QFont::Bold, TRUE ) );
+  title5->setFont(QFont( "Helvetica", 14, QFont::Bold, true ) );
   layout->addRow(title5);
   layout->addRow(hsep2);
 

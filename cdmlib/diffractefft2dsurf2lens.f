@@ -8,7 +8,7 @@
      $     ,aretecube,k0,zz,za,NA,signe
       double complex FF(3*nxm*nym*nzm),Ediffkzpos(nfft2dmax,nfft2dmax,3)
 
-      integer nfft2d2,imax,i,j,k,tabfft2(nfft2d),indice,kk,ii,jj
+      integer nfft2d2,imax,i,j,k,tabfft2(nfft2dmax),indice,kk,ii,jj
       double precision deltakx,deltaky,var1,var2,kx,ky,kz,fac,pi
       double complex ctmp,ctmp1,icomp,Eloinx(nfft2dmax*nfft2dmax)
      $     ,Eloiny(nfft2dmax*nfft2dmax),Eloinz(nfft2dmax*nfft2dmax)
