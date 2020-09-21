@@ -3,6 +3,9 @@
 	1) tabfft2d chgt dimension de nfft2d a nfft2dmax ds
 	diffracte2dsurf.f
 	2) changement de TRUE en true.
+	3) ajout README pour qt5
+	4) ajout qt5 dans la doc.
+	5) ajout d'une ligne dans README
 
 	------------------------------------------------
 	version 0.5.23
