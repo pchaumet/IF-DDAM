@@ -176,6 +176,18 @@ en plus HDF5 il faut installer en plus les packages suivant ``dnf
 install hdf hdf5 hdf5-static hdf5-devel''.
 
 
+Si on veut utiliser le code sans interface graphique, c'est possible
+il faut alors dans le directory tests dans lequel il y a trois
+``script shell''. Suivant les paquets installés on peut alors lancer
+./comp (sans FFTW et sans HDF5) ou ./compfftw (sans HDF5) ou
+./compfftwhdf5. Attention suivant la configuration de votre ordinateur
+peut être lancer avant le code un ``ulimit -s unlimited'' pour ne pas
+avoir de problème avec la ``stacksize''. Il se crée donc quatre
+exécutables dans chaun des directories test, correspondant chacun à
+une configuration. SI on veut changer une donnée il convient bien sûr
+d'éditer mainsurf.f et de changer les options directement dans le code
+fortran.
+
 
 Le code s'installe aussi sous windows, mais la version parallèle
 nécessite évidemment d'installer FFTW sur windows.

@@ -1,3 +1,11 @@
+	version 0.5.25
+
+	1) création des compilations sans interface graphique.
+	2) ajout dans chap1.tex (doc en francçais) comment compiler sans
+	passer par Qt.
+	3) Changement nom version en 0.5.25
+
+	------------------------------------------------
 	version 0.5.24
 
 	1) tabfft2d chgt dimension de nfft2d a nfft2dmax ds

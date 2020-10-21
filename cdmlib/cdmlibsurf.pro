@@ -4,7 +4,7 @@
 
 TEMPLATE 	= 	lib
 
-VERSION         =       0.5.21
+VERSION         =       0.5.25
 
 TARGET 		=       cdmlibsurf
 
