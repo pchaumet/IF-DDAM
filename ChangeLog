@@ -1,3 +1,14 @@
+	version 0.5.26
+
+	1) Erreur dans derivative sur le diemsionnement, passer de 5 à 4.
+	2) para sur ecriture iso en hdf5.
+	3) ajout commentaire sur ss dans la routine champlinaire.
+	4) changement nom version.
+	5) change k_x et k_y en notation avec indice.
+
+
+
+	------------------------------------------------
 	version 0.5.25
 
 	1) création des compilations sans interface graphique.

@@ -1593,8 +1593,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz>0" ) {
        title = "Fourier plane: Scattered field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], (
               norm(run->getEfourierX()[i]) +
@@ -1609,8 +1609,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz>0" ) {
        title = "Fourier plane: Total field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], (
               norm(run->getEfourierincX()[i]) +
@@ -1657,8 +1657,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz<0" ) {
        title = "Fourier plane: Scattered field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], (
               norm(run->getEfourierXneg()[i]) +
@@ -1673,8 +1673,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz<0" ) {
        title = "Fourier plane: Total field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], (
               norm(run->getEfourierincXneg()[i]) +
@@ -1726,8 +1726,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz>0" ) {
        title = "Fourier plane: Scattered field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], sqrt(
               norm(run->getEfourierX()[i]) +
@@ -1742,8 +1742,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz>0" ) {
        title = "Fourier plane: Total field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], sqrt(
               norm(run->getEfourierincX()[i]) +
@@ -1790,8 +1790,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz<0" ) {
        title = "Fourier plane: Scattered field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], sqrt(
               norm(run->getEfourierXneg()[i]) +
@@ -1806,8 +1806,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz<0" ) {
        title = "Fourier plane: Total field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
 	  data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], sqrt(
               norm(run->getEfourierincXneg()[i]) +
@@ -1857,8 +1857,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz>0" && type == "x" ) {
        title = "Fourier plane: Scattered field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierX()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierX()[i])));
@@ -1871,8 +1871,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz>0" && type == "x" ) {
        title = "Fourier plane: Total field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierincX()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierincX()[i])));
@@ -1914,8 +1914,8 @@ RunWidget::plotmicroscopy() {
 
      else if ( field == "Fourier plane: Scattered field: kz<0" && type == "x" ) {
        title = "Fourier plane: Scattered field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierXneg()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierXneg()[i])));
@@ -1928,8 +1928,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz<0" && type == "x" ) {
        title = "Fourier plane: Total field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierincXneg()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierincXneg()[i])));
@@ -1970,8 +1970,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz>0" && type == "y" ) {
        title = "Fourier plane: Scattered field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierY()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierY()[i])));
@@ -1984,8 +1984,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz>0" && type == "y" ) {
        title = "Fourier plane: Total field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierincY()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierincY()[i])));
@@ -2026,8 +2026,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz<0" && type == "y" ) {
        title = "Fourier plane: Scattered field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierYneg()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierYneg()[i])));
@@ -2040,8 +2040,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz<0" && type == "y" ) {
        title = "Fourier plane: Total field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierincYneg()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierincYneg()[i])));
@@ -2082,8 +2082,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz>0" && type == "z" ) {
        title = "Fourier plane: Scattered field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierZ()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierZ()[i])));
@@ -2096,8 +2096,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz>0" && type == "z" ) {
        title = "Fourier plane: Total field: kz>0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierincZ()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierincZ()[i])));
@@ -2138,8 +2138,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Scattered field: kz<0" && type == "z" ) {
        title = "Fourier plane: Scattered field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierZneg()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierZneg()[i])));
@@ -2152,8 +2152,8 @@ RunWidget::plotmicroscopy() {
      }
      else if ( field == "Fourier plane: Total field: kz<0" && type == "z" ) {
        title = "Fourier plane: Total field: kz<0";
-       xtitle = "k_x/k_0";
-       ytitle = "k_y/k_0";
+       xtitle = "k<sub>x</sub>/k<sub>0</sub>";
+       ytitle = "k<sub>y</sub>/k<sub>0</sub>";
        for ( int i = 0 ; i < nfft2d*nfft2d ; i++ ) {
          data->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], abs(run->getEfourierincZneg()[i])));
          datapc->push_back(QwtPoint3D(run->getKXY()[line],run->getKXY()[col], arg(run->getEfourierincZneg()[i])));

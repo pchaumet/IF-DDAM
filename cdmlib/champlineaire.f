@@ -30,6 +30,9 @@ c     on eclaire par en dessous.
          infostr='problem in plane incident wave'
          return
       endif
+c     pp représente la polarisation et ss sert à gerer le cas de la
+c     polarisation suivant un des axe x ou y: +1 ou -1 selon pola
+c     suivant x (3) ou y(3).
       p=ss*dsqrt(pp)
       s=dsqrt(1.d0-pp)
       
