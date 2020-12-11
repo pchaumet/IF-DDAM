@@ -236,6 +236,13 @@ OptionsWindow::tofile(){
       opt << "  Magnitude field imag:" << (imag(options->getE0m().at(i))) << endl;
     }
   }
+  else if (options->getBeam() == "Antenna" ) {
+    opt << "  incidence angle (theta with respect to z): " << options->getIncidenceangle_theta_z() << endl;
+    opt << "  orientation angle (phi with respect to x)" << options->getIncidenceangle_phi_x() << endl;
+    opt << "  position X: " << options->getXgaus() << endl;
+    opt << "  position Y: " << options->getYgaus() << endl;
+    opt << "  position Z: " << options->getZgaus() << endl;
+  }
   opt << "------------------------------------------" << endl;  
   opt << "Object properties options:" << endl;
   for (int i = 0 ; i < options->getObjectNumber(); i++) {

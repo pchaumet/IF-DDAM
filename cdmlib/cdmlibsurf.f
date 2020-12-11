@@ -214,7 +214,7 @@ c     Info string
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 c     nouvelle variable a passer en argument d'entree
 c     power et diametre
-      double precision P0,w0,xgaus,ygaus,zgaus
+      double precision P0,w0,xgaus,ygaus,zgaus,xdip,ydip,zdip
       character(12) methodeit
 
 c     nouvelle variable de sortie Irra plus variable de flux pour le
@@ -1678,7 +1678,47 @@ c     tmp=1.d0
      $        ,Efourierincxpos,Efourierincypos ,Efourierinczpos,fluxinc
      $        ,fluxref,fluxtrans,irra ,nstop ,infostr,plan2b)
          if (nstop.eq.1) return
+      elseif  (beam(1:7).eq.'antenna') then
+
+         l=numerocouche(zdip,neps,nepsmax,zcouche)
+         E0=dsqrt(3.d0*P0*quatpieps0/(k0**4.d0*c))/uncomp/quatpieps0
+     $        /cdsqrt(cdsqrt(epscouche(l)))
+         write(*,*) 'Magnitude of the dipole',E0
+         xdip=xgaus*1.d-9
+         ydip=ygaus*1.d-9
+         zdip=zgaus*1.d-9
+c     regarde si dipole dans l'objet
+         call dipoleinside(xdip,ydip,zdip,xs,ys,zs,aretecube,nmax
+     $        ,nbsphere,zcouche,neps,nepsmax,nstop ,infostr)
+         if (nstop.eq.1) return
          
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
+!$OMP DO SCHEDULE(STATIC)             
+         do i=1,nbsphere
+            call dipoleinc(xdip,ydip,zdip,theta,phi,xs(i),ys(i),zs(i)
+     $           ,aretecube,k0,E0,FF0(3*i-2),FF0(3*i-1),FF0(3*i),neps
+     $           ,nepsmax,dcouche,zcouche ,epscouche,tolinit,nstop
+     $           ,infostr)
+c            write(*,*) FF0(3*i-2),FF0(3*i-1),FF0(3*i),i
+         enddo
+!$OMP ENDDO 
+!$OMP END PARALLEL             
+
+         
+
+         
+         if (nstop.eq.1) return
+c     compute the intenisty at the first object location
+         call dipoleinc(xdip,ydip,zdip,theta,phi,xgmulti(1),ygmulti(1)
+     $        ,zgmulti(1),aretecube,k0,E0,Em(1),Em(2),Em(3),neps
+     $        ,nepsmax,dcouche,zcouche ,epscouche,tolinit,nstop
+     $        ,infostr)
+
+         I0=cdabs(Em(1))**2.d0+cdabs(Em(2))**2.d0+cdabs(Em(3))**2.d0
+
+         
+         if (nstop.eq.1) return
+
       elseif  (beam(1:9).eq.'arbitrary') then
          call incidentarbitrary(xs,ys,zs,aretecube,FF0,nxm,nym,nzm
      $        ,nbsphere,nstop,namefileinc,infostr)
@@ -3719,6 +3759,21 @@ c     Toutes les ondes Ondes gaussiennes:
             
 c     rajoutter le speckle et iso avec Ar/(delta k)^2+Ediff/(-2 i pi
 c     gamma)
+         elseif (beam(1:7).eq.'antenna') then
+            write(*,*) 'antenna'
+            call dipoleinctotal(imaxk0,ncote,nfft2dtmp,nfft2d,nepsmax
+     $           ,neps,epscouche,k0,aretecube,tmp,Ediffkzpos,Ediffkzneg
+     $           ,zcouche,dcouche,E0,theta,phi,xdip,ydip,zdip
+     $           ,Efourierincxneg ,Efourierincyneg ,Efourierinczneg
+     $           ,Efourierincxpos ,Efourierincypos ,Efourierinczpos
+     $           ,fluxreftot ,fluxtratot ,fluxinc ,nstop ,infostr)
+            write(*,*) 'flux',fluxreftot ,fluxtratot,P0
+            fluxinc=P0
+            efficacite=(fluxreftot+fluxtratot)/fluxinc
+            efficaciteref=fluxreftot/fluxinc
+            efficacitetrans=fluxtratot/fluxinc
+
+            
          else
             write(*,*) 'onde pas encore faite'
             nstop=1

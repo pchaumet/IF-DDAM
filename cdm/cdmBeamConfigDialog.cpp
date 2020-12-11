@@ -90,6 +90,13 @@ BeamConfigDialog::BeamConfigDialog(QWidget *parent,Qt::WindowFlags fl,
     layout->addRow(tr("Focus Y(nm):"),ygaus);
     layout->addRow(tr("Focus Z(nm):"),zgaus);
    }
+   else if (options->getBeam() == "Antenna" ) {
+     layout->addRow(tr("Orientation angle (theta with respect to z):"),incidenceangle_theta_z);
+     layout->addRow(tr("Orientation angle (phi with respect to x):"),incidenceangle_phi_x);
+     layout->addRow(tr("position X (nm):"),xgaus);
+     layout->addRow(tr("position Y (nm):"),ygaus);
+     layout->addRow(tr("position Z (nm):"),zgaus);
+   }
    else if (options->getBeam() == "Circular Gaussian" ) {
     layout->addRow(tr("Incidence angle (theta with respect to z):"),incidenceangle_theta_z);
     layout->addRow(tr("Incidence angle (phi with respect to x):"),incidenceangle_phi_x);

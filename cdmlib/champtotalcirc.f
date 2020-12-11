@@ -25,8 +25,9 @@ c     Ici on travaille avec e(k||)
      $     ,Egausztra(nfft2dmax*nfft2dmax)
       integer nepsmax,neps,imini,jmini
       double precision indice0,indicen,pi,ss,theta,phi
-      double complex epscouche(0:nepsmax+1),zcouche(0:nepsmax),E0,icomp
-     $     ,const,Arx,Ary,Arz,Atx,Aty,Atz
+     $     ,zcouche(0:nepsmax)
+      double complex epscouche(0:nepsmax+1),E0,icomp ,const,Arx,Ary,Arz
+     $     ,Atx,Aty,Atz
       character(64) infostr
 
 c     initialisation

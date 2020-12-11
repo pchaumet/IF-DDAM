@@ -4,7 +4,7 @@
 
 TEMPLATE 	= 	lib
 
-VERSION         =       0.5.26
+VERSION         =       0.6.0
 
 TARGET 		=       cdmlibsurf
 
@@ -173,8 +173,9 @@ SOURCES		+= aleatoire.f \
 		anglecalculmic.f \
                 calculdate.f \
                 besselperso.f \
-                primefactor.f
-
+                primefactor.f \
+                dipoleinc.f \
+                dipoleinctotal.f
 INCLUDEPATH     += .
 
 CDMLIB_LIB_PATH  =      ../cdmlib/lib

@@ -26,8 +26,9 @@ c     Ici on travaille avec e(k||)
       integer nepsmax,neps,imini,jmini,nba
       double precision indice0,indicen,pi
       double precision phim(10) ,thetam(10),ssm(10),ppm(10)
-      double complex epscouche(0:nepsmax+1),zcouche(0:nepsmax),icomp
-     $     ,const,Arx,Ary,Arz,Atx,Aty,Atz,E0m(10)
+     $     ,zcouche(0:nepsmax)
+      double complex epscouche(0:nepsmax+1),icomp ,const,Arx,Ary,Arz,Atx
+     $     ,Aty,Atz,E0m(10)
       character(64) infostr
 
 c     initialisation

@@ -7,7 +7,7 @@ Options::Options()
   colors->push_back(Qt::yellow);
 
   beamList = (QStringList() << "Linear plane wave" << "Circular plane wave"
-	                    << "Multiple wave" 
+	                    << "Multiple wave"  << "Antenna"
 			    << "Circular Gaussian" << "Linear Gaussian" 
 	      << "Speckle" << "Arbitrary wave (file)" );
 

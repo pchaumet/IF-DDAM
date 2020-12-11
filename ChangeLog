@@ -1,3 +1,30 @@
+	version 0.6.0
+
+	1) declaration de zcouche en complex dans champtotallineaire,
+	champtotallineairemulti, champtotalcirc: repasser en double
+	precision.
+	2) ajout de l'option éclairement avec un dipole dans l'interface
+	graphique.
+	3) dipoleinside pour savoir ou est le dipole dans l'objet ou
+	dehors.
+	4) dipoleinc pour calculer le champ incident par un dipole.
+	5) dipoleinctotal calcul le champ rayonné par un dipole en champ
+	lointain pour la passer avec la microscopie. Utilise pour ce faire
+	la fonction de Green champ lointian en kx, ky puis multiple exp (i
+	kpara.rpara) et divise par -2 i pi gamma.
+	6) ajout dans cdmlibsurf.f des appels aux trois routines ci
+	dessus, dans la partie calcul de l'éclairement et la partie calcul
+	de l'énergie et champ total. Création variable xdip,ydip,zdip
+	7) Correction ds dipoleinc aa=0 => a=1.d300
+	8) correction sphi et cphi
+	9) correction sur E0 pour aller avec P0
+	10) correctopn sur E0 si dans un milieu d'indice n, il y a une
+	racine de n
+	11) mise en place parallélisation sur dipole eclairement.
+	12) doc modifiée pour mettre l'antenne en francais et anglais.
+	13) changement nom version en 0.6.0
+
+	------------------------------------------------
 	version 0.5.26
 
 	1) Erreur dans derivative sur le diemsionnement, passer de 5 à 4.
