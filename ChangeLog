@@ -1,3 +1,24 @@
+	version 0.6.1
+
+	1) nettoyage de fichiers qui ne servaient pas dans les
+	directories.
+
+	2) preciser dans la doc que pour le dipole il faut un n FFT grand
+	car champ diffracte fort au bord de l'ON.
+	3) création des pdf.
+	4) tex francais arrange une coupure de ligne.
+	5) passage de la limite de nfft de 16384 à 65536
+	6) supression de diffractefft2dsurf2inv.f qui n'a rien à faire là.
+	7) correction erreur sur calcul magnitude dipole epscouche mal
+	placé.
+	8) end de trop dans dipoleinctotal.f	
+	9) I0 redéfini pour l'antenna comme I0=E0^2.
+	10) doc sur antenna explique pourquoi pas toujours conservation d'
+	énergie.
+	
+	qd que emissivity forcement methode lente.
+
+	------------------------------------------------
 	version 0.6.0
 
 	1) declaration de zcouche en complex dans champtotallineaire,
@@ -27,7 +48,7 @@
 	------------------------------------------------
 	version 0.5.26
 
-	1) Erreur dans derivative sur le diemsionnement, passer de 5 à 4.
+	1) Erreur dans derivative sur le dimensionnement, passer de 5 à 4.
 	2) para sur ecriture iso en hdf5.
 	3) ajout commentaire sur ss dans la routine champlinaire.
 	4) changement nom version.
@@ -139,7 +160,7 @@
 	5) rajoute quickFFT pour microscopie
 	6) Remise en forme de cdmOptionsWindow.cpp.
 	7) changement de nett pour nettoyer les .opt dans le bin.
-	   
+
 	--------------------------------------------------------------
 	version 0.5.16
 
@@ -162,8 +183,8 @@
 	5) arrange ecriture cuboid inhomogene side et nnnr.
 	6) rangez corrigé ds cdmPlot.cpp: rangez = QwtInterval(minz,maxz);
 	7) test2 fait dans chaptest pour le userguide en francais.
-	8) changement nett pour tuer les fichiers latex auxiliaires. 
-	
+	8) changement nett pour tuer les fichiers latex auxiliaires.
+
 	----------------------------------------------------------------
 	version 0.5.13
 
@@ -177,13 +198,13 @@
 	7) correction avec le 6 dans ifdda.m pour na
 	8) correction dans le write hdf5 des options du croisement des
 	indices.
-	9)correction dans le inputmatlab des indices croisés la aussi.	
+	9)correction dans le inputmatlab des indices croisés la aussi.
 	10) Ecrit ds ifdda.m quel type de fichier on utilise.
 	11) mis en if nmatf.eq.0 de l'ouverture des fichiers matlab, evite
 	des ouvertures de fichiers vides dans cdmlib.f et tous les
 	fichiers qui crées les objets.
 
-	--------------------------------------------------------------	
+	--------------------------------------------------------------
 	version 0.5.12
 
 	1) ajout de ximage et yimage dans doc.

@@ -194,12 +194,49 @@ position en $x$, $y$ et $z$.
 
 La localisation du dipôle peut être à l'extérieur de l'objet ou dans
 l'objet. Quand l'antenne est dans l'objet, elle est alors placée à la
-position d'un élement de discrétisation, le plus proche possible de la
+position d'un élément de discrétisation, le plus proche possible de la
 position donnée par l'utilisateur.
 
 La puissance donnée dans le code ($P_0$) correspond alors à la
 puissance totale rayonnée par l'antenne.
 
+A noter que le rayonnement d'un dipôle est tel qu'il y a beaucoup
+d'énergie rayonnée sur le bord de l'ouverture numérique du
+microscope. Il convient donc de prendre beaucoup de points dans
+l'ouverture numérique si l'on désire être précis.
+
+
+
+De plus il convient de faire très attention à la conservation d'é
+nergie car celle-ci n'est pas forcément respectée. En effet, un dipôle
+qui émet dans le vide 1~W, n'émettra pas 1~W quand celui-ci sera
+proche d'un objet ou d'une interface. Par exemple pour la
+configuration présentée Fig.~\ref{antenne}(a), la puissance normalisée
+est fonction de la distance de l'antenne à l'interface, voir Fig.~
+\ref{antenne}(b). En effet le rayonnement d'un dipôle n'est pas une
+quantité intrinsèque mais dépend de l'environnement de celui-ci. Si on
+trace l'inverse de la puissance totale rayonnée par le dipôle, c'est
+proportionnel à la durée de vie d'un atome fluorescent, voir~
+\ref{antenne}(c). Pour plus de détails on peut se reporter aux
+articles~\cite{Rahmani_PRA_97,Rahmani_PRA_01}, mais on peut voir que
+quand un dipôle s'approche d'une interface alors ses ondes 
+évanescentes sont captées par l'interface et passées en propagative d'où
+l'augmentation de la puissance totale quand le dipôle est très proche de
+l'interface.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[H]
+\begin{center}
+  \includegraphics*[width=15.0cm,draft=false]{antenna.eps}
+\end{center}
+\caption{(a) Configuration: antenne dans le vide au dessus d'une
+  interface de permittivité $\varepsilon=20$. (b) Puissance rayonnée
+  en fonction de la distance de l'antenne à l'interface. (c) Durée de
+  vie d'un atome fluoresecent en fonction de la distance de celui-ci à
+  l'interface.}
+\label{antenne}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Arbitrary wave}
 

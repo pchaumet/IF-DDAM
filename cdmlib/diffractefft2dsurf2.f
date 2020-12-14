@@ -45,7 +45,7 @@ c     Info string
       var1=(xs(1)+dble(nfft2d2)*aretecube)*deltakx
       var2=(ys(1)+dble(nfft2d2)*aretecube)*deltaky
 
-      if (nfft2d.gt.16384) then
+      if (nfft2d.gt.65536) then
          nstop=1
          infostr='nfft2d too large'
          return

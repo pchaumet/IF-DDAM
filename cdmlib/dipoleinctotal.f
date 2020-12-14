@@ -33,7 +33,6 @@ c     initialisation
       
       x=0.d0
       y=0.d0
-      write(*,*) 'dipole incident'
       write(*,*) 'delta k',deltakx,'m-1'
       write(*,*) 'Number of point in the numerical aperture',imax*2+1
       write(*,*) 'Size of FFT',nfft2d
@@ -49,7 +48,7 @@ c     initialisation
       p(1)=E0*dsin(theta)*dcos(phi)
       p(2)=E0*dsin(theta)*dsin(phi)
       p(3)=E0*dcos(theta)
-      write(*,*) 'dipole',p
+      write(*,*) 'dipole',p,thetat,phit,E0
       zz=1.d0
       
 c     calcul du champ total
@@ -175,6 +174,3 @@ c      write(*,*) 'E0',E0
       return
       end
 
-      
-      
-      end

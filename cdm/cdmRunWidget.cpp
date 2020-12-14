@@ -589,7 +589,7 @@ void cdmlibwrapper(Options *options, Run *run, QString *infoMessage, int *stopFl
      }
    }
    QLOG_DEBUG () << "fftv:" << nfft2d;
-   if (nfft2d > 16384) {
+   if (nfft2d > 65536) {
      *infoMessage = QString("Meshsize too small");
      return;
    }

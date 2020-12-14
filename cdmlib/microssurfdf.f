@@ -180,7 +180,7 @@ c     calcul de deltak
       ideltam=max(int(2.d0*pi/deltatheta)+1,8)
       deltaky=deltakx
 
-      if (nfft2d.gt.16384) then
+      if (nfft2d.gt.65536) then
          nstop=1
          infostr='nfft2d too large'
          return

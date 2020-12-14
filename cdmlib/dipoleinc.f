@@ -50,7 +50,6 @@ c     calcul ou est le dipôle dans le couche et le epsilon
          Ey=const*p(2)
          Ez=const*p(3)
       else
-
          call tenseurmulticouchecomp(hc,tolinit,epsabs,x,y,z,xdip,ydip
      $        ,zdip,k0,neps,dcouche,zcouche,epscouche,Ixx,Ixy,Ixz ,Izx
      $        ,Izz)

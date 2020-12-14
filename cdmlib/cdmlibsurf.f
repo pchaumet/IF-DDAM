@@ -925,7 +925,7 @@ c     Built the object
      $        ,nmax,nbsphere ,ndipole,nx,ny,nz,polarizability,nproche
      $        ,epsilon ,polarisa,neps,nepsmax,dcouche ,zcouche,epscouche
      $        ,tabzn,nmatf,file_id,group_iddip,infostr ,nstop)
-
+         
       elseif(object(1:8).eq.'cylinder') then
          numberobjet=1
 
@@ -1679,14 +1679,15 @@ c     tmp=1.d0
      $        ,fluxref,fluxtrans,irra ,nstop ,infostr,plan2b)
          if (nstop.eq.1) return
       elseif  (beam(1:7).eq.'antenna') then
-
+        
+         xdip=xgaus*1.d-9
+         ydip=ygaus*1.d-9
+         zdip=zgaus*1.d-9
          l=numerocouche(zdip,neps,nepsmax,zcouche)
          E0=dsqrt(3.d0*P0*quatpieps0/(k0**4.d0*c))/uncomp/quatpieps0
      $        /cdsqrt(cdsqrt(epscouche(l)))
          write(*,*) 'Magnitude of the dipole',E0
-         xdip=xgaus*1.d-9
-         ydip=ygaus*1.d-9
-         zdip=zgaus*1.d-9
+
 c     regarde si dipole dans l'objet
          call dipoleinside(xdip,ydip,zdip,xs,ys,zs,aretecube,nmax
      $        ,nbsphere,zcouche,neps,nepsmax,nstop ,infostr)
@@ -1699,25 +1700,15 @@ c     regarde si dipole dans l'objet
      $           ,aretecube,k0,E0,FF0(3*i-2),FF0(3*i-1),FF0(3*i),neps
      $           ,nepsmax,dcouche,zcouche ,epscouche,tolinit,nstop
      $           ,infostr)
-c            write(*,*) FF0(3*i-2),FF0(3*i-1),FF0(3*i),i
+         
          enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL             
 
-         
-
-         
          if (nstop.eq.1) return
-c     compute the intenisty at the first object location
-         call dipoleinc(xdip,ydip,zdip,theta,phi,xgmulti(1),ygmulti(1)
-     $        ,zgmulti(1),aretecube,k0,E0,Em(1),Em(2),Em(3),neps
-     $        ,nepsmax,dcouche,zcouche ,epscouche,tolinit,nstop
-     $        ,infostr)
-
-         I0=cdabs(Em(1))**2.d0+cdabs(Em(2))**2.d0+cdabs(Em(3))**2.d0
-
          
-         if (nstop.eq.1) return
+         I0=cdabs(E0)**2
+         
 
       elseif  (beam(1:9).eq.'arbitrary') then
          call incidentarbitrary(xs,ys,zs,aretecube,FF0,nxm,nym,nzm
@@ -3781,15 +3772,16 @@ c     gamma)
             return
          endif
          if (ncote.eq.0) then
-            write(*,*) 'Incident flux   :',fluxinc,'W'
-            write(*,*) 'Reflected flux  :',fluxreftot,'W'
-            write(*,*) 'Transmitted flux:',fluxtratot,'W'
-            write(*,*) 'Total flux      :',fluxreftot+fluxtratot,'W'
+            write(*,*) 'Incident flux          :',fluxinc,'W'
+            write(*,*) 'Reflected flux   (kz<0):',fluxreftot,'W'
+            write(*,*) 'Transmitted flux (kz>0):',fluxtratot,'W'
+            write(*,*) 'Total flux             :',fluxreftot+fluxtratot,
+     $           'W'
             
-            write(*,*) 'Conservation of energy:',efficacite
-            write(*,*) 'Absorptivity          :',1.d0-efficacite
-            write(*,*) 'Reflextivity          :',efficaciteref
-            write(*,*) 'Transmittivity        :',efficacitetrans
+            write(*,*) 'Conservation of energy :',efficacite
+            write(*,*) 'Absorptivity           :',1.d0-efficacite
+            write(*,*) 'Reflextivity           :',efficaciteref
+            write(*,*) 'Transmittivity         :',efficacitetrans
       
             write(*,*) '************ END ENERGY CONSERVATION ********'
             write(*,*) ' '

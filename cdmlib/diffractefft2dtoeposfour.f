@@ -41,7 +41,7 @@ c     Info string
       enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL
-      if (nfft2d.gt.16384) then
+      if (nfft2d.gt.65536) then
          nstop=1
          infostr='nfft2d too large'
          return
