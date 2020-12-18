@@ -48,7 +48,7 @@ c     initialisation
       p(1)=E0*dsin(theta)*dcos(phi)
       p(2)=E0*dsin(theta)*dsin(phi)
       p(3)=E0*dcos(theta)
-      write(*,*) 'dipole',p,thetat,phit,E0
+      write(*,*) 'Magnitude of the dipole',E0
       zz=1.d0
       
 c     calcul du champ total
@@ -165,8 +165,6 @@ c     $                 ,Egausyref(indice),Egauszref(indice),i,j
 !$OMP ENDDO 
 !$OMP END PARALLEL
       endif
-
-c      write(*,*) 'E0',E0
 
       tmp=4.d0*pi*pi*deltaky*deltakx/(k0*8.d0*pi*1.d-7*299792458.d0)
       fluxref=fluxref*tmp

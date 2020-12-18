@@ -1684,6 +1684,13 @@ c     tmp=1.d0
          ydip=ygaus*1.d-9
          zdip=zgaus*1.d-9
          l=numerocouche(zdip,neps,nepsmax,zcouche)
+
+         if (dimag(epscouche(l)).gt.1.d-10) then
+            nstop=1
+            infostr='antenna in an absorbing layer'
+            return
+         endif
+
          E0=dsqrt(3.d0*P0*quatpieps0/(k0**4.d0*c))/uncomp/quatpieps0
      $        /cdsqrt(cdsqrt(epscouche(l)))
          write(*,*) 'Magnitude of the dipole',E0

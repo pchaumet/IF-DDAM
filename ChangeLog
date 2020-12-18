@@ -1,3 +1,15 @@
+	version 0.6.2
+
+	1) ajoutte un arret si dipole ds couche absorbante.
+	2) nettoyage pour le dipole.
+	3) changement nom version y compris pour les tests.
+	
+	   qd que emissivity forcement methode lente.	
+
+
+
+	
+	------------------------------------------------
 	version 0.6.1
 
 	1) nettoyage de fichiers qui ne servaient pas dans les
