@@ -3984,11 +3984,15 @@ c     passe le champ diffracte lointain en amplitude e(k||)
      $        ,infostr)
          deltakx=2.d0*pi/(dble(nfft2d)*deltax)
          if (nstop.eq.1) return
-
-         write(*,*) 'NA in reflexion          :',numaperref*indice0
-         write(*,*) 'NA in transmission       :',numaperref*indicen
-         write(*,*) 'Focal point reflexion    :',zlensr,'m'
-         write(*,*) 'Focal point transmission :',zlenst,'m'
+         
+         if (ncote.ge.0) then
+            write(*,*) 'NA in transmission       :',numaperref*indicen
+            write(*,*) 'Focal point transmission :',zlenst,'m'
+         endif
+         if (ncote.le.0) then
+            write(*,*) 'NA in reflexion          :',numaperref*indice0
+            write(*,*) 'Focal point reflexion    :',zlensr,'m'
+         endif
          write(*,*) 'Number of point in NA    :',2*imaxk0+1
          write(*,*) 'Delta k                  :',deltakx,'m-1'
 

@@ -1,14 +1,24 @@
+	version 0.6.3
+
+	1) enlever les setCurrentIndex() avec des valeurs entre les
+	parenthèses dans cdmOptionsWidegt.cpp.
+	2) Changement nom des auteurs. Enleve GH a sa demande.
+
+	   qd que emissivity forcement methode lente.
+
+	------------------------------------------------
 	version 0.6.2
 
-	1) ajoutte un arret si dipole ds couche absorbante.
+	1) ajoute un arret si dipole ds couche absorbante.
 	2) nettoyage pour le dipole.
 	3) changement nom version y compris pour les tests.
-	
-	   qd que emissivity forcement methode lente.	
+	4) ajout ds les .pro pour ubuntu de QMAKE_CFLAGS +=
+	-I/usr/include/hdf5/serial
+	5) correction affichage transmission et reflexion NA.
+
+	   qd que emissivity forcement methode lente.
 
 
-
-	
 	------------------------------------------------
 	version 0.6.1
 
@@ -23,11 +33,11 @@
 	6) supression de diffractefft2dsurf2inv.f qui n'a rien à faire là.
 	7) correction erreur sur calcul magnitude dipole epscouche mal
 	placé.
-	8) end de trop dans dipoleinctotal.f	
+	8) end de trop dans dipoleinctotal.f
 	9) I0 redéfini pour l'antenna comme I0=E0^2.
 	10) doc sur antenna explique pourquoi pas toujours conservation d'
 	énergie.
-	
+
 	qd que emissivity forcement methode lente.
 
 	------------------------------------------------
@@ -51,7 +61,7 @@
 	7) Correction ds dipoleinc aa=0 => a=1.d300
 	8) correction sphi et cphi
 	9) correction sur E0 pour aller avec P0
-	10) correctopn sur E0 si dans un milieu d'indice n, il y a une
+	10) correction sur E0 si dans un milieu d'indice n, il y a une
 	racine de n
 	11) mise en place parallélisation sur dipole eclairement.
 	12) doc modifiée pour mettre l'antenne en francais et anglais.

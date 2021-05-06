@@ -92,7 +92,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   beam->addItems(options->beamList);
   beam->setCurrentIndex(beam->findText(options->getBeam()));
   beam->setFixedWidth(200);
-  beam->setCurrentIndex(-1);
+  //  beam->setCurrentIndex(-1);
   connect(beam , SIGNAL(currentIndexChanged(int)),this,
 	SLOT(handleBeamSelectionChanged(int))); 
   beamButton = new QPushButton("Props");
@@ -117,7 +117,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   object      = new QComboBox();
   object->addItems(options->objectList);
   object->setFixedWidth(200);
-  object->setCurrentIndex(-1);
+  //  object->setCurrentIndex(-1);
   connect(object , SIGNAL(currentIndexChanged(int)),this,
 	SLOT(handleObjectSelectionChanged(int)));
   objectButton = new QPushButton("Props");
@@ -299,7 +299,7 @@ OptionsWidget::OptionsWidget(QMainWindow *_mainwindow, Options *_options)
   nside->addItems(options->nsideList);
   nside->setCurrentIndex(options->getNside());
   nside->setFixedWidth(130);
-  nside->setCurrentIndex(1);
+  //  nside->setCurrentIndex(1);
   connect(nside , SIGNAL(currentIndexChanged(int)),this,
 	SLOT(handleSideSelectionChanged(int)));
   
