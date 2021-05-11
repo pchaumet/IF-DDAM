@@ -1,3 +1,23 @@
+	version 0.6.4
+
+	1) changement nom version
+	2) création de version qui change le nom ds tous les fichiers.
+	3) ajout nom version dans titre.tex
+	4) recree les pdf userguide.
+
+	qd que emissivity forcement methode lente.
+ if (state == Qt::Checked) {
+   quickdiffractLabel->show();
+   quickdiffract->show();
+  }
+  else if (state == Qt::Unchecked) {
+   quickdiffractLabel->hide();
+   quickdiffract->setChecked(false);
+   quickdiffract->hide();
+	}
+	 pb avec section efficace alors...
+
+	------------------------------------------------
 	version 0.6.3
 
 	1) enlever les setCurrentIndex() avec des valeurs entre les
