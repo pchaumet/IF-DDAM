@@ -251,12 +251,16 @@ c     declaration pour HDF5
       integer debug
       integer error
 
+
 #ifndef USE_HDF5
       integer,parameter:: hid_t=4
 #endif    
       integer(hid_t) :: file_id
       integer(hid_t) :: group_idopt,group_idmic,group_idnf,group_idof
      $     ,group_idff,group_iddip
+
+
+
       integer :: dim(4)
 c     declaration calcul temps
       character(8)  :: date
@@ -350,8 +354,24 @@ c      write(*,*) 'Optical torque   : ',ntorque,'Density',ntorqued
      $     ,':0 ascii file: 1 no file: 2 hdf5 file'
 
       if (nmatf.eq.2) then
+c         write(*,*) 'prout1',file_id
+c         CALL h5fget_obj_count_f(INT(H5F_OBJ_ALL_F,HID_T), H5F_OBJ_ALL_F
+c     $        , obj_count,error)
+c         write(*,*) 'prout2',error,obj_count
          debug=1
 #ifdef USE_HDF5
+         if (file_id.ne.0) then
+            write(*,*) 'Close HFD5 if not done',file_id
+            CALL h5gclose_f(group_idopt,error) 
+            CALL h5gclose_f(group_iddip,error)
+            CALL h5gclose_f(group_idff,error)
+            CALL h5gclose_f(group_idmic,error)
+c     CALL h5gclose_f(group_idof,error)
+            CALL h5gclose_f(group_idnf,error)
+            call hdf5close(file_id)
+         endif
+
+
          call hdf5create(h5file, file_id)
          write(*,*) 'h5 file created  : ',h5file
          write(*,*) 'file_id          : ', file_id
@@ -4781,6 +4801,7 @@ c     9999 format(201(d22.15,1x))
 c     CALL h5gclose_f(group_idof,error)
          CALL h5gclose_f(group_idnf,error)
          call hdf5close(file_id)
+         file_id=0
          write(*,*) 'close h5file'
 #endif
       endif

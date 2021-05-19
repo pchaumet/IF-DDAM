@@ -1,3 +1,3 @@
-sed -i 's/VERSION         =       0.6.2/VERSION         =       0.6.4/g' cdm/cdm.pro
-sed -i 's/VERSION         =       0.6.2/VERSION         =       0.6.4/g' cdmlib/cdmlibsurf.pro
-sed -i 's/version : 0.6.2/version : 0.6.4/g' doc/titre.tex
+sed -i 's/VERSION         =       0.6.4/VERSION         =       0.6.5/g' cdm/cdm.pro
+sed -i 's/VERSION         =       0.6.4/VERSION         =       0.6.5/g' cdmlib/cdmlibsurf.pro
+sed -i 's/version : 0.6.4/version : 0.6.5/g' doc/titre.tex

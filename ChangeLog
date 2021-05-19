@@ -1,10 +1,12 @@
-	version 0.6.4
+	version 0.6.5
 
-	1) changement nom version
-	2) création de version qui change le nom ds tous les fichiers.
-	3) ajout nom version dans titre.tex
-	4) recree les pdf userguide.
+	1) resoud pb hdf5 pas ferme lors des arrets du code au milieu
+	execution.
+	2) mise en place du shift en z pour améliorer la convergence de la
+	fonction de Green.
+	3) changement nom version.
 
+		
 	qd que emissivity forcement methode lente.
  if (state == Qt::Checked) {
    quickdiffractLabel->show();
@@ -16,6 +18,17 @@
    quickdiffract->hide();
 	}
 	 pb avec section efficace alors...
+	
+	------------------------------------------------	
+	version 0.6.4
+
+	1) changement nom version
+	2) création de version qui change le nom ds tous les fichiers.
+	3) ajout nom version dans titre.tex
+	4) recree les pdf userguide.
+
+	shiftzcouche en cours
+
 
 	------------------------------------------------
 	version 0.6.3

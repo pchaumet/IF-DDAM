@@ -11,7 +11,7 @@
       double precision aretecube,k0,xxp,yyp,a(0:2*n1m*n1m),hc,epsrel
      $     ,epsabs,x0,y0,aretecubeint,epsmax,zs(nmax),pi,zz(ntp)
       double complex matrange(nbs,5),Ixx,Ixy,Ixz,Izx,Izz
-      double precision dcouche(nepsmax),zcouche(0:nepsmax)
+      double precision dcouche(nepsmax),zcouche(0:nepsmax),zshift,z1,z2
       double complex epscouche(0:nepsmax+1),stenseur(3,3)
 
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
@@ -78,19 +78,27 @@ c      write(*,*) 'couc3'
          a(k)=aretecubeint*dble(k)
       enddo
 
+      call shiftzcouche(neps,nepsmax,dcouche,zcouche,epscouche ,zshift)
+      write(*,*) 'Shift ds la fonction de Green',zshift
+      do i=0,neps
+         zcouche(i)=zcouche(i)-zshift
+      enddo
+
       do np1=1,nz
          do np2=np1,nz
 
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(k,xxp,nmat,Ixx,Ixy,Ixz,Izx,Izz)   
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(k,xxp,nmat,Ixx,Ixy,Ixz,Izx,Izz) 
+!$OMP& PRIVATE(z1,z2)
 !$OMP DO SCHEDULE(STATIC)             
             do k=0,ninter
                xxp=a(k)             
                nmat=matind(k)+(matindplan(np2,np1)-1)*nmati
                matindice(matindplan(np2,np1),matind(k))=nmat
-
-               call tenseurmulticouchecomp(hc,epsrel,epsabs,x0,y0
-     $              ,zz(np1),xxp,y0,zz(np2),k0,neps,dcouche,zcouche
-     $              ,epscouche,Ixx,Ixy,Ixz,Izx,Izz)
+               z1=zz(np1)-zshift
+               z2=zz(np2)-zshift
+               call tenseurmulticouchecomp(hc,epsrel,epsabs,x0,y0 ,z1
+     $              ,xxp,y0,z2,k0,neps,dcouche,zcouche ,epscouche,Ixx
+     $              ,Ixy,Ixz,Izx,Izz)
 
 c               write(*,*) k,matind(k),matindplan(np2,np1),nmati,nmat,Ixx
 c     $              ,np1,np2                  
@@ -104,6 +112,11 @@ c     $              ,np1,np2
 !$OMP END PARALLEL                     
          enddo
       enddo
+
+      do i=0,neps
+         zcouche(i)=zcouche(i)+zshift
+      enddo
+
       a(0)=1.d300  
 c**********************************************************
 c     verifie dimension des tableaux
