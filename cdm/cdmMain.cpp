@@ -152,15 +152,15 @@ void CdmMain::printPlots() {
 void CdmMain::openFDocWindow()
 {
   //assistant->showDocumentation("index.html");
-  QLOG_INFO() << "Open doc at " << "file:///"+QDir::currentPath()+"/../doc/userguide-FR.pdf";
-  QDesktopServices::openUrl(QUrl("file:///"+ QDir::currentPath()+"/../doc/userguide-FR.pdf"));
+  QLOG_INFO() << "Open doc at " << "file:///"+QDir::currentPath()+"/../doc/userguide-M-FR.pdf";
+  QDesktopServices::openUrl(QUrl("file:///"+ QDir::currentPath()+"/../doc/userguide-M-FR.pdf"));
 }
 
 void CdmMain::openEDocWindow()
 {
   //assistant->showDocumentation("index.html");
-  QLOG_INFO() << "Open doc at " << "file:///"+QDir::currentPath()+"/../doc/userguide-EN.pdf";
-  QDesktopServices::openUrl(QUrl("file:///"+ QDir::currentPath()+"/../doc/userguide-EN.pdf"));
+  QLOG_INFO() << "Open doc at " << "file:///"+QDir::currentPath()+"/../doc/userguide-M-EN.pdf";
+  QDesktopServices::openUrl(QUrl("file:///"+ QDir::currentPath()+"/../doc/userguide-M-EN.pdf"));
 }
 
 

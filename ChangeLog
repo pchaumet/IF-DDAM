@@ -1,3 +1,10 @@
+	version 0.6.6
+
+	1) changement de nom pour les userguide pour mettre le M pour le
+	multicouche.
+	2) Changement nom version.	
+
+	------------------------------------------------	
 	version 0.6.5
 
 	1) resoud pb hdf5 pas ferme lors des arrets du code au milieu

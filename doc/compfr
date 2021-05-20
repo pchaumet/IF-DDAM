@@ -1,5 +1,5 @@
-latex userguide-FR.tex
-bibtex userguide-FR.aux
-latex  userguide-FR.tex	
-latex userguide-FR.tex
-dvipdf  userguide-FR.dvi
+latex userguide-M-FR.tex
+bibtex userguide-M-FR.aux
+latex  userguide-M-FR.tex	
+latex userguide-M-FR.tex
+dvipdf  userguide-M-FR.dvi
