@@ -1270,7 +1270,7 @@ c     Changement angle si microscopy
 
 
       if (beam(1:11).ne.'pwavelinear'.and.beam(1:13).ne.'pwavecircular'
-     $     .and.beam(1:15).eq.'wavelinearmulti'.and.beam(1:11).ne
+     $     .and.beam(1:15).ne.'wavelinearmulti'.and.beam(1:11).ne
      $     .'gwavelinear'.and.beam(1:13).ne.'gwavecircular'.and.beam(1:8
      $     ).ne.'gwaveiso'.and.beam(1:7).ne.'speckle'.and .beam(1:9).ne.
      $     'arbitrary') then
@@ -1440,12 +1440,21 @@ c     compute E0
          I0=cdabs(E0)**2
 c     write(*,*) 'champ',epscouche,zcouche,neps,nepsmax,k0,E0,ss,pp
 c     $        ,theta,phi
+
+c         call champlineaire(epscouche,zcouche,neps,nepsmax,xs(1) ,ys(1)
+c     $        ,zs(1),k0,E0,ss,pp,theta,phi,infostr,nstop,Eloc(1)
+c     $        ,Eloc(2) ,Eloc(3))
+         
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(i)   
 !$OMP DO SCHEDULE(STATIC)         
          do i=1,nbsphere
             call champlineaire(epscouche,zcouche,neps,nepsmax,xs(i)
      $           ,ys(i),zs(i),k0,E0,ss,pp,theta,phi,infostr,nstop,FF0(3
      $           *i-2),FF0(3*i-1),FF0(3*i))
+c            write(*,*) 'prout',(Eloc(1)*FF0(3*i-1)-Eloc(2)*FF0(3*i-2))
+c     $           /E0,(Eloc(1)*FF0(3*i)-Eloc(3)*FF0(3*i-2))/E0,(Eloc(2)
+c     $           *FF0(3*i) -Eloc(3)*FF0(3*i-1))/E0
+
          enddo
 !$OMP ENDDO 
 !$OMP END PARALLEL  
