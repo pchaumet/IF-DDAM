@@ -741,7 +741,7 @@ c     epsilon of the layers
 
       indice0=dsqrt(dreal(epscouche(0)))
       indicen=dsqrt(dreal(epscouche(neps+1)))
-
+      write(*,*) 'coucou',indice0,indicen,ncote,ntypemic
       if (nenergie+nlentille+ndiffracte.ge.1) then
          
          if (ncote.eq.0.or.ncote.eq.1) then
@@ -762,7 +762,7 @@ c     epsilon of the layers
          
          if (ncote.eq.0.or.ncote.eq.-1) then     
             if (dreal(epscouche(0)).le.0.d0) then
-               infostr='epsilon <0 higher layer computation far field'
+               infostr='epsilon <0 lower layer computation far field'
                nstop=-1
                return
             endif
@@ -773,10 +773,10 @@ c     epsilon of the layers
             endif
             write(*,*) 'Index lower : ',indice0
             indicem=indice0
-            numaperinc=numaperinc/indice0
             numaperref=numaperref/indice0
          endif
-   
+c     ouverture numérique condenseur
+         numaperinc=numaperinc/indice0
       
          if (ncote.eq.0) then
             indicem=max(indice0,indicen)
@@ -791,20 +791,26 @@ c     change ouverture numerique
             nstop=1
             return
          endif
-         if (numaperref.le.0.d0.or.numaperref.gt.1.d0) then
-            nstop=1
-            infostr='problem with numerical aperture in reflexion!'
-            return
+         if (ncote.eq.0.or.ncote.eq.-1) then
+            if (numaperref.le.0.d0.or.numaperref.gt.1.d0) then
+               nstop=1
+               infostr='problem with numerical aperture in reflexion!'
+               return
+            endif
          endif
-         if (numapertra.le.0.d0.or.numapertra.gt.1.d0) then
-            nstop=1
-            infostr='problem with numerical aperture in transmission!'
-            return
+         if (ncote.eq.0.or.ncote.eq.1) then
+            if (numapertra.le.0.d0.or.numapertra.gt.1.d0) then
+               nstop=1
+             infostr='problem with numerical aperture in transmission!'
+               return
+            endif
          endif
-         if (numaperinc.le.0.d0.or.numaperinc.gt.1.d0) then
-            nstop=1
-            infostr='problem with condenser numerical aperture!'
-            return
+         if (ntypemic.ne.0) then
+            if (numaperinc.le.0.d0.or.numaperinc.gt.1.d0) then
+               nstop=1
+               infostr='problem with condenser numerical aperture!'
+               return
+            endif
          endif
          zlensr=zlensr*1.d-9
          zlenst=zlenst*1.d-9
